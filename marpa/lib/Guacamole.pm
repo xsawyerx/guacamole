@@ -1,0 +1,125 @@
+package Guacamole;
+use strict;
+use warnings;
+use Marpa::R2;
+
+my $grammar_source = q{
+lexeme default = latm => 1
+:default ::= action => [ name, values ]
+
+Program ::= StatementSeq
+
+StatementSeq ::= Statement
+               | Statement Semicolon
+               | Statement Semicolon StatementSeq
+
+Statement ::= Expression
+
+Expression ::= Value
+            || Expression OpArrow Expression   assoc=>left
+            || Expression OpInc
+            || OpInc Expression
+            || Expression OpPower Expression   assoc=>right
+            || OpUnary Expression              assoc=>right
+            || Expression OpRegex Expression   assoc=>left
+            || Expression OpMulti Expression   assoc=>left
+            || Expression OpAdd Expression     assoc=>left
+            || Expression OpShift Expression   assoc=>left
+            || OpNamed Expression
+            || Expression OpInequal Expression
+            || Expression OpEqual Expression
+            || Expression OpBinAnd Expression  assoc=>left
+            || Expression OpBinOr Expression   assoc=>left
+            || Expression OpLogAnd Expression  assoc=>left
+            || Expression OpLogOr Expression   assoc=>left
+            || Expression OpRange Expression
+            || Expression OpTriThen Expression OpTriElse Expression  assoc=>right
+            || Expression OpAssign Expression  assoc=>right
+            || Expression OpComma Expression   assoc=>left
+            || OpNameNot Expression            assoc=>right
+            || Expression OpNameAnd Expression assoc=>left
+            || Expression OpNameOr Expression  assoc=>left
+
+Value ::= Literal
+        | SubCall
+        | LParen Expression RParen
+
+SubCall ::= Ident LParen Expression RParen
+          | Ident LParen RParen
+
+Ident ::= IdentComp 
+        | IdentComp PackageSep Ident
+
+Literal ::= LitNumber
+
+###
+
+IdentComp ~ [a-zA-Z_]+
+PackageSep ~ '::'
+
+LitNumber ~ [0-9]+
+
+Semicolon ~ ';'
+
+LParen ~ '('
+RParen ~ ')'
+
+OpArrow ~ '->'
+OpInc ~ '++' | '--'
+OpPower ~ '**'
+OpUnary ~ '!' | '~' | '\' | '+' | '-'
+OpRegex ~ '=~' | '!~'
+OpMulti ~ '*' | '/' | '%' | 'x'
+OpAdd ~ '+' | '-' | '.'
+OpShift ~ '<<' | '>>'
+OpNamed ~ 'chdir' | 'rand'
+OpInequal ~ '<' | '>' | '<=' | '>=' | 'lt' | 'gt' | 'le' | 'ge'
+OpEqual ~ '==' | '!=' | '<=>' | 'eq' | 'ne' | 'cmp'
+OpBinAnd ~ '&'
+OpBinOr ~ '|' | '^'
+OpLogAnd ~ '&&'
+OpLogOr ~ '||' | '//'
+OpRange ~ '..' | '...'
+OpTriThen ~ '?'
+OpTriElse ~ ':'
+OpAssign ~ '=' | '*=' | '/=' | '%=' | 'x=' | '+=' | '-=' | '.=' | '<<=' | '>>=' | '&=' | '|=' | '^=' | '&&=' | '||=' | '//='
+OpComma ~ ',' | '=>'
+OpNameNot ~ 'not'
+OpNameAnd ~ 'and'
+OpNameOr ~ 'or' | 'xor'
+
+:discard ~ whitespace
+whitespace ~ [\s]+
+
+};
+
+our $grammar = Marpa::R2::Scanless::G->new({ source => \$grammar_source });
+
+sub parse {
+    my ($class, $text) = @_;
+    
+    my $rec = Marpa::R2::Scanless::R->new({ grammar => $grammar });
+
+    my @values; 
+
+    $rec->read(\$text);
+    while (my $value = $rec->value()) {
+        push @values, $$value;
+    }
+
+    if (!@values) {
+        for my $nterm (reverse qw/Program Statement Expression SubCall Ident/) {
+            my ($start, $length) = $rec->last_completed($nterm);
+            next unless defined $start;
+            my $range = $rec->substring($start, $length);
+            my $expect = $rec->terminals_expected();
+            my $progress = $rec->show_progress();
+            die "Failed to parse past: $range (char $start, length $length), expected @$expect\n$progress";
+        }
+        die "Failed to parse, dunno why.";
+    }
+
+    return @values;
+}
+
+1;

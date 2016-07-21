@@ -1,0 +1,40 @@
+package Guacamole::Dumper;
+use strict;
+use warnings;
+
+use List::Util qw/any sum/;
+use Exporter "import";
+
+our @EXPORT_OK = qw/dump_tree/;
+
+
+sub dump_tree {
+    my ($tree, $offset) = @_;
+    return join "", map "$_\n", _dump_tree_inner($tree, "", $offset);
+}
+
+sub _dump_tree_inner {
+    my ($tree, $indent, $offset) = @_;
+    $indent //= "";
+    $offset //= "  ";
+
+    my ($head, @tail) = @$tree;
+    die "wtfbbq" if ref $head;
+
+    if (any { ref $_ } @tail) {
+        my @rest = map { ref $_ ? _dump_tree_inner($_, "$indent$offset", $offset) : "$indent$offset'$_'" } @tail;
+
+        my @clean = map { s/^\s+//r } @rest;
+        if (sum(map length, @clean) < 40) {
+            return ("$indent($head @clean)");
+        }
+
+        $rest[-1] .= ")";
+        return ("$indent($head", @rest);
+    } else {
+        my @tailq = map "'$_'", @tail;
+        return ("$indent($head @tailq)");
+    }
+}
+
+1;
