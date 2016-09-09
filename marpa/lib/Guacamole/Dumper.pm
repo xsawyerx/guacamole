@@ -26,14 +26,16 @@ sub _dump_tree_inner {
 
         my @clean = map { s/^\s+//r } @rest;
         if (sum(map length, @clean) < 40) {
-            return ("$indent($head @clean)");
+            my @items = ($head, @clean);
+            return ("$indent(@items)");
         }
 
         $rest[-1] .= ")";
         return ("$indent($head", @rest);
     } else {
         my @tailq = map "'$_'", @tail;
-        return ("$indent($head @tailq)");
+        my @items = ($head, @tailq);
+        return ("$indent(@items)");
     }
 }
 
