@@ -57,6 +57,7 @@ my %_clean_paren_type = (
     "HashElem" => [ "{", "}" ],
     "LitArray" => [ "[", "]" ],
     "LitHash" => [ "{", "}" ],
+    "Block" => [ "{", "}" ],
 );
 
 sub clean_paren {

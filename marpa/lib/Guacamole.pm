@@ -14,6 +14,7 @@ StatementSeq ::= Statement
                | Statement Semicolon StatementSeq
 
 Statement ::= Expression
+            | Block
 
 Expression ::= Value
             || Expression OpArrow ArrowRHS     assoc=>left
@@ -43,6 +44,7 @@ Expression ::= Value
 Value ::= Literal
         | Variable
         | SubCall
+        | DoBlock
         | LParen Expression RParen
 
 Variable ::= VarScalar
@@ -67,6 +69,10 @@ SubCall ::= Ident CallArgs
 
 CallArgs ::= LParen Expression RParen
            | LParen RParen
+
+DoBlock ::= Do Block
+
+Block ::= LBrace StatementSeq RBrace
 
 ArrayElem ::= LBracket Expression RBracket
 
@@ -140,6 +146,8 @@ OpComma ~ ',' | '=>'
 OpNameNot ~ 'not'
 OpNameAnd ~ 'and'
 OpNameOr ~ 'or' | 'xor'
+
+Do ~ 'do'
 
 :discard ~ whitespace
 whitespace ~ [\s]+
