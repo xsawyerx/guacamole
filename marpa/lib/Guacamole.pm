@@ -77,6 +77,12 @@ Ident ::= IdentComp
         | Ident PackageSep
 
 Literal ::= LitNumber
+          | LitArray
+          | LitHash
+
+LitArray ::= LBracket Expression RBracket
+
+LitHash ::= LBrace Expression RBrace
 
 ArrowRHS ::= ArrowDerefCall
            | ArrowMethodCall

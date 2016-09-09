@@ -55,6 +55,8 @@ my %_clean_paren_type = (
     "CallArgs" => [ "(", ")" ],
     "ArrayElem" => [ "[", "]" ],
     "HashElem" => [ "{", "}" ],
+    "LitArray" => [ "[", "]" ],
+    "LitHash" => [ "{", "}" ],
 );
 
 sub clean_paren {
