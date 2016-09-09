@@ -16,7 +16,7 @@ StatementSeq ::= Statement
 Statement ::= Expression
 
 Expression ::= Value
-            || Expression OpArrow Expression   assoc=>left
+            || Expression OpArrow ArrowRHS     assoc=>left
             || Expression OpInc
             || OpInc Expression
             || Expression OpPower Expression   assoc=>right
@@ -44,13 +44,30 @@ Value ::= Literal
         | SubCall
         | LParen Expression RParen
 
-SubCall ::= Ident LParen Expression RParen
-          | Ident LParen RParen
+SubCall ::= Ident CallArgs
+
+CallArgs ::= LParen Expression RParen
+           | LParen RParen
+
+ArrayElem ::= LBracket Expression RBracket
+
+HashElem ::= LBrace Expression RBrace
 
 Ident ::= IdentComp 
         | IdentComp PackageSep Ident
+        | Ident PackageSep
 
 Literal ::= LitNumber
+
+ArrowRHS ::= ArrowDerefCall
+           | ArrowMethodCall
+           | ArrowIndirectCall
+           | ArrayElem
+           | HashElem
+
+ArrowDerefCall ::= CallArgs
+ArrowMethodCall ::= Ident CallArgs
+ArrowIndirectCall ::= SigilScalar Ident CallArgs
 
 ###
 
@@ -61,8 +78,14 @@ LitNumber ~ [0-9]+
 
 Semicolon ~ ';'
 
+SigilScalar ~ '$'
+
 LParen ~ '('
 RParen ~ ')'
+LBracket ~ '['
+RBracket ~ ']'
+LBrace ~ '{'
+RBrace ~ '}'
 
 OpArrow ~ '->'
 OpInc ~ '++' | '--'

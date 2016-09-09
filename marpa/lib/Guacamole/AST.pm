@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use Exporter "import";
+use Data::Dumper;
 
 our @EXPORT_OK = qw/traverse cleanup/;
 
@@ -50,18 +51,25 @@ sub fold_ident {
 }
 
 # Remove useless text nodes.
-sub clean_call {
+my %_clean_paren_type = (
+    "CallArgs" => [ "(", ")" ],
+    "ArrayElem" => [ "[", "]" ],
+    "HashElem" => [ "{", "}" ],
+);
+
+sub clean_paren {
     my $node = shift;
 
     return $node unless ref $node;
-    my ($head, $sub, @list) = @$node;
+    my ($head, @list) = @$node;
 
-    return $node unless $head eq "SubCall";
+    my $paren = $_clean_paren_type{$head};
+    return $node unless defined $paren;
 
     die "bad $head structure" . Dumper($node)
-        unless shift @list eq "(" && pop @list eq ")";
+        unless shift @list eq $paren->[0] && pop @list eq $paren->[1];
     
-    return [ $head, $sub, @list ];
+    return [ $head, @list ];
 }
 
 # Just for lulz
@@ -113,7 +121,7 @@ sub cleanup {
 
     $node = traverse($node, "fold_comma");
     $node = traverse($node, "fold_ident");
-    $node = traverse($node, "clean_call");
+    $node = traverse($node, "clean_paren");
 
     return $node;
 }
