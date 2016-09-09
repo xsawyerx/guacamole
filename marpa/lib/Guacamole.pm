@@ -41,10 +41,29 @@ Expression ::= Value
             || Expression OpNameOr Expression  assoc=>left
 
 Value ::= Literal
+        | Variable
         | SubCall
         | LParen Expression RParen
 
+Variable ::= VarScalar
+           | VarArray
+           | VarHash
+           | VarCode
+           | VarGlob
+           | VarArrayTop
+
+VarScalar ::= SigilScalar VarName
+VarArray ::= SigilArray VarName
+VarHash ::= SigilHash VarName
+VarCode ::= SigilCode VarName
+VarGlob ::= SigilGlob VarName
+VarArrayTop ::= SigilArrayTop VarName
+
+VarName ::= Ident
+         | VarScalar
+
 SubCall ::= Ident CallArgs
+          | VarCode CallArgs
 
 CallArgs ::= LParen Expression RParen
            | LParen RParen
@@ -79,6 +98,11 @@ LitNumber ~ [0-9]+
 Semicolon ~ ';'
 
 SigilScalar ~ '$'
+SigilArray ~ '@'
+SigilHash ~ '%'
+SigilCode ~ '&'
+SigilGlob ~ '*'
+SigilArrayTop ~ '$#'
 
 LParen ~ '('
 RParen ~ ')'
