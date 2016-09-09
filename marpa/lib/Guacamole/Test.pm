@@ -36,9 +36,18 @@ sub parsent {
 
     local $Test::Builder::Level += 1;
 
-    my $res = eval { Guacamole->parse($text) };
+    my @trees;
+    my $res = eval {
+        @trees = Guacamole->parse($text);
+        1;
+    };
     my $err = $@;
     ok !defined $res && defined $err, "'$text': did not parse";
+
+    foreach my $tree (@trees) {
+        my $ast = cleanup($tree);
+        print dump_tree($ast);
+    }
 }
 
 1;
