@@ -153,6 +153,15 @@ Do ~ 'do'
 :discard ~ whitespace
 whitespace ~ [\s]+
 
+# Comments
+:discard ~ <hash comment>
+<hash comment>                    ~ <terminated hash comment> | <unterminated final hash comment>
+<terminated hash comment>         ~ '#' <hash comment body> <vertical space char>
+<unterminated final hash comment> ~ '#' <hash comment body>
+<hash comment body>               ~ <hash comment char>*
+<vertical space char>             ~ [\x{A}\x{B}\x{C}\x{D}\x{2028}\x{2029}]
+<hash comment char>               ~ [^\x{A}\x{B}\x{C}\x{D}\x{2028}\x{2029}]
+
 };
 
 our $grammar = Marpa::R2::Scanless::G->new({ source => \$grammar_source });
