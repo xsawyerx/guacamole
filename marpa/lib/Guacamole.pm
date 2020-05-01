@@ -26,7 +26,7 @@ Expression ::= Value
             || Expression OpMulti Expression   assoc=>left
             || Expression OpAdd Expression     assoc=>left
             || Expression OpShift Expression   assoc=>left
-            || OpNamed Expression
+            || OpKeyword
             || Expression OpInequal Expression
             || Expression OpEqual Expression
             || Expression OpBinAnd Expression  assoc=>left
@@ -100,6 +100,11 @@ ArrowDerefCall    ::= CallArgs
 ArrowMethodCall   ::= Ident CallArgs
 ArrowIndirectCall ::= SigilScalar Ident CallArgs
 
+OpKeyword ::= OpKeywordAbsExpr
+
+OpKeywordAbsExpr ::= OpKeywordAbs Value
+                   | OpKeywordAbs
+
 ###
 
 IdentComp  ~ [a-zA-Z_]+
@@ -131,7 +136,6 @@ OpRegex   ~ '=~' | '!~'
 OpMulti   ~ '*' | '/' | '%' | 'x'
 OpAdd     ~ '+' | '-' | '.'
 OpShift   ~ '<<' | '>>'
-OpNamed   ~ 'chdir' | 'rand'
 OpInequal ~ '<' | '>' | '<=' | '>=' | 'lt' | 'gt' | 'le' | 'ge'
 OpEqual   ~ '==' | '!=' | '<=>' | 'eq' | 'ne' | 'cmp'
 OpBinAnd  ~ '&'
@@ -148,6 +152,7 @@ OpNameAnd ~ 'and'
 OpNameOr  ~ 'or' | 'xor'
 
 
+OpKeywordAbs              ~ 'abs'
 OpKeywordDo               ~ 'do'
 
 # Ignore whitespace
