@@ -54,15 +54,15 @@ Variable ::= VarScalar
            | VarGlob
            | VarArrayTop
 
-VarScalar ::= SigilScalar VarName
-VarArray ::= SigilArray VarName
-VarHash ::= SigilHash VarName
-VarCode ::= SigilCode VarName
-VarGlob ::= SigilGlob VarName
+VarScalar   ::= SigilScalar VarName
+VarArray    ::= SigilArray VarName
+VarHash     ::= SigilHash VarName
+VarCode     ::= SigilCode VarName
+VarGlob     ::= SigilGlob VarName
 VarArrayTop ::= SigilArrayTop VarName
 
 VarName ::= Ident
-         | VarScalar
+          | VarScalar
 
 SubCall ::= Ident CallArgs
           | VarCode CallArgs
@@ -96,59 +96,60 @@ ArrowRHS ::= ArrowDerefCall
            | ArrayElem
            | HashElem
 
-ArrowDerefCall ::= CallArgs
-ArrowMethodCall ::= Ident CallArgs
+ArrowDerefCall    ::= CallArgs
+ArrowMethodCall   ::= Ident CallArgs
 ArrowIndirectCall ::= SigilScalar Ident CallArgs
 
 ###
 
-IdentComp ~ [a-zA-Z_]+
+IdentComp  ~ [a-zA-Z_]+
 PackageSep ~ '::'
 
 LitNumber ~ [0-9]+
 
 Semicolon ~ ';'
 
-SigilScalar ~ '$'
-SigilArray ~ '@'
-SigilHash ~ '%'
-SigilCode ~ '&'
-SigilGlob ~ '*'
+SigilScalar   ~ '$'
+SigilArray    ~ '@'
+SigilHash     ~ '%'
+SigilCode     ~ '&'
+SigilGlob     ~ '*'
 SigilArrayTop ~ '$#'
 
-LParen ~ '('
-RParen ~ ')'
+LParen   ~ '('
+RParen   ~ ')'
 LBracket ~ '['
 RBracket ~ ']'
-LBrace ~ '{'
-RBrace ~ '}'
+LBrace   ~ '{'
+RBrace   ~ '}'
 
-OpArrow ~ '->'
-OpInc ~ '++' | '--'
-OpPower ~ '**'
-OpUnary ~ '!' | '~' | '\' | '+' | '-'
-OpRegex ~ '=~' | '!~'
-OpMulti ~ '*' | '/' | '%' | 'x'
-OpAdd ~ '+' | '-' | '.'
-OpShift ~ '<<' | '>>'
-OpNamed ~ 'chdir' | 'rand'
+OpArrow   ~ '->'
+OpInc     ~ '++' | '--'
+OpPower   ~ '**'
+OpUnary   ~ '!' | '~' | '\' | '+' | '-'
+OpRegex   ~ '=~' | '!~'
+OpMulti   ~ '*' | '/' | '%' | 'x'
+OpAdd     ~ '+' | '-' | '.'
+OpShift   ~ '<<' | '>>'
+OpNamed   ~ 'chdir' | 'rand'
 OpInequal ~ '<' | '>' | '<=' | '>=' | 'lt' | 'gt' | 'le' | 'ge'
-OpEqual ~ '==' | '!=' | '<=>' | 'eq' | 'ne' | 'cmp'
-OpBinAnd ~ '&'
-OpBinOr ~ '|' | '^'
-OpLogAnd ~ '&&'
-OpLogOr ~ '||' | '//'
-OpRange ~ '..' | '...'
+OpEqual   ~ '==' | '!=' | '<=>' | 'eq' | 'ne' | 'cmp'
+OpBinAnd  ~ '&'
+OpBinOr   ~ '|' | '^'
+OpLogAnd  ~ '&&'
+OpLogOr   ~ '||' | '//'
+OpRange   ~ '..' | '...'
 OpTriThen ~ '?'
 OpTriElse ~ ':'
-OpAssign ~ '=' | '*=' | '/=' | '%=' | 'x=' | '+=' | '-=' | '.=' | '<<=' | '>>=' | '&=' | '|=' | '^=' | '&&=' | '||=' | '//='
-OpComma ~ ',' | '=>'
+OpAssign  ~ '=' | '*=' | '/=' | '%=' | 'x=' | '+=' | '-=' | '.=' | '<<=' | '>>=' | '&=' | '|=' | '^=' | '&&=' | '||=' | '//='
+OpComma   ~ ',' | '=>'
 OpNameNot ~ 'not'
 OpNameAnd ~ 'and'
-OpNameOr ~ 'or' | 'xor'
+OpNameOr  ~ 'or' | 'xor'
 
 Do ~ 'do'
 
+# Ignore whitespace
 :discard ~ whitespace
 whitespace ~ [\s]+
 
