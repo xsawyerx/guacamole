@@ -70,7 +70,7 @@ SubCall ::= Ident CallArgs
 CallArgs ::= LParen Expression RParen
            | LParen RParen
 
-DoBlock ::= Do Block
+DoBlock ::= OpKeywordDo Block
 
 Block ::= LBrace StatementSeq RBrace
 
@@ -147,7 +147,8 @@ OpNameNot ~ 'not'
 OpNameAnd ~ 'and'
 OpNameOr  ~ 'or' | 'xor'
 
-Do ~ 'do'
+
+OpKeywordDo               ~ 'do'
 
 # Ignore whitespace
 :discard ~ whitespace
