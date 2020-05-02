@@ -44,7 +44,7 @@ Expression ::= Value
 Value ::= Literal
         | Variable
         | SubCall
-        | DoBlock
+        | OpKeywordDoExpr
         | LParen Expression RParen
 
 Variable ::= VarScalar
@@ -69,8 +69,6 @@ SubCall ::= Ident CallArgs
 
 CallArgs ::= LParen Expression RParen
            | LParen RParen
-
-DoBlock ::= OpKeywordDo Block
 
 Block ::= LBrace StatementSeq RBrace
 
@@ -104,6 +102,9 @@ OpKeyword ::= OpKeywordAbsExpr
 
 OpKeywordAbsExpr ::= OpKeywordAbs Value
                    | OpKeywordAbs
+
+OpKeywordDoExpr ::= OpKeywordDo Block
+                  | OpKeywordDo Expression
 
 ###
 
