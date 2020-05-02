@@ -190,7 +190,134 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordEndprotoentExpr
             | OpKeywordEndserventExpr
             | OpKeywordGetsocknameExpr
-            | OpKeywordGetsockoptExpr
+            | OpKeywordGGlobExpr
+            | OpKeywordGmtimeExpr
+            | OpKeywordGotoExpr
+            | OpKeywordHex
+            | OpKeywordIndex
+            | OpKeywordInt
+            | OpKeywordIoctl
+            | OpKeywordKeys
+            | OpKeywordKill
+            | OpKeywordLast
+            | OpKeywordLc
+            | OpKeywordLcfirst
+            | OpKeywordLength
+            | OpKeywordLink
+            | OpKeywordListen
+            | OpKeywordLocal
+            | OpKeywordLocaltime
+            | OpKeywordLock
+            | OpKeywordLog
+            | OpKeywordLstat
+            | OpKeywordMkdir
+            | OpKeywordMsgctl
+            | OpKeywordMsgget
+            | OpKeywordMsgrcv
+            | OpKeywordMsgsnd
+            | OpKeywordNext
+            | OpKeywordOct
+            | OpKeywordOpendir
+            | OpKeywordOrd
+            | OpKeywordPack
+            | OpKeywordPipe
+            | OpKeywordPop
+            | OpKeywordPos
+            | OpKeywordPush
+            | OpKeywordQuotemeta
+            | OpKeywordRand
+            | OpKeywordRead
+            | OpKeywordReaddir
+            | OpKeywordReadline
+            | OpKeywordReadlink
+            | OpKeywordReadpipe
+            | OpKeywordRecv
+            | OpKeywordRedo
+            | OpKeywordRef
+            | OpKeywordRename
+            | OpKeywordReset
+            | OpKeywordReturn
+            | OpKeywordReverse
+            | OpKeywordRewinddir
+            | OpKeywordRindex
+            | OpKeywordRmdir
+            | OpKeywordScalar
+            | OpKeywordSeek
+            | OpKeywordSeekdir
+            | OpKeywordSelect
+            | OpKeywordSemctl
+            | OpKeywordSemget
+            | OpKeywordSemop
+            | OpKeywordSend
+            | OpKeywordSetpgrp
+            | OpKeywordSetpriority
+            | OpKeywordSetsockopt
+            | OpKeywordShift
+            | OpKeywordShmctl
+            | OpKeywordShmget
+            | OpKeywordShmread
+            | OpKeywordShmwrite
+            | OpKeywordShutdown
+            | OpKeywordSin
+            | OpKeywordSleep
+            | OpKeywordSocket
+            | OpKeywordSocketpair
+            #| OpKeywordSplice
+            #| OpKeywordSplit
+            #| OpKeywordSprintf
+            #| OpKeywordSrand
+            #| OpKeywordStat
+            #| OpKeywordState
+            #| OpKeywordStudy
+            #| OpKeywordSub
+            #| OpKeywordSubstr
+            #| OpKeywordSymlink
+            #| OpKeywordSyscall
+            #| OpKeywordSysopen
+            #| OpKeywordSysread
+            #| OpKeywordSysseek
+            #| OpKeywordSystem
+            #| OpKeywordSyswrite
+            #| OpKeywordTell
+            #| OpKeywordTelldir
+            #| OpKeywordTie
+            #| OpKeywordTied
+            #| OpKeywordTime
+            #| OpKeywordTimes
+            #| OpKeywordTruncate
+            #| OpKeywordUc
+            #| OpKeywordUcfirst
+            #| OpKeywordUmask
+            #| OpKeywordUndef
+            #| OpKeywordUnlink
+            #| OpKeywordUnpack
+            #| OpKeywordUnshift
+            #| OpKeywordUntie
+            #| OpKeywordUse
+            #| OpKeywordUtime
+            #| OpKeywordValues
+            #| OpKeywordVec
+            #| OpKeywordWait
+            #| OpKeywordWaitpid
+            #| OpKeywordWantarray
+            #| OpKeywordWarn
+            #| OpKeywordWrite
+
+# TODO: (Add the following above)
+#| OpKeywordGrepExpr
+#| OpKeywordJoin
+#| OpKeywordMap
+#| OpKeywordMy
+#| OpKeywordNo
+#| OpKeywordOpen
+#| OpKeywordOur
+#| OpKeywordPackage
+#| OpKeywordPrint
+#| OpKeywordPrintf
+#| OpKeywordPrototype
+#| OpKeywordRequire
+#| OpKeywordSay
+#| OpKeywordSort
 
 # Grammar for keywords
 OpKeywordAbsExpr ::= OpKeywordAbs Expression
@@ -376,6 +503,213 @@ OpKeywordGetsocknameExpr ::= OpKeywordGetsockname Expression
 
 OpKeywordGetsockoptExpr ::= OpKeywordGetsockopt Value Value Value
 
+OpKeywordGlobExpr ::= OpKeywordGlob Expression
+                    | OpKeywordGlob
+
+OpKeywordGmtimeExpr ::= OpKeywordGmtime Expression
+                      | OpKeywordGmtime
+
+OpKeywordGotoExpr ::= OpKeywordGoto Label
+                    | OpKeywordGoto Expression
+                    | OpKeywordGoto SigilCode IdentComp
+
+OpKeywordHexExpr ::= OpKeywordHex Expression
+                   | OpKeywordHex
+
+OpKeywordIndexExpr ::= OpKeywordIndex Value Value Value
+                     | OpKeywordIndex Value Value
+
+OpKeywordIntExpr ::= OpKeywordInt Expression
+                   | OpKeywordInt
+
+OpKeywordIoctlExpr ::= OpKeywordIoctl Value Value Value
+
+#TODO: OpKeywordJoinExpr ::=
+
+OpKeywordKeysExpr ::= OpKeywordKeys VarHash
+                    | OpKeywordKeys VarArray
+                    | OpKeywordKeys Expression
+
+OpKeywordKillExpr ::= OpKeywordKill Value Expression
+                    | OpKeywordKill Expression
+
+OpKeywordLastExpr ::= OpKeywordLast Label
+                    | OpKeywordLast Expression
+                    | OpKeywordLast
+
+OpKeywordLcExpr ::= OpKeywordLc Expression
+                  | OpKeywordLc
+
+OpKeywordLcfirstExpr ::= OpKeywordLcfirst Expression
+                       | OpKeywordLcfirst
+
+OpKeywordLengthExpr ::= OpKeywordLength Expression
+                      | OpKeywordLength
+
+OpKeywordLinkExpr ::= OpKeywordLink Value Value
+
+OpKeywordListenExpr ::= OpKeywordListen Value Value
+
+OpKeywordLocalExpr ::= OpKeywordLocal Expression
+
+OpKeywordLocaltimeExpr ::= OpKeywordLocaltime Expression
+                         | OpKeywordLocaltime
+
+OpKeywordLockExpr ::= OpKeywordLock Expression
+
+OpKeywordLogExpr ::= OpKeywordLog Expression
+                   | OpKeywordLog
+
+OpKeywordLstatExpr ::= OpKeywordLstat Expression
+                     | OpKeywordLstat
+
+#TODO: OpKeywordMapExpr ::= OpKeywordMap Expression
+
+OpKeywordMkdirExpr ::= OpKeywordMkdir Value Value
+                     | OpKeywordMkdir Expression
+                     | OpKeywordMkdir
+
+OpKeywordMsgctlExpr ::= OpKeywordMsgctl Value Value Value
+
+OpKeywordMsggetExpr ::= OpKeywordMsgget Value Value
+
+OpKeywordMsgrcvExpr ::= OpKeywordMsgrcv Value Value Value Value Value
+
+OpKeywordMsgsndExpr ::= OpKeywordMsgsnd Value Value Value
+
+# TODO: OpKeywordMyExpr ::= OpKeywordMy Expression
+
+OpKeywordNextExpr ::= OpKeywordNext Label
+                    | OpKeywordNext Expression
+                    | OpKeywordNext
+
+# TODO: OpKeywordNoExpr ::= OpKeywordNo Expression
+
+OpKeywordOctExpr ::= OpKeywordOct Expression
+                   | OpKeywordOct
+
+# TODO: OpKeywordOpenExpr ::= OpKeywordOpen
+
+OpKeywordOpendirExpr ::= OpKeywordOpenDir Value Value
+
+OpKeywordOrdExpr ::= OpKeywordOrd Expression
+                   | OpKeywordOrd
+
+# TODO: OpKeywordOurExpr ::= OpKeywordOur Expression
+
+OpKeywordPackExpr ::= OpKeywordPack Value Value
+
+# TODO: OpKeywordPackageExpr ::= OpKeywordPackage
+
+OpKeywordPipeExpr ::= OpKeywordPipe Value Value
+
+OpKeywordPopExpr ::= OpKeywordPop Expression
+                   | OpKeywordPop
+
+OpKeywordPosExpr ::= OpKeywordPos Expression
+                   | OpKeywordPos
+
+# TODO: OpKeywordPrintExpr ::= OpKeywordPrint Expression
+# TODO: OpKeywordPrintfExpr ::= OpKeywordPrintf Expression
+# TODO: OpKeywordPrototypeExpr ::= OpKeywordPrototype Expression
+
+OpKeywordPushExpr ::= OpKeywordPush Value Expression
+
+OpKeywordQuotemetaExpr ::= OpKeywordQuotemeta Expression
+                         | OpKeywordQuotemeta
+
+OpKeywordRandExpr ::= OpKeywordRand Expression
+                    | OpKeywordRand
+
+OpKeywordReadExpr ::= OpKeywordRead Value Value Value Expression
+                    | OpKeywordRead Value Value Expression
+
+OpKeywordReaddirExpr ::= OpKeywordReaddir Expression
+
+OpKeywordReadlineExpr ::= OpKeywordReadline Expression
+                        | OpKeywordReadline
+
+OpKeywordReadlinkExpr ::= OpKeywordReadlink Expression
+                        | OpKeywordReadlink
+
+OpKeywordReadpipeExpr ::= OpKeywordReadpipe Expression
+                        | OpKeywordReadpipe
+
+OpKeywordRecvExpr ::= OpKeywordRecv Value Value Value Value
+
+OpKeywordRedoExpr ::= OpKeywordRedo Label
+                    | OpKeywordRedo Expression
+                    | OpKeywordRedo
+
+OpKeywordRefExpr ::= OpKeywordRef Expression
+                   | OpKeywordRef
+
+OpKeywordRenameExpr ::= OpKeywordRef Value Value
+
+OpKeywordResetExpr ::= OpKeywordReset Expression
+                     | OpKeywordReset
+
+OpKeywordReturnExpr ::= OpKeywordReturn Expression
+                      | OpKeywordReturn
+
+OpKeywordReverseExpr ::= OpKeywordReverse Expression
+
+OpKeywordRewinddirExpr ::= OpKeywordRewinddir Expression
+                         | OpKeywordRewinddir
+
+OpKeywordRindexExpr ::= OpKeywordRindex Value Value Value
+                      | OpKeywordRindex Value Value
+
+OpKeywordRmdirExpr ::= OpKeywordRmdir Expression
+                     | OpKeywordRmdir
+
+OpKeywordScalarExpr ::= OpKeywordScalar Expression
+
+OpKeywordSeekExpr ::= OpKeywordSeek Value Value Value
+
+OpKeywordSeekdirExpr ::= OpKeywordSeekdir Value Value
+
+OpKeywordSelectExpr ::= OpKeywordSelect Value Value Value Value
+                      | OpKeywordSelect Expression
+
+OpKeywordSemctlExpr ::= OpKeywordSemctl Value Value Value Value
+
+OpKeywordSemgetExpr ::= OpKeywordSemget Value Value Value
+
+OpKeywordSemopExpr ::= OpKeywordSemop Value Value
+
+OpKeywordSendExpr ::= OpKeywordSend Value Value Value Value
+                    | OpKeywordSend Value Value Value
+
+OpKeywordSetpgrpExpr ::= OpKeywordSetpgrp Value Value
+
+OpKeywordSetpriorityExpr ::= OpKeywordSetpriority Value Value Value
+
+OpKeywordSetsocketoptExpr ::= OpKeywordSetsocketopt Value Value Value Value
+
+OpKeywordShiftExpr ::= OpKeywordShift Expression
+                     | OpKeywordShift
+
+OpKeywordShmctlExpr ::= OpKeywordShmctl Value Value Value
+
+OpKeywordShmgetExpr ::= OpKeywordShmget Value Value Value
+
+OpKeywordShmreadExpr ::= OpKeywordShmread Value Value Value Value
+
+OpKeywordShmwriteExpr ::= OpKeywordShmwrite Value Value Value Value
+
+OpKeywordShutdownExpr ::= OpKeywordShutdown Value Value
+
+OpKeywordSinExpr ::= OpKeywordSin Expression
+                   | OpKeywordSin
+
+OpKeywordSleepExpr ::= OpKeywordSleep Expression
+                     | OpKeywordSleep
+
+OpKeywordSocketExpr ::= OpKeywordSocket Value Value Value Value
+
+OpKeywordSocketpairExpr ::= OpKeywordSocketpair Value Value Value Value Value
+
 ###
 
 IdentComp  ~ [a-zA-Z_]+
@@ -510,95 +844,92 @@ OpKeywordEndprotoent      ~ 'endprotoent'
 OpKeywordEndservent       ~ 'endservent'
 OpKeywordGetsockname      ~ 'getsockname'
 OpKeywordGetsockopt       ~ 'getsockopt'
-
-# These cannot be used until there are expressions for them
-#OpKeywordGlob             ~ 'glob'
-#OpKeywordGmtime           ~ 'gmtime'
-#OpKeywordGoto             ~ 'goto'
-#OpKeywordGrep             ~ 'grep'
-#OpKeywordHex              ~ 'hex'
-#OpKeywordImport           ~ 'import'
-#OpKeywordIndex            ~ 'index'
-#OpKeywordInt              ~ 'int'
-#OpKeywordIoctl            ~ 'ioctl'
-#OpKeywordJoin             ~ 'join'
-#OpKeywordKeys             ~ 'keys'
-#OpKeywordKill             ~ 'kill'
-#OpKeywordLast             ~ 'last'
-#OpKeywordLc               ~ 'lc'
-#OpKeywordLcfirst          ~ 'lcfirst'
-#OpKeywordLength           ~ 'length'
-#OpKeywordLink             ~ 'link'
-#OpKeywordListen           ~ 'listen'
-#OpKeywordLocal            ~ 'local'
-#OpKeywordLocaltime        ~ 'localtime'
-#OpKeywordLock             ~ 'lock'
-#OpKeywordLog              ~ 'log'
-#OpKeywordLstat            ~ 'lstat'
-#OpKeywordMap              ~ 'map'
-#OpKeywordMkdir            ~ 'mkdir'
-#OpKeywordMsgctl           ~ 'msgctl'
-#OpKeywordMsgget           ~ 'msgget'
-#OpKeywordMsgrcv           ~ 'msgrcv'
-#OpKeywordMsgsnd           ~ 'msgsnd'
-#OpKeywordMy               ~ 'my'
-#OpKeywordNext             ~ 'next'
-#OpKeywordNo               ~ 'no'
-#OpKeywordOct              ~ 'oct'
-#OpKeywordOpen             ~ 'open'
-#OpKeywordOpendir          ~ 'opendir'
-#OpKeywordOrd              ~ 'ord'
-#OpKeywordOur              ~ 'our'
-#OpKeywordPack             ~ 'pack'
-#OpKeywordPackage          ~ 'package'
-#OpKeywordPipe             ~ 'pipe'
-#OpKeywordPop              ~ 'pop'
-#OpKeywordPos              ~ 'pos'
-#OpKeywordPrint            ~ 'print'
-#OpKeywordPrintf           ~ 'printf'
-#OpKeywordPrototype        ~ 'prototype'
-#OpKeywordPush             ~ 'push'
-#OpKeywordQuotemeta        ~ 'quotemeta'
-#OpKeywordRand             ~ 'rand'
-#OpKeywordRead             ~ 'read'
-#OpKeywordReaddir          ~ 'readdir'
-#OpKeywordReadline         ~ 'readline'
-#OpKeywordReadlink         ~ 'readlink'
-#OpKeywordReadpipe         ~ 'readpipe'
-#OpKeywordRecv             ~ 'recv'
-#OpKeywordRedo             ~ 'redo'
-#OpKeywordRef              ~ 'ref'
-#OpKeywordRename           ~ 'rename'
-#OpKeywordRequire          ~ 'require'
-#OpKeywordReset            ~ 'reset'
-#OpKeywordReturn           ~ 'return'
-#OpKeywordReverse          ~ 'reverse'
-#OpKeywordRewinddir        ~ 'rewinddir'
-#OpKeywordRindex           ~ 'rindex'
-#OpKeywordRmdir            ~ 'rmdir'
-#OpKeywordSay              ~ 'say'
-#OpKeywordScalar           ~ 'scalar'
-#OpKeywordSeek             ~ 'seek'
-#OpKeywordSeekdir          ~ 'seekdir'
-#OpKeywordSelect           ~ 'select'
-#OpKeywordSemctl           ~ 'semctl'
-#OpKeywordSemget           ~ 'semget'
-#OpKeywordSemop            ~ 'semop'
-#OpKeywordSend             ~ 'send'
-#OpKeywordSetpgrp          ~ 'setpgrp'
-#OpKeywordSetpriority      ~ 'setpriority'
-#OpKeywordSetsockopt       ~ 'setsockopt'
-#OpKeywordShift            ~ 'shift'
-#OpKeywordShmctl           ~ 'shmctl'
-#OpKeywordShmget           ~ 'shmget'
-#OpKeywordShmread          ~ 'shmread'
-#OpKeywordShmwrite         ~ 'shmwrite'
-#OpKeywordShutdown         ~ 'shutdown'
-#OpKeywordSin              ~ 'sin'
-#OpKeywordSleep            ~ 'sleep'
-#OpKeywordSocket           ~ 'socket'
-#OpKeywordSocketpair       ~ 'socketpair'
-#OpKeywordSort             ~ 'sort'
+OpKeywordGlob             ~ 'glob'
+OpKeywordGmtime           ~ 'gmtime'
+OpKeywordGoto             ~ 'goto'
+# TODO: #OpKeywordGrep             ~ 'grep'
+OpKeywordHex              ~ 'hex'
+OpKeywordIndex            ~ 'index'
+OpKeywordInt              ~ 'int'
+OpKeywordIoctl            ~ 'ioctl'
+#TODO: OpKeywordJoin             ~ 'join'
+OpKeywordKeys             ~ 'keys'
+OpKeywordKill             ~ 'kill'
+OpKeywordLast             ~ 'last'
+OpKeywordLc               ~ 'lc'
+OpKeywordLcfirst          ~ 'lcfirst'
+OpKeywordLength           ~ 'length'
+OpKeywordLink             ~ 'link'
+OpKeywordListen           ~ 'listen'
+OpKeywordLocal            ~ 'local'
+OpKeywordLocaltime        ~ 'localtime'
+OpKeywordLock             ~ 'lock'
+OpKeywordLog              ~ 'log'
+OpKeywordLstat            ~ 'lstat'
+# TODO: OpKeywordMap              ~ 'map'
+OpKeywordMkdir            ~ 'mkdir'
+OpKeywordMsgctl           ~ 'msgctl'
+OpKeywordMsgget           ~ 'msgget'
+OpKeywordMsgrcv           ~ 'msgrcv'
+OpKeywordMsgsnd           ~ 'msgsnd'
+# TODO: OpKeywordMy               ~ 'my'
+OpKeywordNext             ~ 'next'
+# TODO: OpKeywordNo               ~ 'no'
+OpKeywordOct              ~ 'oct'
+# TODO: OpKeywordOpen             ~ 'open'
+OpKeywordOpendir          ~ 'opendir'
+OpKeywordOrd              ~ 'ord'
+# TODO: OpKeywordOur              ~ 'our'
+OpKeywordPack             ~ 'pack'
+# TODO: OpKeywordPackage          ~ 'package'
+OpKeywordPipe             ~ 'pipe'
+OpKeywordPop              ~ 'pop'
+OpKeywordPos              ~ 'pos'
+# TODO: OpKeywordPrint            ~ 'print'
+# TODO: OpKeywordPrintf           ~ 'printf'
+# TODO: #OpKeywordPrototype        ~ 'prototype'
+OpKeywordPush             ~ 'push'
+OpKeywordQuotemeta        ~ 'quotemeta'
+OpKeywordRand             ~ 'rand'
+OpKeywordRead             ~ 'read'
+OpKeywordReaddir          ~ 'readdir'
+OpKeywordReadline         ~ 'readline'
+OpKeywordReadlink         ~ 'readlink'
+OpKeywordReadpipe         ~ 'readpipe'
+OpKeywordRecv             ~ 'recv'
+OpKeywordRedo             ~ 'redo'
+OpKeywordRef              ~ 'ref'
+OpKeywordRename           ~ 'rename'
+# TODO: OpKeywordRequire          ~ 'require'
+OpKeywordReset            ~ 'reset'
+OpKeywordReturn           ~ 'return'
+OpKeywordReverse          ~ 'reverse'
+OpKeywordRewinddir        ~ 'rewinddir'
+OpKeywordRindex           ~ 'rindex'
+OpKeywordRmdir            ~ 'rmdir'
+# TODO: OpKeywordSay              ~ 'say'
+OpKeywordScalar           ~ 'scalar'
+OpKeywordSeek             ~ 'seek'
+OpKeywordSeekdir          ~ 'seekdir'
+OpKeywordSelect           ~ 'select'
+OpKeywordSemctl           ~ 'semctl'
+OpKeywordSemget           ~ 'semget'
+OpKeywordSemop            ~ 'semop'
+OpKeywordSend             ~ 'send'
+OpKeywordSetpgrp          ~ 'setpgrp'
+OpKeywordSetpriority      ~ 'setpriority'
+OpKeywordSetsockopt       ~ 'setsockopt'
+OpKeywordShift            ~ 'shift'
+OpKeywordShmctl           ~ 'shmctl'
+OpKeywordShmget           ~ 'shmget'
+OpKeywordShmread          ~ 'shmread'
+OpKeywordShmwrite         ~ 'shmwrite'
+OpKeywordShutdown         ~ 'shutdown'
+OpKeywordSin              ~ 'sin'
+OpKeywordSleep            ~ 'sleep'
+OpKeywordSocket           ~ 'socket'
+OpKeywordSocketpair       ~ 'socketpair'
+# TODO: OpKeywordSort             ~ 'sort'
 #OpKeywordSplice           ~ 'splice'
 #OpKeywordSplit            ~ 'split'
 #OpKeywordSprintf          ~ 'sprintf'
