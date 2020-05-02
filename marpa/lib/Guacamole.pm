@@ -43,9 +43,20 @@ Expression ::= Value
 
 Value ::= Literal
         | Variable
+        | UnderscoreValues
         | SubCall
         | OpKeywordDoExpr
         | LParen Expression RParen
+
+# UnderscoreData and UnderscoreEnd are not values
+UnderscoreValues ::= UnderscorePackage
+                   | UnderscoreFile
+                   | UnderscoreLine
+                   | UnderscoreSub
+
+UnderscoreTokens ::= UnderscoreValues
+                   | UnderscoreData
+                   | UnderscoreEnd
 
 Variable ::= VarScalar
            | VarArray
@@ -128,6 +139,13 @@ LBracket ~ '['
 RBracket ~ ']'
 LBrace   ~ '{'
 RBrace   ~ '}'
+
+UnderscorePackage ~ '__PACKAGE__'
+UnderscoreFile    ~ '__FILE__'
+UnderscoreLine    ~ '__LINE__'
+UnderscoreSub     ~ '__SUB__'
+UnderscoreData    ~ '__DATA__'
+UnderscoreEnd     ~ '__END__'
 
 OpArrow   ~ '->'
 OpInc     ~ '++' | '--'
