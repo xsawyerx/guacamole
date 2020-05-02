@@ -16,6 +16,8 @@ StatementSeq ::= Statement
 Statement ::= Expression
             | Block
 
+Label ::= IdentComp Colon
+
 Expression ::= Value
             || Expression OpArrow ArrowRHS     assoc=>left
             || Expression OpInc
@@ -109,13 +111,270 @@ ArrowDerefCall    ::= CallArgs
 ArrowMethodCall   ::= Ident CallArgs
 ArrowIndirectCall ::= SigilScalar Ident CallArgs
 
+# All keywords
 OpKeyword ::= OpKeywordAbsExpr
+            | OpKeywordAcceptExpr
+            | OpKeywordAlarmExpr
+            | OpKeywordAtan2Expr
+            | OpKeywordBindExpr
+            | OpKeywordBinmodeExpr
+            | OpKeywordBlessExpr
+            | OpKeywordBreakExpr
+            | OpKeywordCallerExpr
+            | OpKeywordChdirExpr
+            | OpKeywordChmodExpr
+            | OpKeywordChompExpr
+            | OpKeywordChopExpr
+            | OpKeywordChownExpr
+            | OpKeywordChrExpr
+            | OpKeywordChrootExpr
+            | OpKeywordCloseExpr
+            | OpKeywordClosedirExpr
+            | OpKeywordConnectExpr
+            | OpKeywordContinueExpr
+            | OpKeywordCosExpr
+            | OpKeywordCryptExpr
+            | OpKeywordDbmcloseExpr
+            | OpKeywordDbmopenExpr
+            | OpKeywordDefinedExpr
+            | OpKeywordDeleteExpr
+            | OpKeywordDieExpr
+            | OpKeywordDumpExpr
+            | OpKeywordEachExpr
+            | OpKeywordEofExpr
+            | OpKeywordEvalExpr
+            | OpKeywordEvalbytesExpr
+            | OpKeywordExecExpr
+            | OpKeywordExistsExpr
+            | OpKeywordExitExpr
+            | OpKeywordExpExpr
+            | OpKeywordFcExpr
+            | OpKeywordFcntlExpr
+            | OpKeywordFilenoExpr
+            | OpKeywordFlockExpr
+            | OpKeywordForkExpr
+            | OpKeywordGetcExpr
+            | OpKeywordGetloginExpr
+            | OpKeywordGetpeernameExpr
+            | OpKeywordGetpgrpExpr
+            | OpKeywordGetppidExpr
+            | OpKeywordGetpriorityExpr
+            | OpKeywordGetpwnamExpr
+            | OpKeywordGetgrnamExpr
+            | OpKeywordGethostbynameExpr
+            | OpKeywordGetnetbynameExpr
+            | OpKeywordGetprotobynameExpr
+            | OpKeywordGetpwuidExpr
+            | OpKeywordGetgrgidExpr
+            | OpKeywordGetservbynameExpr
+            | OpKeywordGethostbyaddrExpr
+            | OpKeywordGetnetbyaddrExpr
+            | OpKeywordGetprotobynumberExpr
+            | OpKeywordGetservbyportExpr
+            | OpKeywordGetpwentExpr
+            | OpKeywordGetgrentExpr
+            | OpKeywordGethostentExpr
+            | OpKeywordGetnetentExpr
+            | OpKeywordGetprotoentExpr
+            | OpKeywordGetserventExpr
+            | OpKeywordSetpwentExpr
+            | OpKeywordSetgrentExpr
+            | OpKeywordSethostentExpr
+            | OpKeywordSetnetentExpr
+            | OpKeywordSetprotoentExpr
+            | OpKeywordSetserventExpr
+            | OpKeywordEndpwentExpr
+            | OpKeywordEndgrentExpr
+            | OpKeywordEndhostentExpr
+            | OpKeywordEndnetentExpr
+            | OpKeywordEndprotoentExpr
+            | OpKeywordEndserventExpr
+            | OpKeywordGetsocknameExpr
+            | OpKeywordGetsockoptExpr
 
+# Grammar for keywords
 OpKeywordAbsExpr ::= OpKeywordAbs Expression
                    | OpKeywordAbs
 
+OpKeywordAcceptExpr ::= OpKeywordAccept Value Value
+
+OpKeywordAlarmExpr ::= OpKeywordAlarm Expression
+                     | OpKeywordAlarm
+
+OpKeywordAtan2Expr ::= OpKeywordAtan2 Value Value
+
+OpKeywordBindExpr ::= OpKeywordBind Value Value
+
+OpKeywordBinmodeExpr ::= OpKeywordBinmode Value Value
+                       | OpKeywordBinmode Expression
+
+OpKeywordBlessExpr ::= OpKeywordBless Value Value
+                     | OpKeywordBless Expression
+
+OpKeywordBreakExpr ::= OpKeywordBreak
+
+OpKeywordCallerExpr ::= OpKeywordCaller Expression
+                      | OpKeywordCaller
+
+OpKeywordChdirExpr ::= OpKeywordChdir Expression
+                     | OpKeywordChdir
+
+OpKeywordChmodExpr ::= OpKeywordChmod Value Expression
+
+OpKeywordChompExpr ::= OpKeywordChomp Expression
+                     | OpKeywordChomp
+
+OpKeywordChopExpr ::= OpKeywordChop Expression
+                    | OpKeywordChop
+
+OpKeywordChownExpr ::= OpKeywordChown Value Value Expression
+
+OpKeywordChrExpr ::= OpKeywordChr Expression
+                   | OpKeywordChr
+
+OpKeywordChrootExpr ::= OpKeywordChroot Expression
+                      | OpKeywordChroot
+
+OpKeywordCloseExpr ::= OpKeywordClose Expression
+                     | OpKeywordClose
+
+OpKeywordClosedirExpr ::= OpKeywordClosedir Expression
+
+OpKeywordConnectExpr ::= OpKeywordConnect Value Value
+
+OpKeywordContinueExpr ::= OpKeywordContinue Block
+                        | OpKeywordContinue
+
+OpKeywordCosExpr ::= OpKeywordCos Expression
+
+OpKeywordCryptExpr ::= OpKeywordCrypt Value Value
+
+OpKeywordDbmcloseExpr ::= OpKeywordDbmclose VarHash
+
+OpKeywordDbmopenExpr ::= OpKeywordDbmopen VarHash Value Value
+
+OpKeywordDefinedExpr ::= OpKeywordDefined Expression
+                       | OpKeywordDefined
+
+OpKeywordDeleteExpr ::= OpKeywordDelete Expression
+
+OpKeywordDieExpr ::= OpKeywordDie Expression
+
 OpKeywordDoExpr ::= OpKeywordDo Block
                   | OpKeywordDo Expression
+
+OpKeywordDumpExpr ::= OpKeywordDump Label
+                    | OpKeywordDump Expression
+                    | OpKeywordDump
+
+OpKeywordEachExpr ::= OpKeywordEach Expression
+
+OpKeywordEofExpr ::= OpKeywordEof Expression
+                   | OpKeywordEof
+
+OpKeywordEvalExpr ::= OpKeywordEval Block
+
+OpKeywordEvalbytesExpr ::= OpKeywordEvalbytes Expression
+                         | OpKeywordEvalbytes
+
+OpKeywordExecExpr ::= OpKeywordExec Expression
+
+OpKeywordExistsExpr ::= OpKeywordExists Expression
+
+OpKeywordExitExpr ::= OpKeywordExit Expression
+                    | OpKeywordExit
+
+OpKeywordExpExpr ::= OpKeywordExp Expression
+                   | OpKeywordExp
+
+OpKeywordFcExpr ::= OpKeywordFc Expression
+                  | OpKeywordFc
+
+OpKeywordFcntlExpr ::= OpKeywordFcntl Value Value Value
+                     | OpKeywordFcntl Expression
+
+OpKeywordFilenoExpr ::= OpKeywordFileno Expression
+
+OpKeywordFlockExpr ::= OpKeywordFlock Value Value
+
+OpKeywordForkExpr ::= OpKeywordFork
+
+OpKeywordGetcExpr ::= OpKeywordGetc Expression
+                    | OpKeywordGetc
+
+OpKeywordGetloginExpr ::= OpKeywordGetlogin
+
+OpKeywordGetpeernameExpr ::= OpKeywordGetpeername Expression
+
+OpKeywordGetpgrpExpr ::= OpKeywordGetpgrp Expression
+
+OpKeywordGetppidExpr ::= OpKeywordGetppid
+
+OpKeywordGetpriorityExpr ::= OpKeywordGetpriority Value Value
+
+OpKeywordGetpwnamExpr ::= OpKeywordGetpwnam Expression
+
+OpKeywordGetgrnamExpr ::= OpKeywordGetgrnam Expression
+
+OpKeywordGethostbynameExpr ::= OpKeywordGethostbyname Expression
+
+OpKeywordGetnetbynameExpr ::= OpKeywordGetnetbyname Expression
+
+OpKeywordGetprotobynameExpr ::= OpKeywordGetprotobyname Expression
+
+OpKeywordGetpwuidExpr ::= OpKeywordGetpwuid Expression
+
+OpKeywordGetgrgidExpr ::= OpKeywordGetgrgid Expression
+
+OpKeywordGetservbynameExpr ::= OpKeywordGetservbyname Value Value
+
+OpKeywordGethostbyaddrExpr ::= OpKeywordGethostbyaddr Value Value
+
+OpKeywordGetnetbyaddrExpr ::= OpKeywordGetnetbyaddr Value Value
+
+OpKeywordGetprotobynumberExpr ::= OpKeywordGetprotobynumber Expression
+
+OpKeywordGetservbyportExpr ::= OpKeywordGetservbyport Value Value
+
+OpKeywordGetpwentExpr ::= OpKeywordGetpwent
+
+OpKeywordGetgrentExpr ::= OpKeywordGetgrent
+
+OpKeywordGethostentExpr ::= OpKeywordGethostent
+
+OpKeywordGetnetentExpr ::= OpKeywordGetnetent
+
+OpKeywordGetprotoentExpr ::= OpKeywordGetprotoent
+
+OpKeywordGetserventExpr ::= OpKeywordGetservent
+
+OpKeywordSetpwentExpr ::= OpKeywordSetpwent
+
+OpKeywordSetgrentExpr ::= OpKeywordSetgrent
+
+OpKeywordSethostentExpr ::= OpKeywordSethostent Expression
+
+OpKeywordSetnetentExpr ::= OpKeywordSetnetent Expression
+
+OpKeywordSetprotoentExpr ::= OpKeywordSetprotoent Expression
+
+OpKeywordSetserventExpr ::= OpKeywordSetservent Expression
+
+OpKeywordEndpwentExpr ::= OpKeywordEndpwent
+
+OpKeywordEndgrentExpr ::= OpKeywordEndgrent
+
+OpKeywordEndhostentExpr ::= OpKeywordEndhostent
+
+OpKeywordEndnetentExpr ::= OpKeywordEndnetent
+
+OpKeywordEndprotoentExpr ::= OpKeywordEndprotoent
+
+OpKeywordEndserventExpr ::= OpKeywordEndservent
+
+OpKeywordGetsocknameExpr ::= OpKeywordGetsockname Expression
+
+OpKeywordGetsockoptExpr ::= OpKeywordGetsockopt Value Value Value
 
 ###
 
@@ -124,6 +383,7 @@ PackageSep ~ '::'
 
 LitNumber ~ [0-9]+
 
+Colon     ~ ':'
 Semicolon ~ ';'
 
 SigilScalar   ~ '$'
@@ -170,89 +430,88 @@ OpNameNot ~ 'not'
 OpNameAnd ~ 'and'
 OpNameOr  ~ 'or' | 'xor'
 
-
 OpKeywordAbs              ~ 'abs'
+OpKeywordAccept           ~ 'accept'
+OpKeywordAlarm            ~ 'alarm'
+OpKeywordAtan2            ~ 'atan2'
+OpKeywordBind             ~ 'bind'
+OpKeywordBinmode          ~ 'binmode'
+OpKeywordBless            ~ 'bless'
+OpKeywordBreak            ~ 'break'
+OpKeywordCaller           ~ 'caller'
+OpKeywordChdir            ~ 'chdir'
+OpKeywordChmod            ~ 'chmod'
+OpKeywordChomp            ~ 'chomp'
+OpKeywordChop             ~ 'chop'
+OpKeywordChown            ~ 'chown'
+OpKeywordChr              ~ 'chr'
+OpKeywordChroot           ~ 'chroot'
+OpKeywordClose            ~ 'close'
+OpKeywordClosedir         ~ 'closedir'
+OpKeywordConnect          ~ 'connect'
+OpKeywordContinue         ~ 'continue'
+OpKeywordCos              ~ 'cos'
+OpKeywordCrypt            ~ 'crypt'
+OpKeywordDbmclose         ~ 'dbmclose'
+OpKeywordDbmopen          ~ 'dbmopen'
+OpKeywordDefined          ~ 'defined'
+OpKeywordDelete           ~ 'delete'
+OpKeywordDie              ~ 'die'
 OpKeywordDo               ~ 'do'
+OpKeywordDump             ~ 'dump'
+OpKeywordEach             ~ 'each'
+OpKeywordEof              ~ 'eof'
+OpKeywordEval             ~ 'eval'
+OpKeywordEvalbytes        ~ 'evalbytes'
+OpKeywordExec             ~ 'exec'
+OpKeywordExists           ~ 'exists'
+OpKeywordExit             ~ 'exit'
+OpKeywordExp              ~ 'exp'
+OpKeywordFc               ~ 'fc'
+OpKeywordFcntl            ~ 'fcntl'
+OpKeywordFileno           ~ 'fileno'
+OpKeywordFlock            ~ 'flock'
+OpKeywordFork             ~ 'fork'
+OpKeywordGetc             ~ 'getc'
+OpKeywordGetlogin         ~ 'getlogin'
+OpKeywordGetpeername      ~ 'getpeername'
+OpKeywordGetpgrp          ~ 'getpgrp'
+OpKeywordGetppid          ~ 'getppid'
+OpKeywordGetpriority      ~ 'getpriority'
+OpKeywordGetpwnam         ~ 'getpwnam'
+OpKeywordGetgrnam         ~ 'getgrnam'
+OpKeywordGethostbyname    ~ 'gethostbyname'
+OpKeywordGetnetbyname     ~ 'getnetbyname'
+OpKeywordGetprotobyname   ~ 'getprotobyname'
+OpKeywordGetpwuid         ~ 'getpwuid'
+OpKeywordGetgrgid         ~ 'getgrgid'
+OpKeywordGetservbyname    ~ 'getservbyname'
+OpKeywordGethostbyaddr    ~ 'gethostbyaddr'
+OpKeywordGetnetbyaddr     ~ 'getnetbyaddr'
+OpKeywordGetprotobynumber ~ 'getprotobynumber'
+OpKeywordGetservbyport    ~ 'getservbyport'
+OpKeywordGetpwent         ~ 'getpwent'
+OpKeywordGetgrent         ~ 'getgrent'
+OpKeywordGethostent       ~ 'gethostent'
+OpKeywordGetnetent        ~ 'getnetent'
+OpKeywordGetprotoent      ~ 'getprotoent'
+OpKeywordGetservent       ~ 'getservent'
+OpKeywordSetpwent         ~ 'setpwent'
+OpKeywordSetgrent         ~ 'setgrent'
+OpKeywordSethostent       ~ 'sethostent'
+OpKeywordSetnetent        ~ 'setnetent'
+OpKeywordSetprotoent      ~ 'setprotoent'
+OpKeywordSetservent       ~ 'setservent'
+OpKeywordEndpwent         ~ 'endpwent'
+OpKeywordEndgrent         ~ 'endgrent'
+OpKeywordEndhostent       ~ 'endhostent'
+OpKeywordEndnetent        ~ 'endnetent'
+OpKeywordEndprotoent      ~ 'endprotoent'
+OpKeywordEndservent       ~ 'endservent'
+OpKeywordGetsockname      ~ 'getsockname'
+OpKeywordGetsockopt       ~ 'getsockopt'
 
 # These cannot be used until there are expressions for them
-#OpKeywordAccept           ~ 'accept'
-#OpKeywordAlarm            ~ 'alarm'
-#OpKeywordAtan2            ~ 'atan2'
-#OpKeywordBind             ~ 'bind'
-#OpKeywordBinmode          ~ 'binmode'
-#OpKeywordBless            ~ 'bless'
-#OpKeywordBreak            ~ 'break'
-#OpKeywordCaller           ~ 'caller'
-#OpKeywordChdir            ~ 'chdir'
-#OpKeywordChmod            ~ 'chmod'
-#OpKeywordChomp            ~ 'chomp'
-#OpKeywordChop             ~ 'chop'
-#OpKeywordChown            ~ 'chown'
-#OpKeywordChr              ~ 'chr'
-#OpKeywordChroot           ~ 'chroot'
-#OpKeywordClose            ~ 'close'
-#OpKeywordClosedir         ~ 'closedir'
-#OpKeywordConnect          ~ 'connect'
-#OpKeywordContinue         ~ 'continue'
-#OpKeywordCos              ~ 'cos'
-#OpKeywordCrypt            ~ 'crypt'
-#OpKeywordDbmclose         ~ 'dbmclose'
-#OpKeywordDbmopen          ~ 'dbmopen'
-#OpKeywordDefined          ~ 'defined'
-#OpKeywordDelete           ~ 'delete'
-#OpKeywordDie              ~ 'die'
-#OpKeywordDump             ~ 'dump'
-#OpKeywordEach             ~ 'each'
-#OpKeywordEof              ~ 'eof'
-#OpKeywordEval             ~ 'eval'
-#OpKeywordEvalbytes        ~ 'evalbytes'
-#OpKeywordExec             ~ 'exec'
-#OpKeywordExists           ~ 'exists'
-#OpKeywordExit             ~ 'exit'
-#OpKeywordExp              ~ 'exp'
-#OpKeywordFc               ~ 'fc'
-#OpKeywordFcntl            ~ 'fcntl'
-#OpKeywordFileno           ~ 'fileno'
-#OpKeywordFlock            ~ 'flock'
-#OpKeywordFork             ~ 'fork'
-#OpKeywordGetc             ~ 'getc'
-#OpKeywordGetlogin         ~ 'getlogin'
-#OpKeywordGetpeername      ~ 'getpeername'
-#OpKeywordGetpgrp          ~ 'getpgrp'
-#OpKeywordGetppid          ~ 'getppid'
-#OpKeywordGetpriority      ~ 'getpriority'
-#OpKeywordGetpwnam         ~ 'getpwnam'
-#OpKeywordGetgrnam         ~ 'getgrnam'
-#OpKeywordGethostbyname    ~ 'gethostbyname'
-#OpKeywordGetnetbyname     ~ 'getnetbyname'
-#OpKeywordGetprotobyname   ~ 'getprotobyname'
-#OpKeywordGetpwuid         ~ 'getpwuid'
-#OpKeywordGetgrgid         ~ 'getgrgid'
-#OpKeywordGetservbyname    ~ 'getservbyname'
-#OpKeywordGethostbyaddr    ~ 'gethostbyaddr'
-#OpKeywordGetnetbyaddr     ~ 'getnetbyaddr'
-#OpKeywordGetprotobynumber ~ 'getprotobynumber'
-#OpKeywordGetservbyport    ~ 'getservbyport'
-#OpKeywordGetpwent         ~ 'getpwent'
-#OpKeywordGetgrent         ~ 'getgrent'
-#OpKeywordGethostent       ~ 'gethostent'
-#OpKeywordGetnetent        ~ 'getnetent'
-#OpKeywordGetprotoent      ~ 'getprotoent'
-#OpKeywordGetservent       ~ 'getservent'
-#OpKeywordSetpwent         ~ 'setpwent'
-#OpKeywordSetgrent         ~ 'setgrent'
-#OpKeywordSethostent       ~ 'sethostent'
-#OpKeywordSetnetent        ~ 'setnetent'
-#OpKeywordSetprotoent      ~ 'setprotoent'
-#OpKeywordSetservent       ~ 'setservent'
-#OpKeywordEndpwent         ~ 'endpwent'
-#OpKeywordEndgrent         ~ 'endgrent'
-#OpKeywordEndhostent       ~ 'endhostent'
-#OpKeywordEndnetent        ~ 'endnetent'
-#OpKeywordEndprotoent      ~ 'endprotoent'
-#OpKeywordEndservent       ~ 'endservent'
-#OpKeywordGetsockname      ~ 'getsockname'
-#OpKeywordGetsockopt       ~ 'getsockopt'
 #OpKeywordGlob             ~ 'glob'
 #OpKeywordGmtime           ~ 'gmtime'
 #OpKeywordGoto             ~ 'goto'
