@@ -111,7 +111,7 @@ ArrowIndirectCall ::= SigilScalar Ident CallArgs
 
 OpKeyword ::= OpKeywordAbsExpr
 
-OpKeywordAbsExpr ::= OpKeywordAbs Value
+OpKeywordAbsExpr ::= OpKeywordAbs Expression
                    | OpKeywordAbs
 
 OpKeywordDoExpr ::= OpKeywordDo Block
