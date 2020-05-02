@@ -190,7 +190,7 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordEndprotoentExpr
             | OpKeywordEndserventExpr
             | OpKeywordGetsocknameExpr
-            | OpKeywordGGlobExpr
+            | OpKeywordGlobExpr
             | OpKeywordGmtimeExpr
             | OpKeywordGotoExpr
             | OpKeywordHex
@@ -590,7 +590,7 @@ OpKeywordOctExpr ::= OpKeywordOct Expression
 
 # TODO: OpKeywordOpenExpr ::= OpKeywordOpen
 
-OpKeywordOpendirExpr ::= OpKeywordOpenDir Value Value
+OpKeywordOpendirExpr ::= OpKeywordOpendir Value Value
 
 OpKeywordOrdExpr ::= OpKeywordOrd Expression
                    | OpKeywordOrd
@@ -685,7 +685,7 @@ OpKeywordSetpgrpExpr ::= OpKeywordSetpgrp Value Value
 
 OpKeywordSetpriorityExpr ::= OpKeywordSetpriority Value Value Value
 
-OpKeywordSetsocketoptExpr ::= OpKeywordSetsocketopt Value Value Value Value
+OpKeywordSetsockoptExpr ::= OpKeywordSetsockopt Value Value Value Value
 
 OpKeywordShiftExpr ::= OpKeywordShift Expression
                      | OpKeywordShift
