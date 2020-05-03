@@ -96,10 +96,13 @@ Ident ::= IdentComp
 Literal ::= LitNumber
           | LitArray
           | LitHash
+          | LitString
+          | InterpolString
 
-LitArray ::= LBracket Expression RBracket
-
-LitHash ::= LBrace Expression RBrace
+LitArray       ::= LBracket Expression RBracket
+LitHash        ::= LBrace Expression RBrace
+LitString      ::= SingleQuote NonSingleQuote SingleQuote
+InterpolString ::= DoubleQuote NonDoubleQuote DoubleQuote
 
 ArrowRHS ::= ArrowDerefCall
            | ArrowMethodCall
@@ -813,7 +816,11 @@ OpKeywordWriteExpr            ::= OpKeywordWrite Expression
 IdentComp  ~ [a-zA-Z_]+
 PackageSep ~ '::'
 
-LitNumber ~ [0-9]+
+LitNumber      ~ [0-9]+
+SingleQuote    ~ [']
+DoubleQuote    ~ ["]
+NonDoubleQuote ~ [^"]+
+NonSingleQuote ~ [^']+
 
 Colon     ~ ':'
 Semicolon ~ ';'
