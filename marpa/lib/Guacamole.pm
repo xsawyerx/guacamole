@@ -90,7 +90,7 @@ ArrayElem ::= LBracket Expression RBracket
 
 HashElem ::= LBrace Expression RBrace
 
-Ident ::= IdentComp 
+Ident ::= IdentComp
         | IdentComp PackageSep Ident
         | Ident PackageSep
 
@@ -1609,10 +1609,10 @@ our $grammar = Marpa::R2::Scanless::G->new({ source => \$grammar_source });
 
 sub parse {
     my ($class, $text) = @_;
-    
+
     my $rec = Marpa::R2::Scanless::R->new({ grammar => $grammar });
 
-    my @values; 
+    my @values;
 
     $rec->read(\$text);
     while (my $value = $rec->value()) {
