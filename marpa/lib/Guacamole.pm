@@ -325,19 +325,19 @@ OpKeyword ::= OpKeywordAbsExpr
 OpKeywordAbsExpr ::= OpKeywordAbs Expression
                    | OpKeywordAbs
 
-OpKeywordAcceptExpr ::= OpKeywordAccept Value Value
+OpKeywordAcceptExpr ::= OpKeywordAccept Expression OpComma Expression
 
 OpKeywordAlarmExpr ::= OpKeywordAlarm Expression
                      | OpKeywordAlarm
 
-OpKeywordAtan2Expr ::= OpKeywordAtan2 Value Value
+OpKeywordAtan2Expr ::= OpKeywordAtan2 Expression OpComma Expression
 
-OpKeywordBindExpr ::= OpKeywordBind Value Value
+OpKeywordBindExpr ::= OpKeywordBind Expression OpComma Expression
 
-OpKeywordBinmodeExpr ::= OpKeywordBinmode Value Value
+OpKeywordBinmodeExpr ::= OpKeywordBinmode Expression OpComma Expression
                        | OpKeywordBinmode Expression
 
-OpKeywordBlessExpr ::= OpKeywordBless Value Value
+OpKeywordBlessExpr ::= OpKeywordBless Expression OpComma Expression
                      | OpKeywordBless Expression
 
 OpKeywordBreakExpr ::= OpKeywordBreak
@@ -348,7 +348,7 @@ OpKeywordCallerExpr ::= OpKeywordCaller Expression
 OpKeywordChdirExpr ::= OpKeywordChdir Expression
                      | OpKeywordChdir
 
-OpKeywordChmodExpr ::= OpKeywordChmod Value Expression
+OpKeywordChmodExpr ::= OpKeywordChmod Expression OpComma Expression
 
 OpKeywordChompExpr ::= OpKeywordChomp Expression
                      | OpKeywordChomp
@@ -356,7 +356,7 @@ OpKeywordChompExpr ::= OpKeywordChomp Expression
 OpKeywordChopExpr ::= OpKeywordChop Expression
                     | OpKeywordChop
 
-OpKeywordChownExpr ::= OpKeywordChown Value Value Expression
+OpKeywordChownExpr ::= OpKeywordChown Expression OpComma Expression OpComma Expression
 
 OpKeywordChrExpr ::= OpKeywordChr Expression
                    | OpKeywordChr
@@ -369,18 +369,18 @@ OpKeywordCloseExpr ::= OpKeywordClose Expression
 
 OpKeywordClosedirExpr ::= OpKeywordClosedir Expression
 
-OpKeywordConnectExpr ::= OpKeywordConnect Value Value
+OpKeywordConnectExpr ::= OpKeywordConnect Expression OpComma Expression
 
 OpKeywordContinueExpr ::= OpKeywordContinue Block
                         | OpKeywordContinue
 
 OpKeywordCosExpr ::= OpKeywordCos Expression
 
-OpKeywordCryptExpr ::= OpKeywordCrypt Value Value
+OpKeywordCryptExpr ::= OpKeywordCrypt Expression OpComma Expression
 
 OpKeywordDbmcloseExpr ::= OpKeywordDbmclose VarHash
 
-OpKeywordDbmopenExpr ::= OpKeywordDbmopen VarHash Value Value
+OpKeywordDbmopenExpr ::= OpKeywordDbmopen VarHash OpComma Expression OpComma Expression
 
 OpKeywordDefinedExpr ::= OpKeywordDefined Expression
                        | OpKeywordDefined
@@ -419,12 +419,12 @@ OpKeywordExpExpr ::= OpKeywordExp Expression
 OpKeywordFcExpr ::= OpKeywordFc Expression
                   | OpKeywordFc
 
-OpKeywordFcntlExpr ::= OpKeywordFcntl Value Value Value
+OpKeywordFcntlExpr ::= OpKeywordFcntl Expression OpComma Expression OpComma Expression
                      | OpKeywordFcntl Expression
 
 OpKeywordFilenoExpr ::= OpKeywordFileno Expression
 
-OpKeywordFlockExpr ::= OpKeywordFlock Value Value
+OpKeywordFlockExpr ::= OpKeywordFlock Expression OpComma Expression
 
 OpKeywordForkExpr ::= OpKeywordFork
 
@@ -439,7 +439,7 @@ OpKeywordGetpgrpExpr ::= OpKeywordGetpgrp Expression
 
 OpKeywordGetppidExpr ::= OpKeywordGetppid
 
-OpKeywordGetpriorityExpr ::= OpKeywordGetpriority Value Value
+OpKeywordGetpriorityExpr ::= OpKeywordGetpriority Expression OpComma Expression
 
 OpKeywordGetpwnamExpr ::= OpKeywordGetpwnam Expression
 
@@ -455,15 +455,15 @@ OpKeywordGetpwuidExpr ::= OpKeywordGetpwuid Expression
 
 OpKeywordGetgrgidExpr ::= OpKeywordGetgrgid Expression
 
-OpKeywordGetservbynameExpr ::= OpKeywordGetservbyname Value Value
+OpKeywordGetservbynameExpr ::= OpKeywordGetservbyname Expression OpComma Expression
 
-OpKeywordGethostbyaddrExpr ::= OpKeywordGethostbyaddr Value Value
+OpKeywordGethostbyaddrExpr ::= OpKeywordGethostbyaddr Expression OpComma Expression
 
-OpKeywordGetnetbyaddrExpr ::= OpKeywordGetnetbyaddr Value Value
+OpKeywordGetnetbyaddrExpr ::= OpKeywordGetnetbyaddr Expression OpComma Expression
 
 OpKeywordGetprotobynumberExpr ::= OpKeywordGetprotobynumber Expression
 
-OpKeywordGetservbyportExpr ::= OpKeywordGetservbyport Value Value
+OpKeywordGetservbyportExpr ::= OpKeywordGetservbyport Expression OpComma Expression
 
 OpKeywordGetpwentExpr ::= OpKeywordGetpwent
 
@@ -503,7 +503,7 @@ OpKeywordEndserventExpr ::= OpKeywordEndservent
 
 OpKeywordGetsocknameExpr ::= OpKeywordGetsockname Expression
 
-OpKeywordGetsockoptExpr ::= OpKeywordGetsockopt Value Value Value
+OpKeywordGetsockoptExpr ::= OpKeywordGetsockopt Expression OpComma Expression OpComma Expression
 
 OpKeywordGlobExpr ::= OpKeywordGlob Expression
                     | OpKeywordGlob
@@ -518,13 +518,13 @@ OpKeywordGotoExpr ::= OpKeywordGoto Label
 OpKeywordHexExpr ::= OpKeywordHex Expression
                    | OpKeywordHex
 
-OpKeywordIndexExpr ::= OpKeywordIndex Value Value Value
-                     | OpKeywordIndex Value Value
+OpKeywordIndexExpr ::= OpKeywordIndex Expression OpComma Expression OpComma Expression
+                     | OpKeywordIndex Expression OpComma Expression
 
 OpKeywordIntExpr ::= OpKeywordInt Expression
                    | OpKeywordInt
 
-OpKeywordIoctlExpr ::= OpKeywordIoctl Value Value Value
+OpKeywordIoctlExpr ::= OpKeywordIoctl Expression OpComma Expression OpComma Expression
 
 #TODO: OpKeywordJoinExpr ::=
 
@@ -532,7 +532,7 @@ OpKeywordKeysExpr ::= OpKeywordKeys VarHash
                     | OpKeywordKeys VarArray
                     | OpKeywordKeys Expression
 
-OpKeywordKillExpr ::= OpKeywordKill Value Expression
+OpKeywordKillExpr ::= OpKeywordKill Expression OpComma Expression
                     | OpKeywordKill Expression
 
 OpKeywordLastExpr ::= OpKeywordLast Label
@@ -548,9 +548,9 @@ OpKeywordLcfirstExpr ::= OpKeywordLcfirst Expression
 OpKeywordLengthExpr ::= OpKeywordLength Expression
                       | OpKeywordLength
 
-OpKeywordLinkExpr ::= OpKeywordLink Value Value
+OpKeywordLinkExpr ::= OpKeywordLink Expression OpComma Expression
 
-OpKeywordListenExpr ::= OpKeywordListen Value Value
+OpKeywordListenExpr ::= OpKeywordListen Expression OpComma Expression
 
 OpKeywordLocalExpr ::= OpKeywordLocal Expression
 
@@ -567,17 +567,17 @@ OpKeywordLstatExpr ::= OpKeywordLstat Expression
 
 #TODO: OpKeywordMapExpr ::= OpKeywordMap Expression
 
-OpKeywordMkdirExpr ::= OpKeywordMkdir Value Value
+OpKeywordMkdirExpr ::= OpKeywordMkdir Expression OpComma Expression
                      | OpKeywordMkdir Expression
                      | OpKeywordMkdir
 
-OpKeywordMsgctlExpr ::= OpKeywordMsgctl Value Value Value
+OpKeywordMsgctlExpr ::= OpKeywordMsgctl Expression OpComma Expression OpComma Expression
 
-OpKeywordMsggetExpr ::= OpKeywordMsgget Value Value
+OpKeywordMsggetExpr ::= OpKeywordMsgget Expression OpComma Expression
 
-OpKeywordMsgrcvExpr ::= OpKeywordMsgrcv Value Value Value Value Value
+OpKeywordMsgrcvExpr ::= OpKeywordMsgrcv Expression OpComma Expression OpComma Expression OpComma Expression OpComma Expression
 
-OpKeywordMsgsndExpr ::= OpKeywordMsgsnd Value Value Value
+OpKeywordMsgsndExpr ::= OpKeywordMsgsnd Expression OpComma Expression OpComma Expression
 
 # TODO: OpKeywordMyExpr ::= OpKeywordMy Expression
 
@@ -592,18 +592,18 @@ OpKeywordOctExpr ::= OpKeywordOct Expression
 
 # TODO: OpKeywordOpenExpr ::= OpKeywordOpen
 
-OpKeywordOpendirExpr ::= OpKeywordOpendir Value Value
+OpKeywordOpendirExpr ::= OpKeywordOpendir Expression OpComma Expression
 
 OpKeywordOrdExpr ::= OpKeywordOrd Expression
                    | OpKeywordOrd
 
 # TODO: OpKeywordOurExpr ::= OpKeywordOur Expression
 
-OpKeywordPackExpr ::= OpKeywordPack Value Value
+OpKeywordPackExpr ::= OpKeywordPack Expression OpComma Expression
 
 # TODO: OpKeywordPackageExpr ::= OpKeywordPackage
 
-OpKeywordPipeExpr ::= OpKeywordPipe Value Value
+OpKeywordPipeExpr ::= OpKeywordPipe Expression OpComma Expression
 
 OpKeywordPopExpr ::= OpKeywordPop Expression
                    | OpKeywordPop
@@ -615,7 +615,7 @@ OpKeywordPosExpr ::= OpKeywordPos Expression
 # TODO: OpKeywordPrintfExpr ::= OpKeywordPrintf Expression
 # TODO: OpKeywordPrototypeExpr ::= OpKeywordPrototype Expression
 
-OpKeywordPushExpr ::= OpKeywordPush Value Expression
+OpKeywordPushExpr ::= OpKeywordPush Expression OpComma Expression
 
 OpKeywordQuotemetaExpr ::= OpKeywordQuotemeta Expression
                          | OpKeywordQuotemeta
@@ -623,8 +623,8 @@ OpKeywordQuotemetaExpr ::= OpKeywordQuotemeta Expression
 OpKeywordRandExpr ::= OpKeywordRand Expression
                     | OpKeywordRand
 
-OpKeywordReadExpr ::= OpKeywordRead Value Value Value Expression
-                    | OpKeywordRead Value Value Expression
+OpKeywordReadExpr ::= OpKeywordRead Expression OpComma Expression OpComma Expression OpComma Expression
+                    | OpKeywordRead Expression OpComma Expression OpComma Expression
 
 OpKeywordReaddirExpr ::= OpKeywordReaddir Expression
 
@@ -637,7 +637,7 @@ OpKeywordReadlinkExpr ::= OpKeywordReadlink Expression
 OpKeywordReadpipeExpr ::= OpKeywordReadpipe Expression
                         | OpKeywordReadpipe
 
-OpKeywordRecvExpr ::= OpKeywordRecv Value Value Value Value
+OpKeywordRecvExpr ::= OpKeywordRecv Expression OpComma Expression OpComma Expression OpComma Expression
 
 OpKeywordRedoExpr ::= OpKeywordRedo Label
                     | OpKeywordRedo Expression
@@ -646,7 +646,7 @@ OpKeywordRedoExpr ::= OpKeywordRedo Label
 OpKeywordRefExpr ::= OpKeywordRef Expression
                    | OpKeywordRef
 
-OpKeywordRenameExpr ::= OpKeywordRename Value Value
+OpKeywordRenameExpr ::= OpKeywordRename Expression OpComma Expression
 
 OpKeywordResetExpr ::= OpKeywordReset Expression
                      | OpKeywordReset
@@ -659,48 +659,48 @@ OpKeywordReverseExpr ::= OpKeywordReverse Expression
 OpKeywordRewinddirExpr ::= OpKeywordRewinddir Expression
                          | OpKeywordRewinddir
 
-OpKeywordRindexExpr ::= OpKeywordRindex Value Value Value
-                      | OpKeywordRindex Value Value
+OpKeywordRindexExpr ::= OpKeywordRindex Expression OpComma Expression OpComma Expression
+                      | OpKeywordRindex Expression OpComma Expression
 
 OpKeywordRmdirExpr ::= OpKeywordRmdir Expression
                      | OpKeywordRmdir
 
 OpKeywordScalarExpr ::= OpKeywordScalar Expression
 
-OpKeywordSeekExpr ::= OpKeywordSeek Value Value Value
+OpKeywordSeekExpr ::= OpKeywordSeek Expression OpComma Expression OpComma Expression
 
-OpKeywordSeekdirExpr ::= OpKeywordSeekdir Value Value
+OpKeywordSeekdirExpr ::= OpKeywordSeekdir Expression OpComma Expression
 
-OpKeywordSelectExpr ::= OpKeywordSelect Value Value Value Value
+OpKeywordSelectExpr ::= OpKeywordSelect Expression OpComma Expression OpComma Expression OpComma Expression
                       | OpKeywordSelect Expression
 
-OpKeywordSemctlExpr ::= OpKeywordSemctl Value Value Value Value
+OpKeywordSemctlExpr ::= OpKeywordSemctl Expression OpComma Expression OpComma Expression OpComma Expression
 
-OpKeywordSemgetExpr ::= OpKeywordSemget Value Value Value
+OpKeywordSemgetExpr ::= OpKeywordSemget Expression OpComma Expression OpComma Expression
 
-OpKeywordSemopExpr ::= OpKeywordSemop Value Value
+OpKeywordSemopExpr ::= OpKeywordSemop Expression OpComma Expression
 
-OpKeywordSendExpr ::= OpKeywordSend Value Value Value Value
-                    | OpKeywordSend Value Value Value
+OpKeywordSendExpr ::= OpKeywordSend Expression OpComma Expression OpComma Expression OpComma Expression
+                    | OpKeywordSend Expression OpComma Expression OpComma Expression
 
-OpKeywordSetpgrpExpr ::= OpKeywordSetpgrp Value Value
+OpKeywordSetpgrpExpr ::= OpKeywordSetpgrp Expression OpComma Expression
 
-OpKeywordSetpriorityExpr ::= OpKeywordSetpriority Value Value Value
+OpKeywordSetpriorityExpr ::= OpKeywordSetpriority Expression OpComma Expression OpComma Expression
 
-OpKeywordSetsockoptExpr ::= OpKeywordSetsockopt Value Value Value Value
+OpKeywordSetsockoptExpr ::= OpKeywordSetsockopt Expression OpComma Expression OpComma Expression OpComma Expression
 
 OpKeywordShiftExpr ::= OpKeywordShift Expression
                      | OpKeywordShift
 
-OpKeywordShmctlExpr ::= OpKeywordShmctl Value Value Value
+OpKeywordShmctlExpr ::= OpKeywordShmctl Expression OpComma Expression OpComma Expression
 
-OpKeywordShmgetExpr ::= OpKeywordShmget Value Value Value
+OpKeywordShmgetExpr ::= OpKeywordShmget Expression OpComma Expression OpComma Expression
 
-OpKeywordShmreadExpr ::= OpKeywordShmread Value Value Value Value
+OpKeywordShmreadExpr ::= OpKeywordShmread Expression OpComma Expression OpComma Expression OpComma Expression
 
-OpKeywordShmwriteExpr ::= OpKeywordShmwrite Value Value Value Value
+OpKeywordShmwriteExpr ::= OpKeywordShmwrite Expression OpComma Expression OpComma Expression OpComma Expression
 
-OpKeywordShutdownExpr ::= OpKeywordShutdown Value Value
+OpKeywordShutdownExpr ::= OpKeywordShutdown Expression OpComma Expression
 
 OpKeywordSinExpr ::= OpKeywordSin Expression
                    | OpKeywordSin
@@ -708,13 +708,13 @@ OpKeywordSinExpr ::= OpKeywordSin Expression
 OpKeywordSleepExpr ::= OpKeywordSleep Expression
                      | OpKeywordSleep
 
-OpKeywordSocketExpr ::= OpKeywordSocket Value Value Value Value
+OpKeywordSocketExpr ::= OpKeywordSocket Expression OpComma Expression OpComma Expression OpComma Expression
 
-OpKeywordSocketpairExpr ::= OpKeywordSocketpair Value Value Value Value Value
+OpKeywordSocketpairExpr ::= OpKeywordSocketpair Expression OpComma Expression OpComma Expression OpComma Expression OpComma Expression
 
-OpKeywordSpliceExpr ::= OpKeywordSplice Value Value Value Value
-                      | OpKeywordSplice Value Value Value
-                      | OpKeywordSplice Value Value
+OpKeywordSpliceExpr ::= OpKeywordSplice Expression OpComma Expression OpComma Expression OpComma Expression
+                      | OpKeywordSplice Expression OpComma Expression OpComma Expression
+                      | OpKeywordSplice Expression OpComma Expression
                       | OpKeywordSplice Expression
 
 # TODO: OpKeywordSplitExpr ::= OpKeywordSplit
@@ -737,25 +737,25 @@ OpKeywordStudyExpr ::= OpKeywordStudy Expression
 
 # TODO: OpKeywordSubExpr ::= OpKeywordSub
 
-OpKeywordSubstrExpr ::= OpKeywordSubstr Value Value Value Value
-                      | OpKeywordSubstr Value Value Value
-                      | OpKeywordSubstr Value Value
+OpKeywordSubstrExpr ::= OpKeywordSubstr Expression OpComma Expression OpComma Expression OpComma Expression
+                      | OpKeywordSubstr Expression OpComma Expression OpComma Expression
+                      | OpKeywordSubstr Expression OpComma Expression
 
-OpKeywordSymlinkExpr ::= OpKeywordSymlink Value Value
+OpKeywordSymlinkExpr ::= OpKeywordSymlink Expression OpComma Expression
 
-OpKeywordSyscallExpr ::= OpKeywordSyscall Value Value
+OpKeywordSyscallExpr ::= OpKeywordSyscall Expression OpComma Expression
 
-OpKeywordSysopenExpr ::= OpKeywordSysopen Value Value Value Value
-                       | OpKeywordSysopen Value Value Value
+OpKeywordSysopenExpr ::= OpKeywordSysopen Expression OpComma Expression OpComma Expression OpComma Expression
+                       | OpKeywordSysopen Expression OpComma Expression OpComma Expression
 
-OpKeywordSysreadExpr ::= OpKeywordSysread Value Value Value Value
-                       | OpKeywordSysread Value Value Value
+OpKeywordSysreadExpr ::= OpKeywordSysread Expression OpComma Expression OpComma Expression OpComma Expression
+                       | OpKeywordSysread Expression OpComma Expression OpComma Expression
 
-OpKeywordSysseekExpr ::= OpKeywordSysseek Value Value Value
+OpKeywordSysseekExpr ::= OpKeywordSysseek Expression OpComma Expression OpComma Expression
 
-OpKeywordSyswriteExpr ::= OpKeywordSyswrite Value Value Value Value
-                        | OpKeywordSyswrite Value Value Value
-                        | OpKeywordSyswrite Value Value
+OpKeywordSyswriteExpr ::= OpKeywordSyswrite Expression OpComma Expression OpComma Expression OpComma Expression
+                        | OpKeywordSyswrite Expression OpComma Expression OpComma Expression
+                        | OpKeywordSyswrite Expression OpComma Expression
 
 # TODO: OpKeywordsystemExpr ::= OpKeywordsystem Expression
 
@@ -772,7 +772,7 @@ OpKeywordTimeExpr ::= OpKeywordTime
 
 OpKeywordTimesExpr ::= OpKeywordTimes
 
-OpKeywordTruncateExpr ::= OpKeywordTruncate Value Value
+OpKeywordTruncateExpr ::= OpKeywordTruncate Expression OpComma Expression
 
 OpKeywordUcExpr ::= OpKeywordUc Expression
                   | OpKeywordUc
@@ -789,8 +789,8 @@ OpKeywordUndefExpr ::= OpKeywordUndef Expression
 OpKeywordUnlinkExpr ::= OpKeywordUnlink Expression
                       | OpKeywordUnlink
 
-OpKeywordUnpackExpr ::= OpKeywordUnpack Value Value
-                     | OpKeywordUnpack Expression
+OpKeywordUnpackExpr ::= OpKeywordUnpack Expression OpComma Expression
+                      | OpKeywordUnpack Expression
 
 OpKeywordUnshiftExpr ::= OpKeywordUnshift Value Expression
 
@@ -802,11 +802,11 @@ OpKeywordUtimeExpr ::= OpKeywordUtime Expression
 
 OpKeywordValuesExpr ::= OpKeywordValues Expression
 
-OpKeywordVecExpr ::= OpKeywordVec Value Value Value
+OpKeywordVecExpr ::= OpKeywordVec Expression OpComma Expression OpComma Expression
 
 OpKeywordWaitExpr ::= OpKeywordWait
 
-OpKeywordWaitpidExpr ::= OpKeywordWaitpid Value Value
+OpKeywordWaitpidExpr ::= OpKeywordWaitpid Expression OpComma Expression
 
 OpKeywordWantarrayExpr ::= OpKeywordWantarray
 
