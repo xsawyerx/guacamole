@@ -646,7 +646,7 @@ OpKeywordRedoExpr ::= OpKeywordRedo Label
 OpKeywordRefExpr ::= OpKeywordRef Expression
                    | OpKeywordRef
 
-OpKeywordRenameExpr ::= OpKeywordRef Value Value
+OpKeywordRenameExpr ::= OpKeywordRename Value Value
 
 OpKeywordResetExpr ::= OpKeywordReset Expression
                      | OpKeywordReset
