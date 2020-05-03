@@ -262,46 +262,40 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordSleep
             | OpKeywordSocket
             | OpKeywordSocketpair
-            #| OpKeywordSplice
-            #| OpKeywordSplit
-            #| OpKeywordSprintf
-            #| OpKeywordSrand
-            #| OpKeywordStat
-            #| OpKeywordState
-            #| OpKeywordStudy
-            #| OpKeywordSub
-            #| OpKeywordSubstr
-            #| OpKeywordSymlink
-            #| OpKeywordSyscall
-            #| OpKeywordSysopen
-            #| OpKeywordSysread
-            #| OpKeywordSysseek
-            #| OpKeywordSystem
-            #| OpKeywordSyswrite
-            #| OpKeywordTell
-            #| OpKeywordTelldir
-            #| OpKeywordTie
-            #| OpKeywordTied
-            #| OpKeywordTime
-            #| OpKeywordTimes
-            #| OpKeywordTruncate
-            #| OpKeywordUc
-            #| OpKeywordUcfirst
-            #| OpKeywordUmask
-            #| OpKeywordUndef
-            #| OpKeywordUnlink
-            #| OpKeywordUnpack
-            #| OpKeywordUnshift
-            #| OpKeywordUntie
-            #| OpKeywordUse
-            #| OpKeywordUtime
-            #| OpKeywordValues
-            #| OpKeywordVec
-            #| OpKeywordWait
-            #| OpKeywordWaitpid
-            #| OpKeywordWantarray
-            #| OpKeywordWarn
-            #| OpKeywordWrite
+            | OpKeywordSplice
+            | OpKeywordSqrt
+            | OpKeywordSrand
+            | OpKeywordStat
+            | OpKeywordStudy
+            | OpKeywordSubstr
+            | OpKeywordSymlink
+            | OpKeywordSyscall
+            | OpKeywordSysopen
+            | OpKeywordSysread
+            | OpKeywordSysseek
+            | OpKeywordSyswrite
+            | OpKeywordTell
+            | OpKeywordTelldir
+            | OpKeywordTied
+            | OpKeywordTime
+            | OpKeywordTimes
+            | OpKeywordTruncate
+            | OpKeywordUc
+            | OpKeywordUcfirst
+            | OpKeywordUmask
+            | OpKeywordUndef
+            | OpKeywordUnlink
+            | OpKeywordUnpack
+            | OpKeywordUnshift
+            | OpKeywordUntie
+            | OpKeywordUtime
+            | OpKeywordValues
+            | OpKeywordVec
+            | OpKeywordWait
+            | OpKeywordWaitpid
+            | OpKeywordWantarray
+            | OpKeywordWarn
+            | OpKeywordWrite
 
 # TODO: (Add the following above)
 #| OpKeywordGrepExpr
@@ -318,6 +312,13 @@ OpKeyword ::= OpKeywordAbsExpr
 #| OpKeywordRequire
 #| OpKeywordSay
 #| OpKeywordSort
+#| OpKeywordSplit
+#| OpKeywordSprintf
+#| OpKeywordState
+#| OpKeywordSub
+#| OpKeywordSystem
+#| OpKeywordTie
+#| OpKeywordUse
 
 # Grammar for keywords
 OpKeywordAbsExpr ::= OpKeywordAbs Expression
@@ -710,6 +711,109 @@ OpKeywordSocketExpr ::= OpKeywordSocket Value Value Value Value
 
 OpKeywordSocketpairExpr ::= OpKeywordSocketpair Value Value Value Value Value
 
+OpKeywordSpliceExpr ::= OpKeywordSplice Value Value Value Value
+                      | OpKeywordSplice Value Value Value
+                      | OpKeywordSplice Value Value
+                      | OpKeywordSplice Expression
+
+# TODO: OpKeywordSplitExpr ::= OpKeywordSplit
+
+# TODO: OpKeywordSprintfExpr ::= OpKeywordSprintf
+
+OpKeywordSqrtExpr ::= OpKeywordSqrt Expression
+                    | OpKeywordSqrt
+
+OpKeywordSrandExpr ::= OpKeywordSrand Expression
+                     | OpKeywordSrand
+
+OpKeywordStatExpr ::= OpKeywordStat Expression
+                    | OpKeywordStat
+
+# TODO: OpKeywordStateExpr ::= OpKeywordState
+
+OpKeywordStudyExpr ::= OpKeywordStudy Expression
+                     | OpKeywordStudy
+
+# TODO: OpKeywordSubExpr ::= OpKeywordSub
+
+OpKeywordSubstrExpr ::= OpKeywordSubstr Value Value Value Value
+                      | OpKeywordSubstr Value Value Value
+                      | OpKeywordSubstr Value Value
+
+OpKeywordSymlinkExpr ::= OpKeywordSymlink Value Value
+
+OpKeywordSyscallExpr ::= OpKeywordSyscall Value Value
+
+OpKeywordSysopenExpr ::= OpKeywordSysopen Value Value Value Value
+                       | OpKeywordSysopen Value Value Value
+
+OpKeywordSysreadExpr ::= OpKeywordSysread Value Value Value Value
+                       | OpKeywordSysread Value Value Value
+
+OpKeywordSysseekExpr ::= OpKeywordSysseek Value Value Value
+
+OpKeywordSyswriteExpr ::= OpKeywordSyswrite Value Value Value Value
+                        | OpKeywordSyswrite Value Value Value
+                        | OpKeywordSyswrite Value Value
+
+# TODO: OpKeywordsystemExpr ::= OpKeywordsystem Expression
+
+OpKeywordTellExpr ::= OpKeywordTell Expression
+                    | OpKeywordTell
+
+OpKeywordTelldirExpr ::= OpKeywordTelldir Expression
+
+# TODO: OpKeywordTieExpr ::= OpKeywordTie Expression
+
+OpKeywordTiedExpr ::= OpKeywordTied Expression
+
+OpKeywordTimeExpr ::= OpKeywordTime
+
+OpKeywordTimesExpr ::= OpKeywordTimes
+
+OpKeywordTruncateExpr ::= OpKeywordTruncate Value Value
+
+OpKeywordUcExpr ::= OpKeywordUc Expression
+                  | OpKeywordUc
+
+OpKeywordUcfirstExpr ::= OpKeywordUcfirst Expression
+                       | OpKeywordUcfirst
+
+OpKeywordUmaskExpr ::= OpKeywordUmask Expression
+                     | OpKeywordUmask
+
+OpKeywordUndefExpr ::= OpKeywordUndef Expression
+                     | OpKeywordUndef
+
+OpKeywordUnlinkExpr ::= OpKeywordUnlink Expression
+                      | OpKeywordUnlink
+
+OpKeywordUnpackExpr ::= OpKeywordUnpack Value Value
+                     | OpKeywordUnpack Expression
+
+OpKeywordUnshiftExpr ::= OpKeywordUnshift Value Expression
+
+OpKeywordUntieExpr ::= OpKeywordUntie Expression
+
+# TODO: OpKeywordUseExpr ::= OpKeywordUse
+
+OpKeywordUtimeExpr ::= OpKeywordUtime Expression
+
+OpKeywordValuesExpr ::= OpKeywordValues Expression
+
+OpKeywordVecExpr ::= OpKeywordVec Value Value Value
+
+OpKeywordWaitExpr ::= OpKeywordWait
+
+OpKeywordWaitpidExpr ::= OpKeywordWaitpid Value Value
+
+OpKeywordWantarrayExpr ::= OpKeywordWantarray
+
+OpKeywordWarnExpr ::= OpKeywordWarn Expression
+
+OpKeywordWriteExpr ::= OpKeywordWrite Expression
+                     | OpKeywordWrite
+
 ###
 
 IdentComp  ~ [a-zA-Z_]+
@@ -930,46 +1034,47 @@ OpKeywordSleep            ~ 'sleep'
 OpKeywordSocket           ~ 'socket'
 OpKeywordSocketpair       ~ 'socketpair'
 # TODO: OpKeywordSort             ~ 'sort'
-#OpKeywordSplice           ~ 'splice'
-#OpKeywordSplit            ~ 'split'
-#OpKeywordSprintf          ~ 'sprintf'
-#OpKeywordSrand            ~ 'srand'
-#OpKeywordStat             ~ 'stat'
-#OpKeywordState            ~ 'state'
-#OpKeywordStudy            ~ 'study'
-#OpKeywordSub              ~ 'sub'
-#OpKeywordSubstr           ~ 'substr'
-#OpKeywordSymlink          ~ 'symlink'
-#OpKeywordSyscall          ~ 'syscall'
-#OpKeywordSysopen          ~ 'sysopen'
-#OpKeywordSysread          ~ 'sysread'
-#OpKeywordSysseek          ~ 'sysseek'
-#OpKeywordSystem           ~ 'system'
-#OpKeywordSyswrite         ~ 'syswrite'
-#OpKeywordTell             ~ 'tell'
-#OpKeywordTelldir          ~ 'telldir'
-#OpKeywordTie              ~ 'tie'
-#OpKeywordTied             ~ 'tied'
-#OpKeywordTime             ~ 'time'
-#OpKeywordTimes            ~ 'times'
-#OpKeywordTruncate         ~ 'truncate'
-#OpKeywordUc               ~ 'uc'
-#OpKeywordUcfirst          ~ 'ucfirst'
-#OpKeywordUmask            ~ 'umask'
-#OpKeywordUndef            ~ 'undef'
-#OpKeywordUnlink           ~ 'unlink'
-#OpKeywordUnpack           ~ 'unpack'
-#OpKeywordUnshift          ~ 'unshift'
-#OpKeywordUntie            ~ 'untie'
-#OpKeywordUse              ~ 'use'
-#OpKeywordUtime            ~ 'utime'
-#OpKeywordValues           ~ 'values'
-#OpKeywordVec              ~ 'vec'
-#OpKeywordWait             ~ 'wait'
-#OpKeywordWaitpid          ~ 'waitpid'
-#OpKeywordWantarray        ~ 'wantarray'
-#OpKeywordWarn             ~ 'warn'
-#OpKeywordWrite            ~ 'write'
+OpKeywordSplice           ~ 'splice'
+# TODO: OpKeywordSplit            ~ 'split'
+# TODO: OpKeywordSprintf          ~ 'sprintf'
+OpKeywordSqrt             ~ 'sqrt'
+OpKeywordSrand            ~ 'srand'
+OpKeywordStat             ~ 'stat'
+# TODO: OpKeywordState            ~ 'state'
+OpKeywordStudy            ~ 'study'
+# TODO: OpKeywordSub              ~ 'sub'
+OpKeywordSubstr           ~ 'substr'
+OpKeywordSymlink          ~ 'symlink'
+OpKeywordSyscall          ~ 'syscall'
+OpKeywordSysopen          ~ 'sysopen'
+OpKeywordSysread          ~ 'sysread'
+OpKeywordSysseek          ~ 'sysseek'
+# TODO: OpKeywordSystem           ~ 'system'
+OpKeywordSyswrite         ~ 'syswrite'
+OpKeywordTell             ~ 'tell'
+OpKeywordTelldir          ~ 'telldir'
+# TODO: OpKeywordTie              ~ 'tie'
+OpKeywordTied             ~ 'tied'
+OpKeywordTime             ~ 'time'
+OpKeywordTimes            ~ 'times'
+OpKeywordTruncate         ~ 'truncate'
+OpKeywordUc               ~ 'uc'
+OpKeywordUcfirst          ~ 'ucfirst'
+OpKeywordUmask            ~ 'umask'
+OpKeywordUndef            ~ 'undef'
+OpKeywordUnlink           ~ 'unlink'
+OpKeywordUnpack           ~ 'unpack'
+OpKeywordUnshift          ~ 'unshift'
+OpKeywordUntie            ~ 'untie'
+# TODO: OpKeywordUse              ~ 'use'
+OpKeywordUtime            ~ 'utime'
+OpKeywordValues           ~ 'values'
+OpKeywordVec              ~ 'vec'
+OpKeywordWait             ~ 'wait'
+OpKeywordWaitpid          ~ 'waitpid'
+OpKeywordWantarray        ~ 'wantarray'
+OpKeywordWarn             ~ 'warn'
+OpKeywordWrite            ~ 'write'
 
 # These are some parsing rules for the Expressions for them:
 # ----
