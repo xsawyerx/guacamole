@@ -190,6 +190,7 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordEndprotoentExpr
             | OpKeywordEndserventExpr
             | OpKeywordGetsocknameExpr
+            | OpKeywordGetsockoptExpr
             | OpKeywordGlobExpr
             | OpKeywordGmtimeExpr
             | OpKeywordGotoExpr
