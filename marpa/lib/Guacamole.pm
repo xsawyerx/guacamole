@@ -420,7 +420,6 @@ OpKeywordFcExpr ::= OpKeywordFc Expression
                   | OpKeywordFc
 
 OpKeywordFcntlExpr ::= OpKeywordFcntl Expression OpComma Expression OpComma Expression
-                     | OpKeywordFcntl Expression
 
 OpKeywordFilenoExpr ::= OpKeywordFileno Expression
 
