@@ -131,7 +131,6 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordCloseExpr
             | OpKeywordClosedirExpr
             | OpKeywordConnectExpr
-            | OpKeywordContinueExpr
             | OpKeywordCosExpr
             | OpKeywordCryptExpr
             | OpKeywordDbmcloseExpr
@@ -370,9 +369,6 @@ OpKeywordCloseExpr ::= OpKeywordClose Expression
 OpKeywordClosedirExpr ::= OpKeywordClosedir Expression
 
 OpKeywordConnectExpr ::= OpKeywordConnect Expression OpComma Expression
-
-OpKeywordContinueExpr ::= OpKeywordContinue Block
-                        | OpKeywordContinue
 
 OpKeywordCosExpr ::= OpKeywordCos Expression
 
@@ -887,7 +883,6 @@ OpKeywordChroot           ~ 'chroot'
 OpKeywordClose            ~ 'close'
 OpKeywordClosedir         ~ 'closedir'
 OpKeywordConnect          ~ 'connect'
-OpKeywordContinue         ~ 'continue'
 OpKeywordCos              ~ 'cos'
 OpKeywordCrypt            ~ 'crypt'
 OpKeywordDbmclose         ~ 'dbmclose'
@@ -1452,6 +1447,7 @@ OpKeywordWrite            ~ 'write'
 # * OpKeyword: default
 # * OpKeyword: given
 # * OpKeyword: when
+# * OpKeywordContinue: continue
 
 # File ops:
 # From perlfunc:
