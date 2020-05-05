@@ -143,7 +143,6 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordEofExpr
             | OpKeywordEvalExpr
             | OpKeywordEvalbytesExpr
-            | OpKeywordExecExpr
             | OpKeywordExistsExpr
             | OpKeywordExitExpr
             | OpKeywordExpExpr
@@ -298,27 +297,28 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordWriteExpr
 
 # TODO: (Add the following above)
+#| OpKeywordExec
 #| OpKeywordGrepExpr
-#| OpKeywordJoin
-#| OpKeywordMap
-#| OpKeywordMy
-#| OpKeywordNo
-#| OpKeywordOpen
-#| OpKeywordOur
-#| OpKeywordPackage
-#| OpKeywordPrint
-#| OpKeywordPrintf
-#| OpKeywordPrototype
-#| OpKeywordRequire
-#| OpKeywordSay
-#| OpKeywordSort
-#| OpKeywordSplit
-#| OpKeywordSprintf
-#| OpKeywordState
-#| OpKeywordSub
-#| OpKeywordSystem
-#| OpKeywordTie
-#| OpKeywordUse
+#| OpKeywordJoinExpr
+#| OpKeywordMapExpr
+#| OpKeywordMyExpr
+#| OpKeywordNoExpr
+#| OpKeywordOpenExpr
+#| OpKeywordOurExpr
+#| OpKeywordPackageExpr
+#| OpKeywordPrintExpr
+#| OpKeywordPrintfExpr
+#| OpKeywordPrototypeExpr
+#| OpKeywordRequireExpr
+#| OpKeywordSayExpr
+#| OpKeywordSortExpr
+#| OpKeywordSplitExpr
+#| OpKeywordSprintfExpr
+#| OpKeywordStateExpr
+#| OpKeywordSubExpr
+#| OpKeywordSystemExpr
+#| OpKeywordTieExpr
+#| OpKeywordUseExpr
 
 # Grammar for keywords
 OpKeywordAbsExpr ::= OpKeywordAbs Expression
@@ -401,8 +401,6 @@ OpKeywordEvalExpr ::= OpKeywordEval Block
 
 OpKeywordEvalbytesExpr ::= OpKeywordEvalbytes Expression
                          | OpKeywordEvalbytes
-
-OpKeywordExecExpr ::= OpKeywordExec Expression
 
 OpKeywordExistsExpr ::= OpKeywordExists Expression
 
@@ -896,7 +894,7 @@ OpKeywordEach             ~ 'each'
 OpKeywordEof              ~ 'eof'
 OpKeywordEval             ~ 'eval'
 OpKeywordEvalbytes        ~ 'evalbytes'
-OpKeywordExec             ~ 'exec'
+# TODO: OpKeywordExec             ~ 'exec'
 OpKeywordExists           ~ 'exists'
 OpKeywordExit             ~ 'exit'
 OpKeywordExp              ~ 'exp'
