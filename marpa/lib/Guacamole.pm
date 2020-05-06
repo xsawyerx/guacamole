@@ -29,6 +29,7 @@ Expression ::= Value
             || Expression OpAdd Expression     assoc=>left
             || Expression OpShift Expression   assoc=>left
             || OpKeyword
+            || OpFile
             || Expression OpInequal Expression
             || Expression OpEqual Expression
             || Expression OpBinAnd Expression  assoc=>left
@@ -89,7 +90,7 @@ ArrayElem ::= LBracket Expression RBracket
 
 HashElem ::= LBrace Expression RBrace
 
-Ident ::= IdentComp 
+Ident ::= IdentComp
         | IdentComp PackageSep Ident
         | Ident PackageSep
 
@@ -322,6 +323,34 @@ OpKeyword ::= OpKeywordAbsExpr
 #| OpKeywordSystemExpr
 #| OpKeywordTieExpr
 #| OpKeywordUseExpr
+
+OpFile ::= OpFileReadableEffectiveExpr
+         | OpFileWritableEffectiveExpr
+         | OpFileRExecutableEffectiveExpr
+         | OpFileOwnedEffectiveExpr
+         | OpFileReadableRealExpr
+         | OpFileWritableRealExpr
+         | OpFileRExecutableRealExpr
+         | OpFileOwnedRealExpr
+         | OpFileExistsExpr
+         | OpFileEmptyExpr
+         | OpFileNonEmptyExpr
+         | OpFilePlainExpr
+         | OpFileDirectoryExpr
+         | OpFileSymbolicExpr
+         | OpFileNamedPipeExpr
+         | OpFileSocketExpr
+         | OpFileBlockExpr
+         | OpFileCharacterExpr
+         | OpFileOpenedTtyExpr
+         | OpFileSetuidExpr
+         | OpFileSetgidExpr
+         | OpFileStickyExpr
+         | OpFileAsciiUtf8Expr
+         | OpFileBinaryExpr
+         | OpFileStartTimeExpr
+         | OpFileAccessTimeExpr
+         | OpFileChangeTimeExpr
 
 # Grammar for keywords
 OpKeywordAbsExpr              ::= OpKeywordAbs Expression
@@ -811,6 +840,34 @@ OpKeywordWarnExpr             ::= OpKeywordWarn Expression
 OpKeywordWriteExpr            ::= OpKeywordWrite Expression
                                 | OpKeywordWrite
 
+OpFileReadableEffectiveExpr     ::= OpFileReadableEffective    Expression
+OpFileWritableEffectiveExpr     ::= OpFileWritableEffective    Expression
+OpFileRExecutableEffectiveExpr  ::= OpFileRExecutableEffective Expression
+OpFileOwnedEffectiveExpr        ::= OpFileOwnedEffective       Expression
+OpFileReadableRealExpr          ::= OpFileReadableReal         Expression
+OpFileWritableRealExpr          ::= OpFileWritableReal         Expression
+OpFileRExecutableRealExpr       ::= OpFileRExecutableReal      Expression
+OpFileOwnedRealExpr             ::= OpFileOwnedReal            Expression
+OpFileExistsExpr                ::= OpFileExists               Expression
+OpFileEmptyExpr                 ::= OpFileEmpty                Expression
+OpFileNonEmptyExpr              ::= OpFileNonEmpty             Expression
+OpFilePlainExpr                 ::= OpFilePlain                Expression
+OpFileDirectoryExpr             ::= OpFileDirectory            Expression
+OpFileSymbolicExpr              ::= OpFileSymbolic             Expression
+OpFileNamedPipeExpr             ::= OpFileNamedPipe            Expression
+OpFileSocketExpr                ::= OpFileSocket               Expression
+OpFileBlockExpr                 ::= OpFileBlock                Expression
+OpFileCharacterExpr             ::= OpFileCharacter            Expression
+OpFileOpenedTtyExpr             ::= OpFileOpenedTty            Expression
+OpFileSetuidExpr                ::= OpFileSetuid               Expression
+OpFileSetgidExpr                ::= OpFileSetgid               Expression
+OpFileStickyExpr                ::= OpFileSticky               Expression
+OpFileAsciiUtf8Expr             ::= OpFileAsciiUtf8            Expression
+OpFileBinaryExpr                ::= OpFileBinary               Expression
+OpFileStartTimeExpr             ::= OpFileStartTime            Expression
+OpFileAccessTimeExpr            ::= OpFileAccessTime           Expression
+OpFileChangeTimeExpr            ::= OpFileChangeTime           Expression
+
 ###
 
 IdentComp  ~ [a-zA-Z_]+
@@ -1075,6 +1132,34 @@ OpKeywordWaitpid          ~ 'waitpid'
 OpKeywordWantarray        ~ 'wantarray'
 OpKeywordWarn             ~ 'warn'
 OpKeywordWrite            ~ 'write'
+
+OpFileReadableEffective     ~ '-r'
+OpFileWritableEffective     ~ '-w'
+OpFileRExecutableEffective  ~ '-x'
+OpFileOwnedEffective        ~ '-o'
+OpFileReadableReal          ~ '-R'
+OpFileWritableReal          ~ '-W'
+OpFileRExecutableReal       ~ '-X'
+OpFileOwnedReal             ~ '-O'
+OpFileExists                ~ '-e'
+OpFileEmpty                 ~ '-z'
+OpFileNonEmpty              ~ '-s'
+OpFilePlain                 ~ '-f'
+OpFileDirectory             ~ '-d'
+OpFileSymbolic              ~ '-l'
+OpFileNamedPipe             ~ '-p'
+OpFileSocket                ~ '-S'
+OpFileBlock                 ~ '-b'
+OpFileCharacter             ~ '-c'
+OpFileOpenedTty             ~ '-t'
+OpFileSetuid                ~ '-u'
+OpFileSetgid                ~ '-g'
+OpFileSticky                ~ '-k'
+OpFileAsciiUtf8             ~ '-T'
+OpFileBinary                ~ '-B'
+OpFileStartTime             ~ '-M'
+OpFileAccessTime            ~ '-A'
+OpFileChangeTime            ~ '-C'
 
 # These are some parsing rules for the Expressions for them:
 # ----
@@ -1524,10 +1609,10 @@ our $grammar = Marpa::R2::Scanless::G->new({ source => \$grammar_source });
 
 sub parse {
     my ($class, $text) = @_;
-    
+
     my $rec = Marpa::R2::Scanless::R->new({ grammar => $grammar });
 
-    my @values; 
+    my @values;
 
     $rec->read(\$text);
     while (my $value = $rec->value()) {
