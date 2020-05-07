@@ -13,7 +13,7 @@ StatementSeq ::= Statement
                | Statement Semicolon
                | Statement Semicolon StatementSeq
 
-Statement ::= Expression
+Statement ::= NonBraceExpression
             | Block
 
 Label ::= IdentComp Colon
@@ -44,12 +44,44 @@ Expression ::= Value
             || Expression OpNameAnd Expression assoc=>left
             || Expression OpNameOr Expression  assoc=>left
 
-Value ::= Literal
-        | Variable
-        | UnderscoreValues
-        | SubCall
-        | OpKeywordDoExpr
-        | LParen Expression RParen
+# Same as Expression, but since it's a top-level expresison,
+# it can only use NonBraceValue and NonBraceExpressions
+NonBraceExpression ::= NonBraceValue
+                    || NonBraceExpression OpArrow ArrowRHS     assoc=>left
+                    || NonBraceExpression OpInc
+                    || OpInc Expression
+                    || NonBraceExpression OpPower Expression   assoc=>right
+                    || OpUnary Expression                      assoc=>right
+                    || NonBraceExpression OpRegex Expression   assoc=>left
+                    || NonBraceExpression OpMulti Expression   assoc=>left
+                    || NonBraceExpression OpAdd Expression     assoc=>left
+                    || NonBraceExpression OpShift Expression   assoc=>left
+                    || OpKeyword
+                    || NonBraceExpression OpInequal Expression
+                    || NonBraceExpression OpEqual Expression
+                    || NonBraceExpression OpBinAnd Expression  assoc=>left
+                    || NonBraceExpression OpBinOr Expression   assoc=>left
+                    || NonBraceExpression OpLogAnd Expression  assoc=>left
+                    || NonBraceExpression OpLogOr Expression   assoc=>left
+                    || NonBraceExpression OpRange Expression
+                    || NonBraceExpression OpTriThen Expression OpTriElse Expression  assoc=>right
+                    || NonBraceExpression OpAssign Expression  assoc=>right
+                    || OpNameNot Expression                    assoc=>right
+                    || NonBraceExpression OpNameAnd Expression assoc=>left
+                    || NonBraceExpression OpNameOr Expression  assoc=>left
+
+Value         ::= Literal
+                | Variable
+                | UnderscoreValues
+                | SubCall
+                | LParen Expression RParen
+
+# Same as Value above, but with a NonBraceLiteral
+NonBraceValue ::= NonBraceLiteral
+                | Variable
+                | UnderscoreValues
+                | SubCall
+                | LParen Expression RParen
 
 # UnderscoreData and UnderscoreEnd are not values
 UnderscoreValues ::= UnderscorePackage
@@ -94,11 +126,13 @@ Ident ::= IdentComp
         | IdentComp PackageSep Ident
         | Ident PackageSep
 
-Literal ::= LitNumber
-          | LitArray
-          | LitHash
-          | LitString
-          | InterpolString
+NonBraceLiteral ::= LitNumber
+                  | LitArray
+                  | LitString
+                  | InterpolString
+
+Literal         ::= NonBraceLiteral
+                  | LitHash
 
 LitArray       ::= LBracket Expression RBracket
 LitHash        ::= LBrace Expression RBrace
