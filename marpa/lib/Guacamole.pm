@@ -116,7 +116,9 @@ SubCall ::= Ident CallArgs
 CallArgs ::= LParen Expression RParen
            | LParen RParen
 
-Block ::= LBrace StatementSeq RBrace
+
+Block ::= LBrace RBrace
+        | LBrace StatementSeq RBrace
 
 ArrayElem ::= LBracket Expression RBracket
 
@@ -135,9 +137,16 @@ Literal         ::= NonBraceLiteral
                   | LitHash
 
 LitArray       ::= LBracket Expression RBracket
+                 | LBracket RBracket
+
 LitHash        ::= LBrace Expression RBrace
+                 | LBrace RBrace
+
 LitString      ::= SingleQuote NonSingleQuote SingleQuote
+                 | SingleQuote SingleQuote
+
 InterpolString ::= DoubleQuote NonDoubleQuote DoubleQuote
+                 | DoubleQuote DoubleQuote
 
 ArrowRHS ::= ArrowDerefCall
            | ArrowMethodCall
