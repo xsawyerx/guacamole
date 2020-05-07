@@ -320,6 +320,7 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordSleepExpr
             | OpKeywordSocketExpr
             | OpKeywordSocketpairExpr
+            | OpKeywordSortExpr
             | OpKeywordSpliceExpr
             | OpKeywordSprintfExpr
             | OpKeywordSqrtExpr
@@ -363,7 +364,6 @@ OpKeyword ::= OpKeywordAbsExpr
 #| OpKeywordNoExpr
 #| OpKeywordPackageExpr
 #| OpKeywordRequireExpr
-#| OpKeywordSortExpr
 #| OpKeywordSplitExpr
 #| OpKeywordSubExpr
 #| OpKeywordUseExpr
@@ -804,6 +804,11 @@ OpKeywordSocketExpr           ::= OpKeywordSocket Expression OpComma Expression 
 
 OpKeywordSocketpairExpr       ::= OpKeywordSocketpair Expression OpComma Expression OpComma Expression OpComma Expression OpComma Expression
 
+OpKeywordSortExpr             ::= OpKeywordSort Block Expression
+                                | OpKeywordSort NonBraceExpression Expression
+                                | OpKeywordSort VarScalar Expression
+                                | OpKeywordSort Expression
+
 OpKeywordSpliceExpr           ::= OpKeywordSplice Expression OpComma Expression OpComma Expression OpComma Expression
                                 | OpKeywordSplice Expression OpComma Expression OpComma Expression
                                 | OpKeywordSplice Expression OpComma Expression
@@ -1158,7 +1163,7 @@ OpKeywordSin              ~ 'sin'
 OpKeywordSleep            ~ 'sleep'
 OpKeywordSocket           ~ 'socket'
 OpKeywordSocketpair       ~ 'socketpair'
-# TODO: OpKeywordSort             ~ 'sort'
+OpKeywordSort             ~ 'sort'
 OpKeywordSplice           ~ 'splice'
 # TODO: OpKeywordSplit            ~ 'split'
 OpKeywordSprintf          ~ 'sprintf'
