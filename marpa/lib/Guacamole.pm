@@ -13,8 +13,24 @@ StatementSeq ::= Statement
                | Statement Semicolon
                | Statement Semicolon StatementSeq
 
-Statement ::= NonBraceExpression
+Statement ::= NonBraceExpression ConditionIfPostfixExpr
+            | NonBraceExpression ConditionUnlessPostfixExpr
+            | NonBraceExpression
             | Block
+            | Condition
+
+Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
+            | ConditionIfExpr ConditionElseExpr
+            | ConditionIfExpr ConditionElsifExpr
+            | ConditionIfExpr
+            | ConditionUnlessExpr
+
+ConditionUnlessExpr        ::= ConditionUnless LParen Expression RParen Block
+ConditionIfExpr            ::= ConditionIf     LParen Expression RParen Block
+ConditionElsifExpr         ::= ConditionElsif  LParen Expression RParen Block
+ConditionElseExpr          ::= ConditionElse   Block
+ConditionIfPostfixExpr     ::= ConditionIf     Expression
+ConditionUnlessPostfixExpr ::= ConditionUnless Expression
 
 Label ::= IdentComp Colon
 
@@ -1233,6 +1249,11 @@ OpFileBinary                ~ '-B'
 OpFileStartTime             ~ '-M'
 OpFileAccessTime            ~ '-A'
 OpFileChangeTime            ~ '-C'
+
+ConditionIf     ~ 'if'
+ConditionElsif  ~ 'elsif'
+ConditionElse   ~ 'else'
+ConditionUnless ~ 'unless'
 
 # These are some parsing rules for the Expressions for them:
 # ----
