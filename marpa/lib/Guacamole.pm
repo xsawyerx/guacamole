@@ -13,11 +13,18 @@ StatementSeq ::= Statement
                | Statement Semicolon
                | Statement Semicolon StatementSeq
 
-Statement ::= NonBraceExpression ConditionIfPostfixExpr
-            | NonBraceExpression ConditionUnlessPostfixExpr
+Statement ::= NonBraceExpression StatementModifier
             | NonBraceExpression
             | Block
             | Condition
+
+StatementModifier ::= ConditionIfPostfixExpr
+                    | ConditionUnlessPostfixExpr
+                    | ConditionWhilePostfixExpr
+                    | ConditionUntilPostfixExpr
+                    | ConditionForPostfixExpr
+                    | ConditionForeachPostfixExpr
+                    | ConditionWhenPostfixExpr
 
 Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
             | ConditionIfExpr ConditionElseExpr
@@ -25,12 +32,17 @@ Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
             | ConditionIfExpr
             | ConditionUnlessExpr
 
-ConditionUnlessExpr        ::= ConditionUnless LParen Expression RParen Block
-ConditionIfExpr            ::= ConditionIf     LParen Expression RParen Block
-ConditionElsifExpr         ::= ConditionElsif  LParen Expression RParen Block
-ConditionElseExpr          ::= ConditionElse   Block
-ConditionIfPostfixExpr     ::= ConditionIf     Expression
-ConditionUnlessPostfixExpr ::= ConditionUnless Expression
+ConditionUnlessExpr         ::= ConditionUnless  LParen Expression RParen Block
+ConditionIfExpr             ::= ConditionIf      LParen Expression RParen Block
+ConditionElsifExpr          ::= ConditionElsif   LParen Expression RParen Block
+ConditionElseExpr           ::= ConditionElse    Block
+ConditionIfPostfixExpr      ::= ConditionIf      Expression
+ConditionUnlessPostfixExpr  ::= ConditionUnless  Expression
+ConditionWhilePostfixExpr   ::= ConditionWhile   Expression
+ConditionUntilPostfixExpr   ::= ConditionUntil   Expression
+ConditionForPostfixExpr     ::= ConditionFor     Expression
+ConditionForeachPostfixExpr ::= ConditionForeach Expression
+ConditionWhenPostfixExpr    ::= ConditionWhen    Expression
 
 Label ::= IdentComp Colon
 
@@ -1242,10 +1254,15 @@ OpFileStartTime             ~ '-M'
 OpFileAccessTime            ~ '-A'
 OpFileChangeTime            ~ '-C'
 
-ConditionIf     ~ 'if'
-ConditionElsif  ~ 'elsif'
-ConditionElse   ~ 'else'
-ConditionUnless ~ 'unless'
+ConditionIf      ~ 'if'
+ConditionElsif   ~ 'elsif'
+ConditionElse    ~ 'else'
+ConditionUnless  ~ 'unless'
+ConditionWhile   ~ 'while'
+ConditionUntil   ~ 'until'
+ConditionFor     ~ 'for'
+ConditionForeach ~ 'foreach'
+ConditionWhen    ~ 'when'
 
 # These are some parsing rules for the Expressions for them:
 # ----
