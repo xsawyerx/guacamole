@@ -15,8 +15,16 @@ StatementSeq ::= Statement
 
 Statement ::= NonBraceExpression StatementModifier
             | NonBraceExpression
+            | ForStatement
             | Block
             | Condition
+
+ForStatement ::= ForStatementOp LParen Statement Semicolon Statement Semicolon Statement RParen Block
+               | ForStatementOp OpKeywordMy VarScalar LParen Expression RParen Block
+               | ForStatementOp VarScalar LParen Expression RParen Block
+
+ForStatementOp ::= OpKeywordFor
+                 | OpKeywordForeach
 
 StatementModifier ::= ConditionIfPostfixExpr
                     | ConditionUnlessPostfixExpr
@@ -1057,6 +1065,8 @@ OpKeywordExists           ~ 'exists'
 OpKeywordExit             ~ 'exit'
 OpKeywordExp              ~ 'exp'
 OpKeywordFc               ~ 'fc'
+OpKeywordFor              ~ 'for'
+OpKeywordForeach          ~ 'foreach'
 OpKeywordFcntl            ~ 'fcntl'
 OpKeywordFileno           ~ 'fileno'
 OpKeywordFlock            ~ 'flock'
