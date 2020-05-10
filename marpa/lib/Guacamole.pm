@@ -15,9 +15,13 @@ StatementSeq ::= Statement
 
 Statement ::= NonBraceExpression StatementModifier
             | NonBraceExpression
-            | ForStatement
+            | LoopStatement
             | Block
             | Condition
+
+LoopStatement ::= ForStatement
+                | WhileStatement
+                | UntilStatement
 
 ForStatement ::= ForStatementOp LParen Statement Semicolon Statement Semicolon Statement RParen Block
                | ForStatementOp OpKeywordMy VarScalar LParen Expression RParen Block
@@ -25,6 +29,9 @@ ForStatement ::= ForStatementOp LParen Statement Semicolon Statement Semicolon S
 
 ForStatementOp ::= OpKeywordFor
                  | OpKeywordForeach
+
+WhileStatement ::= ConditionWhile LParen Expression RParen Block
+UntilStatement ::= ConditionUntil LParen Expression RParen Block
 
 StatementModifier ::= ConditionIfPostfixExpr
                     | ConditionUnlessPostfixExpr
