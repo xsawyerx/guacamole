@@ -816,7 +816,7 @@ OpKeywordSpliceExpr           ::= OpKeywordSplice Expression OpComma Expression 
 
 # TODO: OpKeywordSplitExpr ::= OpKeywordSplit
 
-OpKeywordSprintfExpr          ::= OpKeywordSprintf Expression OpComma Expression
+OpKeywordSprintfExpr          ::= OpKeywordSprintf Expression
 
 OpKeywordSqrtExpr             ::= OpKeywordSqrt Expression
                                 | OpKeywordSqrt
