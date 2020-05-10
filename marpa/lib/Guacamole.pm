@@ -807,7 +807,7 @@ OpKeywordSocketpairExpr       ::= OpKeywordSocketpair Expression OpComma Express
 OpKeywordSortExpr             ::= OpKeywordSort Block Expression
                                 | OpKeywordSort NonBraceExpression Expression
                                 | OpKeywordSort VarScalar Expression
-                                | OpKeywordSort Expression
+                                | OpKeywordSort NonBraceExpression
 
 OpKeywordSpliceExpr           ::= OpKeywordSplice Expression OpComma Expression OpComma Expression OpComma Expression
                                 | OpKeywordSplice Expression OpComma Expression OpComma Expression
