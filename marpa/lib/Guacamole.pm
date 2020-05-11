@@ -20,6 +20,7 @@ Statement ::= NonBraceExpression StatementModifier
             | Condition
             | EllipsisStatement
             | QLikeExpression
+            | UseStatement
 
 LoopStatement ::= ForStatement
                 | WhileStatement
@@ -43,6 +44,12 @@ StatementModifier ::= ConditionIfPostfixExpr
                     | ConditionForeachPostfixExpr
 
 EllipsisStatement ::= Ellipsis
+
+UseStatement ::= OpKeywordUse Ident VersionExpr Expression
+               | OpKeywordUse Ident VersionExpr
+               | OpKeywordUse Ident Expression
+               | OpKeywordUse VersionExpr
+               | OpKeywordUse Ident
 
 Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
             | ConditionIfExpr ConditionElseExpr
@@ -413,7 +420,6 @@ OpKeyword ::= OpKeywordAbsExpr
 #| OpKeywordRequireExpr
 #| OpKeywordSplitExpr
 #| OpKeywordSubExpr
-#| OpKeywordUseExpr
 
 OpFile ::= OpFileReadableEffectiveExpr
          | OpFileWritableEffectiveExpr
@@ -932,8 +938,6 @@ OpKeywordUnshiftExpr          ::= OpKeywordUnshift Value Expression
 
 OpKeywordUntieExpr            ::= OpKeywordUntie Expression
 
-# TODO: OpKeywordUseExpr ::= OpKeywordUse
-
 OpKeywordUtimeExpr            ::= OpKeywordUtime Expression
 
 OpKeywordValuesExpr           ::= OpKeywordValues Expression
@@ -1005,25 +1009,35 @@ QLikeFunction ~ OpKeywordQ
 IdentComp  ~ [a-zA-Z_]+
 PackageSep ~ '::'
 
-LitNumber ~ [0-9]+
+VersionExpr           ::= VersionNumber
+VersionNumber         ~ VersionNumberSegments
+                      | 'v' VersionNumberSegments
+
+VersionNumberSegments ~ VersionNumberSegment '.' VersionNumberSegment '.' VersionNumberSegment
+                      | VersionNumberSegment '.' VersionNumberSegment
+                      | VersionNumberSegment
+
+VersionNumberSegment ~ [0-9] [0-9] [0-9]
+                     | [0-9] [0-9]
+                     | [0-9]
+
+LitNumber   ~ [0-9]+
+SingleQuote ~ [']
+DoubleQuote ~ ["]
 
 NonDoubleOrEscapedQuote_Many ~ NonDoubleOrEscapedQuote+
 NonDoubleOrEscapedQuote      ~ EscapedDoubleQuote | NonDoubleQuote
 EscapedDoubleQuote           ~ Escape ["]
 NonDoubleQuote               ~ [^"]
-DoubleQuote    ~ ["]
 
 NonSingleOrEscapedQuote_Many ~ NonSingleOrEscapedQuote+
 NonSingleOrEscapedQuote      ~ EscapedSingleQuote | NonSingleQuote
 EscapedSingleQuote           ~ Escape [']
 NonSingleQuote               ~ [^']
-SingleQuote    ~ [']
 
-Colon        ~ ':'
-Semicolon    ~ ';'
-#ForwardSlash ~ '/'
-#ExclamPoint  ~ '!'
-Escape       ~ '\'
+Colon     ~ ':'
+Semicolon ~ ';'
+Escape    ~ '\'
 
 SigilScalar   ~ '$'
 SigilArray    ~ '@'
@@ -1313,7 +1327,7 @@ OpKeywordUnlink           ~ 'unlink'
 OpKeywordUnpack           ~ 'unpack'
 OpKeywordUnshift          ~ 'unshift'
 OpKeywordUntie            ~ 'untie'
-# TODO: OpKeywordUse              ~ 'use'
+OpKeywordUse              ~ 'use'
 OpKeywordUtime            ~ 'utime'
 OpKeywordValues           ~ 'values'
 OpKeywordVec              ~ 'vec'
