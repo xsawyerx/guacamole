@@ -18,6 +18,7 @@ Statement ::= NonBraceExpression StatementModifier
             | LoopStatement
             | Block
             | Condition
+            | EllipsisStatement
 
 LoopStatement ::= ForStatement
                 | WhileStatement
@@ -39,6 +40,8 @@ StatementModifier ::= ConditionIfPostfixExpr
                     | ConditionUntilPostfixExpr
                     | ConditionForPostfixExpr
                     | ConditionForeachPostfixExpr
+
+EllipsisStatement ::= Ellipsis
 
 Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
             | ConditionIfExpr ConditionElseExpr
@@ -1002,6 +1005,8 @@ LBracket ~ '['
 RBracket ~ ']'
 LBrace   ~ '{'
 RBrace   ~ '}'
+
+Ellipsis ~ '...'
 
 UnderscorePackage ~ '__PACKAGE__'
 UnderscoreFile    ~ '__FILE__'
