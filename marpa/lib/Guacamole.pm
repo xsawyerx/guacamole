@@ -44,8 +44,6 @@ StatementModifier ::= ConditionIfPostfixExpr
 
 EllipsisStatement ::= Ellipsis
 
-EllipsisStatement ::= Ellipsis
-
 Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
             | ConditionIfExpr ConditionElseExpr
             | ConditionIfExpr ConditionElsifExpr
@@ -1040,8 +1038,6 @@ LBracket ~ '['
 RBracket ~ ']'
 LBrace   ~ '{'
 RBrace   ~ '}'
-#LAngle   ~ '<'
-#RAngle   ~ '>'
 
 NonRParenOrEscapedParens_Many ~ NonRParenOrEscapedParens+
 NonRParenOrEscapedParens      ~ EscapedParens | NonRParen
