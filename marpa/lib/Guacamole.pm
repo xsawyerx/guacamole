@@ -34,7 +34,8 @@ Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
 
 ConditionUnlessExpr         ::= ConditionUnless  LParen Expression RParen Block
 ConditionIfExpr             ::= ConditionIf      LParen Expression RParen Block
-ConditionElsifExpr          ::= ConditionElsif   LParen Expression RParen Block
+ConditionElsifExpr          ::= ConditionElsif   LParen Expression RParen Block ConditionElsifExpr
+                              | ConditionElsif   LParen Expression RParen Block
 ConditionElseExpr           ::= ConditionElse    Block
 ConditionIfPostfixExpr      ::= ConditionIf      Expression
 ConditionUnlessPostfixExpr  ::= ConditionUnless  Expression
