@@ -21,6 +21,7 @@ Statement ::= NonBraceExpression StatementModifier
             | EllipsisStatement
             | QLikeExpression
             | UseStatement
+            | NoStatement
 
 LoopStatement ::= ForStatement
                 | WhileStatement
@@ -50,6 +51,12 @@ UseStatement ::= OpKeywordUse Ident VersionExpr Expression
                | OpKeywordUse Ident Expression
                | OpKeywordUse VersionExpr
                | OpKeywordUse Ident
+
+NoStatement ::= OpKeywordNo Ident VersionExpr Expression
+              | OpKeywordNo Ident VersionExpr
+              | OpKeywordNo Ident Expression
+              | OpKeywordNo VersionExpr
+              | OpKeywordNo Ident
 
 Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
             | ConditionIfExpr ConditionElseExpr
@@ -710,8 +717,6 @@ OpKeywordNextExpr             ::= OpKeywordNext Label
                                 | OpKeywordNext Expression
                                 | OpKeywordNext
 
-# TODO: OpKeywordNoExpr ::= OpKeywordNo Expression
-
 OpKeywordOctExpr              ::= OpKeywordOct Expression
                                 | OpKeywordOct
 
@@ -1234,7 +1239,7 @@ OpKeywordMsgrcv           ~ 'msgrcv'
 OpKeywordMsgsnd           ~ 'msgsnd'
 OpKeywordMy               ~ 'my'
 OpKeywordNext             ~ 'next'
-# TODO: OpKeywordNo               ~ 'no'
+OpKeywordNo               ~ 'no'
 OpKeywordOct              ~ 'oct'
 OpKeywordOpen             ~ 'open'
 OpKeywordOpendir          ~ 'opendir'
