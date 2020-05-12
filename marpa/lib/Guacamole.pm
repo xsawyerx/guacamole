@@ -328,6 +328,11 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordPrintfExpr
             | OpKeywordPrototypeExpr
             | OpKeywordPushExpr
+            | OpKeywordQExpr
+            | OpKeywordQqExpr
+            | OpKeywordQxExpr
+            | OpKeywordQwExpr
+            | OpKeywordQrExpr
             | OpKeywordQuotemetaExpr
             | OpKeywordRandExpr
             | OpKeywordReadExpr
@@ -750,6 +755,12 @@ OpKeywordPrototypeExpr        ::= OpKeywordPrototype Expression
 
 OpKeywordPushExpr             ::= OpKeywordPush Expression OpComma Expression
 
+OpKeywordQExpr                ::= OpKeywordQ  QFuncDelimitedValue
+OpKeywordQqExpr               ::= OpKeywordQq QFuncDelimitedValue
+OpKeywordQxExpr               ::= OpKeywordQx QFuncDelimitedValue
+OpKeywordQwExpr               ::= OpKeywordQw QFuncDelimitedValue
+OpKeywordQrExpr               ::= OpKeywordQr QFuncDelimitedValue
+
 OpKeywordQuotemetaExpr        ::= OpKeywordQuotemeta Expression
                                 | OpKeywordQuotemeta
 
@@ -988,6 +999,19 @@ OpFileStartTimeExpr             ::= OpFileStartTime            Expression
 OpFileAccessTimeExpr            ::= OpFileAccessTime           Expression
 OpFileChangeTimeExpr            ::= OpFileChangeTime           Expression
 
+QFuncDelimitedValue ::= LParen       NonRParen       RParen
+                      | LParen       RParen
+                      | LBrace       NonRBrace       RBrace
+                      | LBrace       RBrace
+                      | LAngle       NonRAngle       RAngle
+                      | LAngle       RAngle
+                      | LBracket     NonRBracket     RBracket
+                      | LBracket     RBracket
+                      | ForwardSlash NonForwardSlash ForwardSlash
+                      | ForwardSlash ForwardSlash
+                      | ExclamPoint  NonExclamPoint  ExclamPoint
+                      | ExclamPoint  ExclamPoint
+
 ###
 
 IdentComp  ~ [a-zA-Z_]+
@@ -999,8 +1023,10 @@ DoubleQuote    ~ ["]
 NonDoubleQuote ~ [^"]+
 NonSingleQuote ~ [^']+
 
-Colon     ~ ':'
-Semicolon ~ ';'
+Colon        ~ ':'
+Semicolon    ~ ';'
+ForwardSlash ~ '/'
+ExclamPoint  ~ '!'
 
 SigilScalar   ~ '$'
 SigilArray    ~ '@'
@@ -1015,6 +1041,15 @@ LBracket ~ '['
 RBracket ~ ']'
 LBrace   ~ '{'
 RBrace   ~ '}'
+LAngle   ~ '<'
+RAngle   ~ '>'
+
+NonRParen       ~ [^)]+
+NonRBracket     ~ [^\]]+
+NonRBrace       ~ [^\}]+
+NonRAngle       ~ [^>]+
+NonForwardSlash ~ [^\/]+
+NonExclamPoint  ~ [^\!]+
 
 Ellipsis ~ '...'
 
@@ -1174,6 +1209,11 @@ OpKeywordPrint            ~ 'print'
 OpKeywordPrintf           ~ 'printf'
 OpKeywordPrototype        ~ 'prototype'
 OpKeywordPush             ~ 'push'
+OpKeywordQ                ~ 'q'
+OpKeywordQq               ~ 'qq'
+OpKeywordQx               ~ 'qx'
+OpKeywordQw               ~ 'qw'
+OpKeywordQr               ~ 'qr'
 OpKeywordQuotemeta        ~ 'quotemeta'
 OpKeywordRand             ~ 'rand'
 OpKeywordRead             ~ 'read'
