@@ -422,7 +422,6 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordWriteExpr
 
 # TODO: (Add the following above)
-#| OpKeywordNoExpr
 #| OpKeywordPackageExpr
 #| OpKeywordRequireExpr
 #| OpKeywordSplitExpr
