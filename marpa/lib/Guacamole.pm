@@ -27,16 +27,18 @@ LoopStatement ::= ForStatement
                 | WhileStatement
                 | UntilStatement
 
-ForStatement ::= ForStatementOp LParen Statement Semicolon Statement Semicolon Statement RParen Block OpKeywordContinue Block
+ForStatement ::= ForStatementOp LParen Statement Semicolon Statement Semicolon Statement RParen Block ContinueExpr
                | ForStatementOp LParen Statement Semicolon Statement Semicolon Statement RParen Block
-               | ForStatementOp OpKeywordMy VarScalar LParen Expression RParen Block OpKeywordContinue Block
+               | ForStatementOp OpKeywordMy VarScalar LParen Expression RParen Block ContinueExpr
                | ForStatementOp OpKeywordMy VarScalar LParen Expression RParen Block
-               | ForStatementOp VarScalar LParen Expression RParen Block OpKeywordContinue Block
+               | ForStatementOp VarScalar LParen Expression RParen Block ContinueExpr
                | ForStatementOp VarScalar LParen Expression RParen Block
-               | ForStatementOp LParen Semicolon Semicolon RParen Block OpKeywordContinue Block
+               | ForStatementOp LParen Semicolon Semicolon RParen Block ContinueExpr
                | ForStatementOp LParen Semicolon Semicolon RParen Block
-               | ForStatementOp LParen Expression RParen Block OpKeywordContinue Block
+               | ForStatementOp LParen Expression RParen Block ContinueExpr
                | ForStatementOp LParen Expression RParen Block
+
+ContinueExpr ::= OpKeywordContinue Block
 
 ForStatementOp ::= OpKeywordFor
                  | OpKeywordForeach
