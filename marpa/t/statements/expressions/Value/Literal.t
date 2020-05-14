@@ -11,10 +11,12 @@ use Guacamole::Test;
 # LitHash
 
 # LitString (SingleQuote)
+parses(q{''});
 parses(q{ 'hello' });
 parses(q{ 'hello world \' foo " ' });
 
 # InterpolString (DoubleQuote)
+parses(q{""});
 parses(q{ "hello" });
 parses(q{ "hello world \" foo ' " });
 
