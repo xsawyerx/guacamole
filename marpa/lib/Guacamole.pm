@@ -194,10 +194,10 @@ LitArray       ::= LBracket Expression RBracket
 LitHash        ::= LBrace Expression RBrace
                  | LBrace RBrace
 
-LitString      ::= SingleQuote NonSingleQuote SingleQuote
+LitString      ::= SingleQuote NonSingleOrEscapedQuote_Many SingleQuote
                  | SingleQuote SingleQuote
 
-InterpolString ::= DoubleQuote NonDoubleQuote DoubleQuote
+InterpolString ::= DoubleQuote NonDoubleOrEscapedQuote_Many DoubleQuote
                  | DoubleQuote DoubleQuote
 
 ArrowRHS ::= ArrowDerefCall
@@ -1009,16 +1009,25 @@ QFuncDelimitedValue ::= LParen       NonRParenOrEscapedParens_Many              
 IdentComp  ~ [a-zA-Z_]+
 PackageSep ~ '::'
 
-LitNumber      ~ [0-9]+
-SingleQuote    ~ [']
+LitNumber ~ [0-9]+
+
+NonDoubleOrEscapedQuote_Many ~ NonDoubleOrEscapedQuote+
+NonDoubleOrEscapedQuote      ~ EscapedDoubleQuote | NonDoubleQuote
+EscapedDoubleQuote           ~ Escape ["]
+NonDoubleQuote               ~ [^"]
 DoubleQuote    ~ ["]
-NonDoubleQuote ~ [^"]+
-NonSingleQuote ~ [^']+
+
+NonSingleOrEscapedQuote_Many ~ NonSingleOrEscapedQuote+
+NonSingleOrEscapedQuote      ~ EscapedSingleQuote | NonSingleQuote
+EscapedSingleQuote           ~ Escape [']
+NonSingleQuote               ~ [^']
+SingleQuote    ~ [']
 
 Colon        ~ ':'
 Semicolon    ~ ';'
 ForwardSlash ~ '/'
 ExclamPoint  ~ '!'
+Escape       ~ '\'
 
 SigilScalar   ~ '$'
 SigilArray    ~ '@'
