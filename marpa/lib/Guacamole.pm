@@ -15,8 +15,23 @@ StatementSeq ::= Statement
 
 Statement ::= NonBraceExpression StatementModifier
             | NonBraceExpression
+            | LoopStatement
             | Block
             | Condition
+
+LoopStatement ::= ForStatement
+                | WhileStatement
+                | UntilStatement
+
+ForStatement ::= ForStatementOp LParen Statement Semicolon Statement Semicolon Statement RParen Block
+               | ForStatementOp OpKeywordMy VarScalar LParen Expression RParen Block
+               | ForStatementOp VarScalar LParen Expression RParen Block
+
+ForStatementOp ::= OpKeywordFor
+                 | OpKeywordForeach
+
+WhileStatement ::= ConditionWhile LParen Expression RParen Block
+UntilStatement ::= ConditionUntil LParen Expression RParen Block
 
 StatementModifier ::= ConditionIfPostfixExpr
                     | ConditionUnlessPostfixExpr
@@ -24,7 +39,6 @@ StatementModifier ::= ConditionIfPostfixExpr
                     | ConditionUntilPostfixExpr
                     | ConditionForPostfixExpr
                     | ConditionForeachPostfixExpr
-                    | ConditionWhenPostfixExpr
 
 Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
             | ConditionIfExpr ConditionElseExpr
@@ -43,7 +57,6 @@ ConditionWhilePostfixExpr   ::= ConditionWhile   Expression
 ConditionUntilPostfixExpr   ::= ConditionUntil   Expression
 ConditionForPostfixExpr     ::= ConditionFor     Expression
 ConditionForeachPostfixExpr ::= ConditionForeach Expression
-ConditionWhenPostfixExpr    ::= ConditionWhen    Expression
 
 Label ::= IdentComp Colon
 
@@ -1057,6 +1070,8 @@ OpKeywordExists           ~ 'exists'
 OpKeywordExit             ~ 'exit'
 OpKeywordExp              ~ 'exp'
 OpKeywordFc               ~ 'fc'
+OpKeywordFor              ~ 'for'
+OpKeywordForeach          ~ 'foreach'
 OpKeywordFcntl            ~ 'fcntl'
 OpKeywordFileno           ~ 'fileno'
 OpKeywordFlock            ~ 'flock'
@@ -1263,7 +1278,6 @@ ConditionWhile   ~ 'while'
 ConditionUntil   ~ 'until'
 ConditionFor     ~ 'for'
 ConditionForeach ~ 'foreach'
-ConditionWhen    ~ 'when'
 
 # These are some parsing rules for the Expressions for them:
 # ----
