@@ -2,6 +2,8 @@ use strict;
 use warnings;
 use experimental qw< postderef >;
 
+use Test::More;
+use Test::Fatal qw< exception >;
 use Guacamole::Test;
 
 # qw is using spaces in between - that's different
@@ -34,7 +36,17 @@ foreach my $function (@q_functions) {
         # and one without delimiters
         my $emptystring = sprintf '%s%s%s', $function,
                           $delimiter_set->@*;
+
         parses($emptystring);
+
+        my $bad_string = sprintf '%s %s%s', $function,
+                         $delimiter_set->@*;
+
+        like(
+            exception { parses($bad_string) },
+            qr/Error \s in \s SLIF \s parse/xms,
+            "Failed to parse: $bad_string",
+        );
     }
 }
 
