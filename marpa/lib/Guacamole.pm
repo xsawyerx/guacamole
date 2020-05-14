@@ -162,6 +162,8 @@ NonBraceValue ::= Modifier Variable
                 | ParenExpr
 
 ParenExpr ::= LParen Expression RParen
+            | LParen RParen # support ()
+
 Modifier  ::= OpKeywordMy | OpKeywordOur | OpKeywordLocal | OpKeywordState
 
 # UnderscoreData and UnderscoreEnd are not values
