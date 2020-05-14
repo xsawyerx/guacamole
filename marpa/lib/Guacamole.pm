@@ -72,16 +72,21 @@ NonBraceExpression ::= NonBraceValue
 
 Value         ::= Literal
                 | Variable
+                | Modifier Variable
+                | Modifier ParenExpr
                 | UnderscoreValues
                 | SubCall
-                | LParen Expression RParen
+                | ParenExpr
 
 # Same as Value above, but with a NonBraceLiteral
 NonBraceValue ::= NonBraceLiteral
                 | Variable
                 | UnderscoreValues
                 | SubCall
-                | LParen Expression RParen
+                | ParenExpr
+
+ParenExpr ::= LParen Expression RParen
+Modifier  ::= OpKeywordMy | OpKeywordOur | OpKeywordLocal | OpKeywordState
 
 # UnderscoreData and UnderscoreEnd are not values
 UnderscoreValues ::= UnderscorePackage
@@ -113,7 +118,7 @@ VarName ::= Ident
 SubCall ::= Ident CallArgs
           | VarCode CallArgs
 
-CallArgs ::= LParen Expression RParen
+CallArgs ::= ParenExpr
            | LParen RParen
 
 
@@ -255,7 +260,6 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordLengthExpr
             | OpKeywordLinkExpr
             | OpKeywordListenExpr
-            | OpKeywordLocalExpr
             | OpKeywordLocaltimeExpr
             | OpKeywordLockExpr
             | OpKeywordLogExpr
@@ -266,13 +270,11 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordMsggetExpr
             | OpKeywordMsgrcvExpr
             | OpKeywordMsgsndExpr
-            | OpKeywordMyExpr
             | OpKeywordNextExpr
             | OpKeywordOctExpr
             | OpKeywordOpenExpr
             | OpKeywordOpendirExpr
             | OpKeywordOrdExpr
-            | OpKeywordOurExpr
             | OpKeywordPackExpr
             | OpKeywordPipeExpr
             | OpKeywordPopExpr
@@ -326,7 +328,6 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordSqrtExpr
             | OpKeywordSrandExpr
             | OpKeywordStatExpr
-            | OpKeywordStateExpr
             | OpKeywordStudyExpr
             | OpKeywordSubstrExpr
             | OpKeywordSymlinkExpr
@@ -627,8 +628,6 @@ OpKeywordLinkExpr             ::= OpKeywordLink Expression OpComma Expression
 
 OpKeywordListenExpr           ::= OpKeywordListen Expression OpComma Expression
 
-OpKeywordLocalExpr            ::= OpKeywordLocal Expression
-
 OpKeywordLocaltimeExpr        ::= OpKeywordLocaltime Expression
                                 | OpKeywordLocaltime
 
@@ -655,8 +654,6 @@ OpKeywordMsgrcvExpr           ::= OpKeywordMsgrcv Expression OpComma Expression 
 
 OpKeywordMsgsndExpr           ::= OpKeywordMsgsnd Expression OpComma Expression OpComma Expression
 
-OpKeywordMyExpr               ::= OpKeywordMy Expression
-
 OpKeywordNextExpr             ::= OpKeywordNext Label
                                 | OpKeywordNext Expression
                                 | OpKeywordNext
@@ -673,8 +670,6 @@ OpKeywordOpendirExpr          ::= OpKeywordOpendir Expression OpComma Expression
 
 OpKeywordOrdExpr              ::= OpKeywordOrd Expression
                                 | OpKeywordOrd
-
-OpKeywordOurExpr              ::= OpKeywordOur Expression
 
 OpKeywordPackExpr             ::= OpKeywordPack Expression OpComma Expression
 
@@ -825,8 +820,6 @@ OpKeywordSrandExpr            ::= OpKeywordSrand Expression
 
 OpKeywordStatExpr             ::= OpKeywordStat Expression
                                 | OpKeywordStat
-
-OpKeywordStateExpr            ::= OpKeywordState Expression
 
 OpKeywordStudyExpr            ::= OpKeywordStudy Expression
                                 | OpKeywordStudy
