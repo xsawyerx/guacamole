@@ -991,17 +991,17 @@ OpFileStartTimeExpr             ::= OpFileStartTime            Expression
 OpFileAccessTimeExpr            ::= OpFileAccessTime           Expression
 OpFileChangeTimeExpr            ::= OpFileChangeTime           Expression
 
-QFuncDelimitedValue ::= LParen       NonRParen       RParen
+QFuncDelimitedValue ::= LParen       NonRParenOrEscapedParens_Many               RParen
                       | LParen       RParen
-                      | LBrace       NonRBrace       RBrace
+                      | LBrace       NonRBraceOrEscapedBraces_Many               RBrace
                       | LBrace       RBrace
-                      | LAngle       NonRAngle       RAngle
+                      | LAngle       NonRAngleOrEscapedAngles_Many               RAngle
                       | LAngle       RAngle
-                      | LBracket     NonRBracket     RBracket
+                      | LBracket     NonRBracketOrEscapedBrackets_Many           RBracket
                       | LBracket     RBracket
-                      | ForwardSlash NonForwardSlash ForwardSlash
+                      | ForwardSlash NonForwardSlashOrEscapedForwardSlashes_Many ForwardSlash
                       | ForwardSlash ForwardSlash
-                      | ExclamPoint  NonExclamPoint  ExclamPoint
+                      | ExclamPoint  NonExclamPointOrEscapedExclamPoints_Many    ExclamPoint
                       | ExclamPoint  ExclamPoint
 
 ###
@@ -1036,12 +1036,43 @@ RBrace   ~ '}'
 LAngle   ~ '<'
 RAngle   ~ '>'
 
-NonRParen       ~ [^)]+
-NonRBracket     ~ [^\]]+
-NonRBrace       ~ [^\}]+
-NonRAngle       ~ [^>]+
-NonForwardSlash ~ [^\/]+
-NonExclamPoint  ~ [^\!]+
+NonRParenOrEscapedParens_Many ~ NonRParenOrEscapedParens+
+NonRParenOrEscapedParens      ~ EscapedParens | NonRParen
+EscapedParens                 ~ EscapedLParen | EscapedRParen
+EscapedLParen                 ~ '\\('
+EscapedRParen                 ~ '\\)'
+NonRParen                     ~ [^)]
+
+NonRBracketOrEscapedBrackets_Many ~ NonRBracketOrEscapedBrackets+
+NonRBracketOrEscapedBrackets      ~ EscapedBrackets | NonRBracket
+EscapedBrackets                   ~ EscapedLBracket | EscapedRBracket
+EscapedLBracket                   ~ '\\['
+EscapedRBracket                   ~ '\\]'
+NonRBracket                       ~ [^\]]
+
+NonRBraceOrEscapedBraces_Many ~ NonRBraceOrEscapedBraces+
+NonRBraceOrEscapedBraces      ~ EscapedBraces | NonRBrace
+EscapedBraces                 ~ EscapedLBrace | EscapedRBrace
+EscapedLBrace                 ~ '\\{'
+EscapedRBrace                 ~ '\\}'
+NonRBrace                     ~ [^\}]
+
+NonRAngleOrEscapedAngles_Many ~ NonRAngleOrEscapedAngles+
+NonRAngleOrEscapedAngles      ~ EscapedAngles | NonRAngle
+EscapedAngles                 ~ EscapedLAngle | EscapedRAngle
+EscapedLAngle                 ~ '\\<'
+EscapedRAngle                 ~ '\\>'
+NonRAngle                     ~ [^>]
+
+NonForwardSlashOrEscapedForwardSlashes_Many ~ NonForwardSlashOrEscapedForwardSlashes+
+NonForwardSlashOrEscapedForwardSlashes      ~ EscapedForwardSlash | NonForwardSlash
+EscapedForwardSlash                        ~ '\/'
+NonForwardSlash                            ~ [^\/]
+
+NonExclamPointOrEscapedExclamPoints_Many ~ NonExclamPointOrEscapedExclamPoints+
+NonExclamPointOrEscapedExclamPoints      ~ EscapedExclamPoint | NonExclamPoint
+EscapedExclamPoint                        ~ '\\!'
+NonExclamPoint                            ~ [^\!]
 
 Ellipsis ~ '...'
 
