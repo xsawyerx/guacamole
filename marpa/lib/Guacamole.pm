@@ -13,7 +13,7 @@ StatementSeq ::= Statement
                | Statement Semicolon
                | Statement Semicolon StatementSeq
 
-Statement ::= Expression
+Statement ::= NonBraceExpression
             | Block
 
 Label ::= IdentComp Colon
@@ -44,12 +44,49 @@ Expression ::= Value
             || Expression OpNameAnd Expression assoc=>left
             || Expression OpNameOr Expression  assoc=>left
 
-Value ::= Literal
-        | Variable
-        | UnderscoreValues
-        | SubCall
-        | OpKeywordDoExpr
-        | LParen Expression RParen
+# Same as Expression, but since it's a top-level expresison,
+# it can only use NonBraceValue and NonBraceExpressions
+NonBraceExpression ::= NonBraceValue
+                    || NonBraceExpression OpArrow ArrowRHS     assoc=>left
+                    || NonBraceExpression OpInc
+                    || OpInc Expression
+                    || NonBraceExpression OpPower Expression   assoc=>right
+                    || OpUnary Expression                      assoc=>right
+                    || NonBraceExpression OpRegex Expression   assoc=>left
+                    || NonBraceExpression OpMulti Expression   assoc=>left
+                    || NonBraceExpression OpAdd Expression     assoc=>left
+                    || NonBraceExpression OpShift Expression   assoc=>left
+                    || OpKeyword
+                    || NonBraceExpression OpInequal Expression
+                    || NonBraceExpression OpEqual Expression
+                    || NonBraceExpression OpBinAnd Expression  assoc=>left
+                    || NonBraceExpression OpBinOr Expression   assoc=>left
+                    || NonBraceExpression OpLogAnd Expression  assoc=>left
+                    || NonBraceExpression OpLogOr Expression   assoc=>left
+                    || NonBraceExpression OpRange Expression
+                    || NonBraceExpression OpTriThen Expression OpTriElse Expression  assoc=>right
+                    || NonBraceExpression OpAssign Expression  assoc=>right
+                    || OpNameNot Expression                    assoc=>right
+                    || NonBraceExpression OpNameAnd Expression assoc=>left
+                    || NonBraceExpression OpNameOr Expression  assoc=>left
+
+Value         ::= Literal
+                | Variable
+                | Modifier Variable
+                | Modifier ParenExpr
+                | UnderscoreValues
+                | SubCall
+                | ParenExpr
+
+# Same as Value above, but with a NonBraceLiteral
+NonBraceValue ::= NonBraceLiteral
+                | Variable
+                | UnderscoreValues
+                | SubCall
+                | ParenExpr
+
+ParenExpr ::= LParen Expression RParen
+Modifier  ::= OpKeywordMy | OpKeywordOur | OpKeywordLocal | OpKeywordState
 
 # UnderscoreData and UnderscoreEnd are not values
 UnderscoreValues ::= UnderscorePackage
@@ -81,10 +118,12 @@ VarName ::= Ident
 SubCall ::= Ident CallArgs
           | VarCode CallArgs
 
-CallArgs ::= LParen Expression RParen
+CallArgs ::= ParenExpr
            | LParen RParen
 
-Block ::= LBrace StatementSeq RBrace
+
+Block ::= LBrace RBrace
+        | LBrace StatementSeq RBrace
 
 ArrayElem ::= LBracket Expression RBracket
 
@@ -94,16 +133,25 @@ Ident ::= IdentComp
         | IdentComp PackageSep Ident
         | Ident PackageSep
 
-Literal ::= LitNumber
-          | LitArray
-          | LitHash
-          | LitString
-          | InterpolString
+NonBraceLiteral ::= LitNumber
+                  | LitArray
+                  | LitString
+                  | InterpolString
+
+Literal         ::= NonBraceLiteral
+                  | LitHash
 
 LitArray       ::= LBracket Expression RBracket
+                 | LBracket RBracket
+
 LitHash        ::= LBrace Expression RBrace
+                 | LBrace RBrace
+
 LitString      ::= SingleQuote NonSingleQuote SingleQuote
+                 | SingleQuote SingleQuote
+
 InterpolString ::= DoubleQuote NonDoubleQuote DoubleQuote
+                 | DoubleQuote DoubleQuote
 
 ArrowRHS ::= ArrowDerefCall
            | ArrowMethodCall
@@ -142,6 +190,7 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordDefinedExpr
             | OpKeywordDeleteExpr
             | OpKeywordDieExpr
+            | OpKeywordDoExpr
             | OpKeywordDumpExpr
             | OpKeywordEachExpr
             | OpKeywordEofExpr
@@ -191,15 +240,18 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordEndnetentExpr
             | OpKeywordEndprotoentExpr
             | OpKeywordEndserventExpr
+            | OpKeywordExecExpr
             | OpKeywordGetsocknameExpr
             | OpKeywordGetsockoptExpr
             | OpKeywordGlobExpr
             | OpKeywordGmtimeExpr
             | OpKeywordGotoExpr
+            | OpKeywordGrepExpr
             | OpKeywordHexExpr
             | OpKeywordIndexExpr
             | OpKeywordIntExpr
             | OpKeywordIoctlExpr
+            | OpKeywordJoinExpr
             | OpKeywordKeysExpr
             | OpKeywordKillExpr
             | OpKeywordLastExpr
@@ -208,11 +260,11 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordLengthExpr
             | OpKeywordLinkExpr
             | OpKeywordListenExpr
-            | OpKeywordLocalExpr
             | OpKeywordLocaltimeExpr
             | OpKeywordLockExpr
             | OpKeywordLogExpr
             | OpKeywordLstatExpr
+            | OpKeywordMapExpr
             | OpKeywordMkdirExpr
             | OpKeywordMsgctlExpr
             | OpKeywordMsggetExpr
@@ -220,12 +272,16 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordMsgsndExpr
             | OpKeywordNextExpr
             | OpKeywordOctExpr
+            | OpKeywordOpenExpr
             | OpKeywordOpendirExpr
             | OpKeywordOrdExpr
             | OpKeywordPackExpr
             | OpKeywordPipeExpr
             | OpKeywordPopExpr
             | OpKeywordPosExpr
+            | OpKeywordPrintExpr
+            | OpKeywordPrintfExpr
+            | OpKeywordPrototypeExpr
             | OpKeywordPushExpr
             | OpKeywordQuotemetaExpr
             | OpKeywordRandExpr
@@ -244,6 +300,7 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordRewinddirExpr
             | OpKeywordRindexExpr
             | OpKeywordRmdirExpr
+            | OpKeywordSayExpr
             | OpKeywordScalarExpr
             | OpKeywordSeekExpr
             | OpKeywordSeekdirExpr
@@ -265,7 +322,9 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordSleepExpr
             | OpKeywordSocketExpr
             | OpKeywordSocketpairExpr
+            | OpKeywordSortExpr
             | OpKeywordSpliceExpr
+            | OpKeywordSprintfExpr
             | OpKeywordSqrtExpr
             | OpKeywordSrandExpr
             | OpKeywordStatExpr
@@ -276,9 +335,11 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordSysopenExpr
             | OpKeywordSysreadExpr
             | OpKeywordSysseekExpr
+            | OpKeywordSystemExpr
             | OpKeywordSyswriteExpr
             | OpKeywordTellExpr
             | OpKeywordTelldirExpr
+            | OpKeywordTieExpr
             | OpKeywordTiedExpr
             | OpKeywordTimeExpr
             | OpKeywordTimesExpr
@@ -301,27 +362,11 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordWriteExpr
 
 # TODO: (Add the following above)
-#| OpKeywordExec
-#| OpKeywordGrepExpr
-#| OpKeywordJoinExpr
-#| OpKeywordMapExpr
-#| OpKeywordMyExpr
 #| OpKeywordNoExpr
-#| OpKeywordOpenExpr
-#| OpKeywordOurExpr
 #| OpKeywordPackageExpr
-#| OpKeywordPrintExpr
-#| OpKeywordPrintfExpr
-#| OpKeywordPrototypeExpr
 #| OpKeywordRequireExpr
-#| OpKeywordSayExpr
-#| OpKeywordSortExpr
 #| OpKeywordSplitExpr
-#| OpKeywordSprintfExpr
-#| OpKeywordStateExpr
 #| OpKeywordSubExpr
-#| OpKeywordSystemExpr
-#| OpKeywordTieExpr
 #| OpKeywordUseExpr
 
 OpFile ::= OpFileReadableEffectiveExpr
@@ -418,7 +463,7 @@ OpKeywordDeleteExpr           ::= OpKeywordDelete Expression
 OpKeywordDieExpr              ::= OpKeywordDie Expression
 
 OpKeywordDoExpr               ::= OpKeywordDo Block
-                                | OpKeywordDo Expression
+                                | OpKeywordDo NonBraceExpression
 
 OpKeywordDumpExpr             ::= OpKeywordDump Label
                                 | OpKeywordDump Expression
@@ -526,6 +571,9 @@ OpKeywordEndprotoentExpr      ::= OpKeywordEndprotoent
 
 OpKeywordEndserventExpr       ::= OpKeywordEndservent
 
+OpKeywordExecExpr             ::= OpKeywordExec Block Expression
+                                | OpKeywordExec NonBraceExpression
+
 OpKeywordGetsocknameExpr      ::= OpKeywordGetsockname Expression
 
 OpKeywordGetsockoptExpr       ::= OpKeywordGetsockopt Expression OpComma Expression OpComma Expression
@@ -540,6 +588,9 @@ OpKeywordGotoExpr             ::= OpKeywordGoto Label
                                 | OpKeywordGoto Expression
                                 | OpKeywordGoto SigilCode IdentComp
 
+OpKeywordGrepExpr             ::= OpKeywordGrep Block Expression
+                                | OpKeywordGrep NonBraceExpression OpComma Expression
+
 OpKeywordHexExpr              ::= OpKeywordHex Expression
                                 | OpKeywordHex
 
@@ -551,7 +602,7 @@ OpKeywordIntExpr              ::= OpKeywordInt Expression
 
 OpKeywordIoctlExpr            ::= OpKeywordIoctl Expression OpComma Expression OpComma Expression
 
-#TODO: OpKeywordJoinExpr ::=
+OpKeywordJoinExpr             ::= OpKeywordJoin Expression OpComma Expression
 
 OpKeywordKeysExpr             ::= OpKeywordKeys VarHash
                                 | OpKeywordKeys VarArray
@@ -577,8 +628,6 @@ OpKeywordLinkExpr             ::= OpKeywordLink Expression OpComma Expression
 
 OpKeywordListenExpr           ::= OpKeywordListen Expression OpComma Expression
 
-OpKeywordLocalExpr            ::= OpKeywordLocal Expression
-
 OpKeywordLocaltimeExpr        ::= OpKeywordLocaltime Expression
                                 | OpKeywordLocaltime
 
@@ -590,7 +639,8 @@ OpKeywordLogExpr              ::= OpKeywordLog Expression
 OpKeywordLstatExpr            ::= OpKeywordLstat Expression
                                 | OpKeywordLstat
 
-#TODO: OpKeywordMapExpr ::= OpKeywordMap Expression
+OpKeywordMapExpr              ::= OpKeywordMap Block Expression
+                                | OpKeywordMap NonBraceExpression OpComma Expression
 
 OpKeywordMkdirExpr            ::= OpKeywordMkdir Expression OpComma Expression
                                 | OpKeywordMkdir Expression
@@ -604,8 +654,6 @@ OpKeywordMsgrcvExpr           ::= OpKeywordMsgrcv Expression OpComma Expression 
 
 OpKeywordMsgsndExpr           ::= OpKeywordMsgsnd Expression OpComma Expression OpComma Expression
 
-# TODO: OpKeywordMyExpr ::= OpKeywordMy Expression
-
 OpKeywordNextExpr             ::= OpKeywordNext Label
                                 | OpKeywordNext Expression
                                 | OpKeywordNext
@@ -615,14 +663,13 @@ OpKeywordNextExpr             ::= OpKeywordNext Label
 OpKeywordOctExpr              ::= OpKeywordOct Expression
                                 | OpKeywordOct
 
-# TODO: OpKeywordOpenExpr ::= OpKeywordOpen
+OpKeywordOpenExpr             ::= OpKeywordOpen Expression OpComma Expression OpComma Expression OpComma Expression
+                                | OpKeywordOpen Expression OpComma Expression OpComma Expression
 
 OpKeywordOpendirExpr          ::= OpKeywordOpendir Expression OpComma Expression
 
 OpKeywordOrdExpr              ::= OpKeywordOrd Expression
                                 | OpKeywordOrd
-
-# TODO: OpKeywordOurExpr ::= OpKeywordOur Expression
 
 OpKeywordPackExpr             ::= OpKeywordPack Expression OpComma Expression
 
@@ -636,9 +683,18 @@ OpKeywordPopExpr              ::= OpKeywordPop Expression
 OpKeywordPosExpr              ::= OpKeywordPos Expression
                                 | OpKeywordPos
 
-# TODO: OpKeywordPrintExpr     ::= OpKeywordPrint Expression
-# TODO: OpKeywordPrintfExpr    ::= OpKeywordPrintf Expression
-# TODO: OpKeywordPrototypeExpr ::= OpKeywordPrototype Expression
+OpKeywordPrintExpr            ::= OpKeywordPrint Block Expression
+                                | OpKeywordPrint NonBraceExpression OpComma Expression
+                                | OpKeywordPrint NonBraceExpression
+                                | OpKeywordPrint Block
+                                | OpKeywordPrint
+
+OpKeywordPrintfExpr           ::= OpKeywordPrintf Block NonBraceExpression OpComma Expression
+                                | OpKeywordPrintf NonBraceExpression OpComma Expression
+                                | OpKeywordPrintf Block
+
+OpKeywordPrototypeExpr        ::= OpKeywordPrototype Expression
+                                | OpKeywordPrototype
 
 OpKeywordPushExpr             ::= OpKeywordPush Expression OpComma Expression
 
@@ -690,6 +746,12 @@ OpKeywordRindexExpr           ::= OpKeywordRindex Expression OpComma Expression 
 OpKeywordRmdirExpr            ::= OpKeywordRmdir Expression
                                 | OpKeywordRmdir
 
+OpKeywordSayExpr              ::= OpKeywordSay Block Expression
+                                | OpKeywordSay NonBraceExpression OpComma Expression
+                                | OpKeywordSay NonBraceExpression
+                                | OpKeywordSay Block
+                                | OpKeywordSay
+
 OpKeywordScalarExpr           ::= OpKeywordScalar Expression
 
 OpKeywordSeekExpr             ::= OpKeywordSeek Expression OpComma Expression OpComma Expression
@@ -737,6 +799,10 @@ OpKeywordSocketExpr           ::= OpKeywordSocket Expression OpComma Expression 
 
 OpKeywordSocketpairExpr       ::= OpKeywordSocketpair Expression OpComma Expression OpComma Expression OpComma Expression OpComma Expression
 
+OpKeywordSortExpr             ::= OpKeywordSort Block Expression
+                                | OpKeywordSort VarScalar Expression
+                                | OpKeywordSort NonBraceExpression
+
 OpKeywordSpliceExpr           ::= OpKeywordSplice Expression OpComma Expression OpComma Expression OpComma Expression
                                 | OpKeywordSplice Expression OpComma Expression OpComma Expression
                                 | OpKeywordSplice Expression OpComma Expression
@@ -744,7 +810,7 @@ OpKeywordSpliceExpr           ::= OpKeywordSplice Expression OpComma Expression 
 
 # TODO: OpKeywordSplitExpr ::= OpKeywordSplit
 
-# TODO: OpKeywordSprintfExpr ::= OpKeywordSprintf
+OpKeywordSprintfExpr          ::= OpKeywordSprintf Expression
 
 OpKeywordSqrtExpr             ::= OpKeywordSqrt Expression
                                 | OpKeywordSqrt
@@ -754,8 +820,6 @@ OpKeywordSrandExpr            ::= OpKeywordSrand Expression
 
 OpKeywordStatExpr             ::= OpKeywordStat Expression
                                 | OpKeywordStat
-
-# TODO: OpKeywordStateExpr ::= OpKeywordState
 
 OpKeywordStudyExpr            ::= OpKeywordStudy Expression
                                 | OpKeywordStudy
@@ -782,14 +846,15 @@ OpKeywordSyswriteExpr         ::= OpKeywordSyswrite Expression OpComma Expressio
                                 | OpKeywordSyswrite Expression OpComma Expression OpComma Expression
                                 | OpKeywordSyswrite Expression OpComma Expression
 
-# TODO: OpKeywordsystemExpr ::= OpKeywordsystem Expression
+OpKeywordSystemExpr           ::= OpKeywordSystem Block Expression
+                                | OpKeywordSystem NonBraceExpression
 
 OpKeywordTellExpr             ::= OpKeywordTell Expression
                                 | OpKeywordTell
 
 OpKeywordTelldirExpr          ::= OpKeywordTelldir Expression
 
-# TODO: OpKeywordTieExpr ::= OpKeywordTie Expression
+OpKeywordTieExpr              ::= OpKeywordTie Expression OpComma Expression OpComma Expression
 
 OpKeywordTiedExpr             ::= OpKeywordTied Expression
 
@@ -958,7 +1023,7 @@ OpKeywordEach             ~ 'each'
 OpKeywordEof              ~ 'eof'
 OpKeywordEval             ~ 'eval'
 OpKeywordEvalbytes        ~ 'evalbytes'
-# TODO: OpKeywordExec             ~ 'exec'
+OpKeywordExec             ~ 'exec'
 OpKeywordExists           ~ 'exists'
 OpKeywordExit             ~ 'exit'
 OpKeywordExp              ~ 'exp'
@@ -1008,12 +1073,12 @@ OpKeywordGetsockopt       ~ 'getsockopt'
 OpKeywordGlob             ~ 'glob'
 OpKeywordGmtime           ~ 'gmtime'
 OpKeywordGoto             ~ 'goto'
-# TODO: #OpKeywordGrep             ~ 'grep'
+OpKeywordGrep             ~ 'grep'
 OpKeywordHex              ~ 'hex'
 OpKeywordIndex            ~ 'index'
 OpKeywordInt              ~ 'int'
 OpKeywordIoctl            ~ 'ioctl'
-#TODO: OpKeywordJoin             ~ 'join'
+OpKeywordJoin             ~ 'join'
 OpKeywordKeys             ~ 'keys'
 OpKeywordKill             ~ 'kill'
 OpKeywordLast             ~ 'last'
@@ -1027,28 +1092,28 @@ OpKeywordLocaltime        ~ 'localtime'
 OpKeywordLock             ~ 'lock'
 OpKeywordLog              ~ 'log'
 OpKeywordLstat            ~ 'lstat'
-# TODO: OpKeywordMap              ~ 'map'
+OpKeywordMap              ~ 'map'
 OpKeywordMkdir            ~ 'mkdir'
 OpKeywordMsgctl           ~ 'msgctl'
 OpKeywordMsgget           ~ 'msgget'
 OpKeywordMsgrcv           ~ 'msgrcv'
 OpKeywordMsgsnd           ~ 'msgsnd'
-# TODO: OpKeywordMy               ~ 'my'
+OpKeywordMy               ~ 'my'
 OpKeywordNext             ~ 'next'
 # TODO: OpKeywordNo               ~ 'no'
 OpKeywordOct              ~ 'oct'
-# TODO: OpKeywordOpen             ~ 'open'
+OpKeywordOpen             ~ 'open'
 OpKeywordOpendir          ~ 'opendir'
 OpKeywordOrd              ~ 'ord'
-# TODO: OpKeywordOur              ~ 'our'
+OpKeywordOur              ~ 'our'
 OpKeywordPack             ~ 'pack'
 # TODO: OpKeywordPackage          ~ 'package'
 OpKeywordPipe             ~ 'pipe'
 OpKeywordPop              ~ 'pop'
 OpKeywordPos              ~ 'pos'
-# TODO: OpKeywordPrint            ~ 'print'
-# TODO: OpKeywordPrintf           ~ 'printf'
-# TODO: #OpKeywordPrototype        ~ 'prototype'
+OpKeywordPrint            ~ 'print'
+OpKeywordPrintf           ~ 'printf'
+OpKeywordPrototype        ~ 'prototype'
 OpKeywordPush             ~ 'push'
 OpKeywordQuotemeta        ~ 'quotemeta'
 OpKeywordRand             ~ 'rand'
@@ -1068,7 +1133,7 @@ OpKeywordReverse          ~ 'reverse'
 OpKeywordRewinddir        ~ 'rewinddir'
 OpKeywordRindex           ~ 'rindex'
 OpKeywordRmdir            ~ 'rmdir'
-# TODO: OpKeywordSay              ~ 'say'
+OpKeywordSay              ~ 'say'
 OpKeywordScalar           ~ 'scalar'
 OpKeywordSeek             ~ 'seek'
 OpKeywordSeekdir          ~ 'seekdir'
@@ -1090,14 +1155,14 @@ OpKeywordSin              ~ 'sin'
 OpKeywordSleep            ~ 'sleep'
 OpKeywordSocket           ~ 'socket'
 OpKeywordSocketpair       ~ 'socketpair'
-# TODO: OpKeywordSort             ~ 'sort'
+OpKeywordSort             ~ 'sort'
 OpKeywordSplice           ~ 'splice'
 # TODO: OpKeywordSplit            ~ 'split'
-# TODO: OpKeywordSprintf          ~ 'sprintf'
+OpKeywordSprintf          ~ 'sprintf'
 OpKeywordSqrt             ~ 'sqrt'
 OpKeywordSrand            ~ 'srand'
 OpKeywordStat             ~ 'stat'
-# TODO: OpKeywordState            ~ 'state'
+OpKeywordState            ~ 'state'
 OpKeywordStudy            ~ 'study'
 # TODO: OpKeywordSub              ~ 'sub'
 OpKeywordSubstr           ~ 'substr'
@@ -1106,11 +1171,11 @@ OpKeywordSyscall          ~ 'syscall'
 OpKeywordSysopen          ~ 'sysopen'
 OpKeywordSysread          ~ 'sysread'
 OpKeywordSysseek          ~ 'sysseek'
-# TODO: OpKeywordSystem           ~ 'system'
+OpKeywordSystem           ~ 'system'
 OpKeywordSyswrite         ~ 'syswrite'
 OpKeywordTell             ~ 'tell'
 OpKeywordTelldir          ~ 'telldir'
-# TODO: OpKeywordTie              ~ 'tie'
+OpKeywordTie              ~ 'tie'
 OpKeywordTied             ~ 'tied'
 OpKeywordTime             ~ 'time'
 OpKeywordTimes            ~ 'times'
