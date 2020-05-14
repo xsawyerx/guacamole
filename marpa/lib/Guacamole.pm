@@ -30,6 +30,7 @@ LoopStatement ::= ForStatement
 ForStatement ::= ForStatementOp LParen Statement Semicolon Statement Semicolon Statement RParen Block
                | ForStatementOp OpKeywordMy VarScalar LParen Expression RParen Block
                | ForStatementOp VarScalar LParen Expression RParen Block
+               | ForStatementOp LParen Expression RParen Block
 
 ForStatementOp ::= OpKeywordFor
                  | OpKeywordForeach
@@ -130,16 +131,18 @@ NonBraceExpression ::= NonBraceValue
                     || NonBraceExpression OpNameAnd Expression assoc=>left
                     || NonBraceExpression OpNameOr Expression  assoc=>left
 
-Value         ::= Literal
-                | Variable
-                | Modifier Variable
+Value         ::= Modifier Variable
                 | Modifier ParenExpr
+                | Literal
+                | Variable
                 | UnderscoreValues
                 | SubCall
                 | ParenExpr
 
 # Same as Value above, but with a NonBraceLiteral
-NonBraceValue ::= NonBraceLiteral
+NonBraceValue ::= Modifier Variable
+                | Modifier ParenExpr
+                | NonBraceLiteral
                 | Variable
                 | UnderscoreValues
                 | SubCall
