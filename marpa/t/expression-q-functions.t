@@ -9,7 +9,6 @@ use Guacamole::Test;
 # here we're just testing the delimiters
 my @q_functions = ( 'q', 'qq', 'qw', 'qx', 'qr' );
 
-
 my @delimiters = (
     [ '(', ')' ], # q(...) | q()
     [ '{', '}' ], # q{...} | q{}
@@ -20,11 +19,17 @@ my @delimiters = (
 
 foreach my $function (@q_functions) {
     foreach my $delimiter_set (@delimiters) {
-        my $string = sprintf '%s%s$foo%s',
-                     $function,
-                     $delimiter_set->@*;
+        my $simple_string = sprintf '%s%s$foo%s',
+                            $function,
+                            $delimiter_set->@*;
 
-        parses($string);
+        parses($simple_string);
+
+        my $escaped_string = sprintf '%s%s \\%s $foo \\%s %s',
+                             $function,
+                             $delimiter_set->@[ 0, 0, 1, 1 ];
+
+        parses($escaped_string);
 
         # and one without delimiters
         my $emptystring = sprintf '%s%s%s', $function,
