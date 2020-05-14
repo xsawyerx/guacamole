@@ -19,6 +19,7 @@ Statement ::= NonBraceExpression StatementModifier
             | Block
             | Condition
             | EllipsisStatement
+            | QLikeExpression
 
 LoopStatement ::= ForStatement
                 | WhileStatement
@@ -328,11 +329,6 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordPrintfExpr
             | OpKeywordPrototypeExpr
             | OpKeywordPushExpr
-            | OpKeywordQExpr
-            | OpKeywordQqExpr
-            | OpKeywordQxExpr
-            | OpKeywordQwExpr
-            | OpKeywordQrExpr
             | OpKeywordQuotemetaExpr
             | OpKeywordRandExpr
             | OpKeywordReadExpr
@@ -755,12 +751,6 @@ OpKeywordPrototypeExpr        ::= OpKeywordPrototype Expression
 
 OpKeywordPushExpr             ::= OpKeywordPush Expression OpComma Expression
 
-OpKeywordQExpr                ::= OpKeywordQ  QFuncDelimitedValue
-OpKeywordQqExpr               ::= OpKeywordQq QFuncDelimitedValue
-OpKeywordQxExpr               ::= OpKeywordQx QFuncDelimitedValue
-OpKeywordQwExpr               ::= OpKeywordQw QFuncDelimitedValue
-OpKeywordQrExpr               ::= OpKeywordQr QFuncDelimitedValue
-
 OpKeywordQuotemetaExpr        ::= OpKeywordQuotemeta Expression
                                 | OpKeywordQuotemeta
 
@@ -999,18 +989,26 @@ OpFileStartTimeExpr             ::= OpFileStartTime            Expression
 OpFileAccessTimeExpr            ::= OpFileAccessTime           Expression
 OpFileChangeTimeExpr            ::= OpFileChangeTime           Expression
 
-QFuncDelimitedValue ::= LParen       NonRParenOrEscapedParens_Many               RParen
-                      | LParen       RParen
-                      | LBrace       NonRBraceOrEscapedBraces_Many               RBrace
-                      | LBrace       RBrace
-                      | LAngle       NonRAngleOrEscapedAngles_Many               RAngle
-                      | LAngle       RAngle
-                      | LBracket     NonRBracketOrEscapedBrackets_Many           RBracket
-                      | LBracket     RBracket
-                      | ForwardSlash NonForwardSlashOrEscapedForwardSlashes_Many ForwardSlash
-                      | ForwardSlash ForwardSlash
-                      | ExclamPoint  NonExclamPointOrEscapedExclamPoints_Many    ExclamPoint
-                      | ExclamPoint  ExclamPoint
+QLikeExpression ::= QLikeExpressionExpr
+
+QLikeExpressionExpr ~ QLikeFunction '(' NonRParenOrEscapedParens_Many               ')'
+                    | QLikeFunction '{' NonRBraceOrEscapedBraces_Many               '}'
+                    | QLikeFunction '<' NonRAngleOrEscapedAngles_Many               '>'
+                    | QLikeFunction '[' NonRBracketOrEscapedBrackets_Many           ']'
+                    | QLikeFunction '/' NonForwardSlashOrEscapedForwardSlashes_Many '/'
+                    | QLikeFunction '!' NonExclamPointOrEscapedExclamPoints_Many    '!'
+                    | QLikeFunction '()'
+                    | QLikeFunction '{}'
+                    | QLikeFunction '<>'
+                    | QLikeFunction '[]'
+                    | QLikeFunction '//'
+                    | QLikeFunction '!!'
+
+QLikeFunction ~ OpKeywordQ
+              | OpKeywordQq
+              | OpKeywordQx
+              | OpKeywordQw
+              | OpKeywordQr
 
 ###
 
@@ -1033,8 +1031,8 @@ SingleQuote    ~ [']
 
 Colon        ~ ':'
 Semicolon    ~ ';'
-ForwardSlash ~ '/'
-ExclamPoint  ~ '!'
+#ForwardSlash ~ '/'
+#ExclamPoint  ~ '!'
 Escape       ~ '\'
 
 SigilScalar   ~ '$'
@@ -1050,46 +1048,46 @@ LBracket ~ '['
 RBracket ~ ']'
 LBrace   ~ '{'
 RBrace   ~ '}'
-LAngle   ~ '<'
-RAngle   ~ '>'
+#LAngle   ~ '<'
+#RAngle   ~ '>'
 
 NonRParenOrEscapedParens_Many ~ NonRParenOrEscapedParens+
 NonRParenOrEscapedParens      ~ EscapedParens | NonRParen
 EscapedParens                 ~ EscapedLParen | EscapedRParen
-EscapedLParen                 ~ '\\('
-EscapedRParen                 ~ '\\)'
+EscapedLParen                 ~ Escape [(]
+EscapedRParen                 ~ Escape [)]
 NonRParen                     ~ [^)]
 
 NonRBracketOrEscapedBrackets_Many ~ NonRBracketOrEscapedBrackets+
 NonRBracketOrEscapedBrackets      ~ EscapedBrackets | NonRBracket
 EscapedBrackets                   ~ EscapedLBracket | EscapedRBracket
-EscapedLBracket                   ~ '\\['
-EscapedRBracket                   ~ '\\]'
+EscapedLBracket                   ~ Escape [\[]
+EscapedRBracket                   ~ Escape [\]]
 NonRBracket                       ~ [^\]]
 
 NonRBraceOrEscapedBraces_Many ~ NonRBraceOrEscapedBraces+
 NonRBraceOrEscapedBraces      ~ EscapedBraces | NonRBrace
 EscapedBraces                 ~ EscapedLBrace | EscapedRBrace
-EscapedLBrace                 ~ '\\{'
-EscapedRBrace                 ~ '\\}'
+EscapedLBrace                 ~ Escape [\{]
+EscapedRBrace                 ~ Escape [\}]
 NonRBrace                     ~ [^\}]
 
 NonRAngleOrEscapedAngles_Many ~ NonRAngleOrEscapedAngles+
 NonRAngleOrEscapedAngles      ~ EscapedAngles | NonRAngle
 EscapedAngles                 ~ EscapedLAngle | EscapedRAngle
-EscapedLAngle                 ~ '\\<'
-EscapedRAngle                 ~ '\\>'
+EscapedLAngle                 ~ Escape [<]
+EscapedRAngle                 ~ Escape [>]
 NonRAngle                     ~ [^>]
 
 NonForwardSlashOrEscapedForwardSlashes_Many ~ NonForwardSlashOrEscapedForwardSlashes+
 NonForwardSlashOrEscapedForwardSlashes      ~ EscapedForwardSlash | NonForwardSlash
-EscapedForwardSlash                        ~ '\/'
-NonForwardSlash                            ~ [^\/]
+EscapedForwardSlash                         ~ Escape [/]
+NonForwardSlash                             ~ [^\/]
 
 NonExclamPointOrEscapedExclamPoints_Many ~ NonExclamPointOrEscapedExclamPoints+
 NonExclamPointOrEscapedExclamPoints      ~ EscapedExclamPoint | NonExclamPoint
-EscapedExclamPoint                        ~ '\\!'
-NonExclamPoint                            ~ [^\!]
+EscapedExclamPoint                       ~ Escape [!]
+NonExclamPoint                           ~ [^\!]
 
 Ellipsis ~ '...'
 
