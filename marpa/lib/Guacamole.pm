@@ -39,7 +39,6 @@ StatementModifier ::= ConditionIfPostfixExpr
                     | ConditionUntilPostfixExpr
                     | ConditionForPostfixExpr
                     | ConditionForeachPostfixExpr
-                    | ConditionWhenPostfixExpr
 
 Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
             | ConditionIfExpr ConditionElseExpr
@@ -58,7 +57,6 @@ ConditionWhilePostfixExpr   ::= ConditionWhile   Expression
 ConditionUntilPostfixExpr   ::= ConditionUntil   Expression
 ConditionForPostfixExpr     ::= ConditionFor     Expression
 ConditionForeachPostfixExpr ::= ConditionForeach Expression
-ConditionWhenPostfixExpr    ::= ConditionWhen    Expression
 
 Label ::= IdentComp Colon
 
@@ -1280,7 +1278,6 @@ ConditionWhile   ~ 'while'
 ConditionUntil   ~ 'until'
 ConditionFor     ~ 'for'
 ConditionForeach ~ 'foreach'
-ConditionWhen    ~ 'when'
 
 # These are some parsing rules for the Expressions for them:
 # ----
