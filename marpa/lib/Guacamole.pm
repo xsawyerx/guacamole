@@ -20,6 +20,8 @@ Statement ::= NonBraceExpression StatementModifier
             | Condition
             | EllipsisStatement
             | QLikeExpression
+            | UseStatement
+            | NoStatement
 
 LoopStatement ::= ForStatement
                 | WhileStatement
@@ -44,7 +46,17 @@ StatementModifier ::= ConditionIfPostfixExpr
 
 EllipsisStatement ::= Ellipsis
 
-EllipsisStatement ::= Ellipsis
+UseStatement ::= OpKeywordUse Ident VersionExpr Expression
+               | OpKeywordUse Ident VersionExpr
+               | OpKeywordUse Ident Expression
+               | OpKeywordUse VersionExpr
+               | OpKeywordUse Ident
+
+NoStatement ::= OpKeywordNo Ident VersionExpr Expression
+              | OpKeywordNo Ident VersionExpr
+              | OpKeywordNo Ident Expression
+              | OpKeywordNo VersionExpr
+              | OpKeywordNo Ident
 
 Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
             | ConditionIfExpr ConditionElseExpr
@@ -410,12 +422,10 @@ OpKeyword ::= OpKeywordAbsExpr
             | OpKeywordWriteExpr
 
 # TODO: (Add the following above)
-#| OpKeywordNoExpr
 #| OpKeywordPackageExpr
 #| OpKeywordRequireExpr
 #| OpKeywordSplitExpr
 #| OpKeywordSubExpr
-#| OpKeywordUseExpr
 
 OpFile ::= OpFileReadableEffectiveExpr
          | OpFileWritableEffectiveExpr
@@ -706,8 +716,6 @@ OpKeywordNextExpr             ::= OpKeywordNext Label
                                 | OpKeywordNext Expression
                                 | OpKeywordNext
 
-# TODO: OpKeywordNoExpr ::= OpKeywordNo Expression
-
 OpKeywordOctExpr              ::= OpKeywordOct Expression
                                 | OpKeywordOct
 
@@ -934,8 +942,6 @@ OpKeywordUnshiftExpr          ::= OpKeywordUnshift Value Expression
 
 OpKeywordUntieExpr            ::= OpKeywordUntie Expression
 
-# TODO: OpKeywordUseExpr ::= OpKeywordUse
-
 OpKeywordUtimeExpr            ::= OpKeywordUtime Expression
 
 OpKeywordValuesExpr           ::= OpKeywordValues Expression
@@ -1007,25 +1013,35 @@ QLikeFunction ~ OpKeywordQ
 IdentComp  ~ [a-zA-Z_]+
 PackageSep ~ '::'
 
-LitNumber ~ [0-9]+
+VersionExpr           ::= VersionNumber
+VersionNumber         ~ VersionNumberSegments
+                      | 'v' VersionNumberSegments
+
+VersionNumberSegments ~ VersionNumberSegment '.' VersionNumberSegment '.' VersionNumberSegment
+                      | VersionNumberSegment '.' VersionNumberSegment
+                      | VersionNumberSegment
+
+VersionNumberSegment ~ [0-9] [0-9] [0-9]
+                     | [0-9] [0-9]
+                     | [0-9]
+
+LitNumber   ~ [0-9]+
+SingleQuote ~ [']
+DoubleQuote ~ ["]
 
 NonDoubleOrEscapedQuote_Many ~ NonDoubleOrEscapedQuote+
 NonDoubleOrEscapedQuote      ~ EscapedDoubleQuote | NonDoubleQuote
 EscapedDoubleQuote           ~ Escape ["]
 NonDoubleQuote               ~ [^"]
-DoubleQuote    ~ ["]
 
 NonSingleOrEscapedQuote_Many ~ NonSingleOrEscapedQuote+
 NonSingleOrEscapedQuote      ~ EscapedSingleQuote | NonSingleQuote
 EscapedSingleQuote           ~ Escape [']
 NonSingleQuote               ~ [^']
-SingleQuote    ~ [']
 
-Colon        ~ ':'
-Semicolon    ~ ';'
-#ForwardSlash ~ '/'
-#ExclamPoint  ~ '!'
-Escape       ~ '\'
+Colon     ~ ':'
+Semicolon ~ ';'
+Escape    ~ '\'
 
 SigilScalar   ~ '$'
 SigilArray    ~ '@'
@@ -1040,8 +1056,6 @@ LBracket ~ '['
 RBracket ~ ']'
 LBrace   ~ '{'
 RBrace   ~ '}'
-#LAngle   ~ '<'
-#RAngle   ~ '>'
 
 NonRParenOrEscapedParens_Many ~ NonRParenOrEscapedParens+
 NonRParenOrEscapedParens      ~ EscapedParens | NonRParen
@@ -1224,7 +1238,7 @@ OpKeywordMsgrcv           ~ 'msgrcv'
 OpKeywordMsgsnd           ~ 'msgsnd'
 OpKeywordMy               ~ 'my'
 OpKeywordNext             ~ 'next'
-# TODO: OpKeywordNo               ~ 'no'
+OpKeywordNo               ~ 'no'
 OpKeywordOct              ~ 'oct'
 OpKeywordOpen             ~ 'open'
 OpKeywordOpendir          ~ 'opendir'
@@ -1317,7 +1331,7 @@ OpKeywordUnlink           ~ 'unlink'
 OpKeywordUnpack           ~ 'unpack'
 OpKeywordUnshift          ~ 'unshift'
 OpKeywordUntie            ~ 'untie'
-# TODO: OpKeywordUse              ~ 'use'
+OpKeywordUse              ~ 'use'
 OpKeywordUtime            ~ 'utime'
 OpKeywordValues           ~ 'values'
 OpKeywordVec              ~ 'vec'
