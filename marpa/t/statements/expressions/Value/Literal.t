@@ -4,10 +4,18 @@ use experimental qw< postderef >;
 
 use Guacamole::Test;
 
-parses(q{ "hello" });
-parses(q{ 'hello' });
+# LitNumber
 
-parses(q{ "hello world \" foo ' " });
+# LitArray
+
+# LitHash
+
+# LitString (SingleQuote)
+parses(q{ 'hello' });
 parses(q{ 'hello world \' foo " ' });
+
+# InterpolString (DoubleQuote)
+parses(q{ "hello" });
+parses(q{ "hello world \" foo ' " });
 
 done_testing();
