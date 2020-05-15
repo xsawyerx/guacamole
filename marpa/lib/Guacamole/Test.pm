@@ -23,7 +23,15 @@ sub parses {
 
     local $Test::Builder::Level += 1;
 
-    my @trees = Guacamole->parse($text);
+    my @trees;
+    eval { @trees = Guacamole->parse($text); }
+    or do { diag($@); };
+
+    # debugging
+    # use DDP;
+    # my @dumped_trees = map dump_tree( cleanup($_) ), @trees;
+    # p @dumped_trees;
+
     is( scalar(@trees), 1, "'$text': parsed unambiguously" );
     return \@trees;
 }
