@@ -5,9 +5,12 @@ use Guacamole::Test;
 
 foreach my $op ( qw< use no > ) {
     # use Module
+    parses("$op Module ()");
     parses("$op Module");
     parses("$op My::Module");
+    parses("$op My::Module ()");
     parses("$op My::Module::Foo");
+    parses("$op My::Module::Foo ()");
 
     # use VERSION
     parses("$op 5.010");
