@@ -52,7 +52,7 @@ sub fold_ident {
 
 # Remove useless text nodes.
 my %_clean_paren_type = (
-    "CallArgs" => [ "(", ")" ],
+    "ParenExpr" => [ "(", ")" ],
     "ArrayElem" => [ "[", "]" ],
     "HashElem" => [ "{", "}" ],
     "LitArray" => [ "[", "]" ],
