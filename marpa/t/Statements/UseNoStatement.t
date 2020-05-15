@@ -34,6 +34,10 @@ foreach my $op ( qw< use no > ) {
     parses("$op Module 4.10.999 ('foo')");
     parses("$op My::Module v5.200.123 qw< foo >");
     parses("$op My::Module::Foo 5.3.5 ( qw< foo > )");
+
+    # use with qw<>
+    parses("$op Fcntl qw( :mode );");
+    parses("$op Fcntl qw( :mode );");
 }
 
 done_testing();
