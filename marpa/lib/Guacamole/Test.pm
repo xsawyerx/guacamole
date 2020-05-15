@@ -13,6 +13,7 @@ use Exporter "import";
 
 our @EXPORT = qw(
     parses
+    parses_as
     parsent
     done_testing
 );
@@ -22,13 +23,31 @@ sub parses {
 
     local $Test::Builder::Level += 1;
 
-    my @trees = Guacamole->parse($text);
-    is scalar(@trees), 1, "'$text': parsed unambiguously";
+    my @trees;
+    eval { @trees = Guacamole->parse($text); }
+    or do { diag($@); };
 
-    foreach my $tree (@trees) {
-        my $ast = cleanup($tree);
-        print dump_tree($ast);
-    }
+    # debugging
+    # use DDP;
+    # my @dumped_trees = map dump_tree( cleanup($_) ), @trees;
+    # p @dumped_trees;
+
+    is( scalar(@trees), 1, "'$text': parsed unambiguously" );
+    return \@trees;
+}
+
+sub parses_as {
+    my ( $text, $user_trees ) = @_;
+
+    my $trees             = parses($text);
+    my @dumped_trees      = map dump_tree( cleanup($_) ), @{$trees};
+    my @dumped_user_trees = map dump_tree( cleanup($_) ), @{$user_trees};
+
+    is_deeply(
+        \@dumped_user_trees,
+        \@dumped_trees,
+        "'$text': parsed exactly as expected",
+    );
 }
 
 sub parsent {
