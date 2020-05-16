@@ -88,10 +88,13 @@ SubStatement ::= PhaseStatement Block
                | OpKeywordSub Ident SubDefinition
                | OpKeywordSub Ident
 
-SubDefinition ::= SubAttrsDefinition SubSigsDefinition Block
-                | SubAttrsDefinition Block
+SubDefinition ::= SubAttrsDefinitionSeq SubSigsDefinition Block
+                | SubAttrsDefinitionSeq Block
                 | SubSigsDefinition Block
-                |  Block
+                | Block
+
+SubAttrsDefinitionSeq ::= SubAttrsDefinition SubAttrsDefinitionSeq
+                        | SubAttrsDefinition
 
 SubAttrsDefinition ::= Colon IdentComp SubAttrArgs
                      | Colon IdentComp

@@ -6,6 +6,7 @@ parses('sub foo');
 parses('sub foo;');
 parses('sub foo :attr {1}');
 parses('sub foo : attr {1}');
+parses('sub foo : attra :attrb {1}');
 parses('sub foo :attr(foo) {1}');
 parses('sub foo : attr(foo) {1}');
 parses('sub foo ( $left, $right ) {1}');
