@@ -43,7 +43,7 @@ foreach my $function (@q_functions) {
                          $delimiter_set->@*;
 
         like(
-            exception( sub { parses($bad_string) } ),
+            exception( sub { parse_fail($bad_string) } ),
             qr/Error \s in \s SLIF \s parse/xms,
             "Refuse to parse: $bad_string",
         );
