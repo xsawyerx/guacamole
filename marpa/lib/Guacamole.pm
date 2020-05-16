@@ -21,6 +21,7 @@ Statement ::= BlockLevelExpression StatementModifier
             | EllipsisStatement
             | UseStatement
             | NoStatement
+            | RequireStatement
 
 LoopStatement ::= ForStatement
                 | WhileStatement
@@ -70,6 +71,10 @@ NoStatement ::= OpKeywordNo Ident VersionExpr Expression
               | OpKeywordNo Ident Expression
               | OpKeywordNo VersionExpr
               | OpKeywordNo Ident
+
+RequireStatement ::= OpKeywordRequire VersionExpr
+                   | OpKeywordRequire Ident
+                   | OpKeywordRequire Expression
 
 Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
             | ConditionIfExpr ConditionElseExpr
@@ -244,7 +249,6 @@ ArrowIndirectCall ::= SigilScalar Ident CallArgs
 
 # TODO: (Add the following above)
 #| OpKeywordPackageExpr
-#| OpKeywordRequireExpr
 #| OpKeywordSplitExpr
 #| OpKeywordSubExpr
 
@@ -1268,7 +1272,7 @@ OpKeywordRecv             ~ 'recv'
 OpKeywordRedo             ~ 'redo'
 OpKeywordRef              ~ 'ref'
 OpKeywordRename           ~ 'rename'
-# TODO: OpKeywordRequire          ~ 'require'
+OpKeywordRequire          ~ 'require'
 OpKeywordReset            ~ 'reset'
 OpKeywordReturn           ~ 'return'
 OpKeywordReverse          ~ 'reverse'
