@@ -278,7 +278,6 @@ ArrowIndirectCall ::= SigilScalar Ident CallArgs
 
 # TODO: (Add the following above)
 #| OpKeywordSplitExpr
-#| OpKeywordSubExpr
 
 OpNullaryKeywordExpr ::=
       OpKeywordBreakExpr
@@ -300,6 +299,7 @@ OpNullaryKeywordExpr ::=
     | OpKeywordEndprotoentExpr
     | OpKeywordEndserventExpr
     | OpKeywordEvalExpr
+    | OpKeywordSubExpr
     | OpKeywordTimeExpr
     | OpKeywordTimesExpr
     | OpKeywordWaitExpr
@@ -903,7 +903,7 @@ OpKeywordStatExpr             ::= OpKeywordStat ExprKwUnary
 OpKeywordStudyExpr            ::= OpKeywordStudy ExprKwUnary
                                 | OpKeywordStudy
 
-# TODO: OpKeywordSubExpr ::= OpKeywordSub
+OpKeywordSubExpr              ::= OpKeywordSub SubDefinition
 
 OpKeywordSubstrExpr           ::= OpKeywordSubstr ExprKwList
 
