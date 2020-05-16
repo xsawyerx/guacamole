@@ -19,7 +19,6 @@ Statement ::= BlockLevelExpression StatementModifier
             | Block
             | Condition
             | EllipsisStatement
-            | QLikeExpression
             | UseStatement
             | NoStatement
 
@@ -151,10 +150,10 @@ BlockLevelExprNameAnd ::= BlockLevelExprNameAnd OpNameAnd ExprNameNot | BlockLev
 BlockLevelExprNameOr ::= BlockLevelExprNameOr OpNameOr ExprNameAnd | BlockLevelExprNameAnd action => ::first
 BlockLevelExpression ::= BlockLevelExprNameOr action => ::first
 
-Value         ::= Literal | NonLiteral
+Value         ::= Literal | NonLiteral | QLikeValue
 
 # Same as Value above, but with a NonBraceLiteral
-NonBraceValue ::= NonBraceLiteral | NonLiteral
+NonBraceValue ::= NonBraceLiteral | NonLiteral | QLikeValue
 
 NonLiteral ::= Variable action => ::first
              | Modifier Variable action => ::first
@@ -976,20 +975,20 @@ OpFile ::=
     | OpFileAccessTime
     | OpFileChangeTime
 
-QLikeExpression ::= QLikeExpressionExpr
+QLikeValue ::= QLikeValueExpr
 
-QLikeExpressionExpr ~ QLikeFunction '(' NonRParenOrEscapedParens_Many               ')'
-                    | QLikeFunction '{' NonRBraceOrEscapedBraces_Many               '}'
-                    | QLikeFunction '<' NonRAngleOrEscapedAngles_Many               '>'
-                    | QLikeFunction '[' NonRBracketOrEscapedBrackets_Many           ']'
-                    | QLikeFunction '/' NonForwardSlashOrEscapedForwardSlashes_Many '/'
-                    | QLikeFunction '!' NonExclamPointOrEscapedExclamPoints_Many    '!'
-                    | QLikeFunction '()'
-                    | QLikeFunction '{}'
-                    | QLikeFunction '<>'
-                    | QLikeFunction '[]'
-                    | QLikeFunction '//'
-                    | QLikeFunction '!!'
+QLikeValueExpr ~ QLikeFunction '(' NonRParenOrEscapedParens_Many               ')'
+               | QLikeFunction '{' NonRBraceOrEscapedBraces_Many               '}'
+               | QLikeFunction '<' NonRAngleOrEscapedAngles_Many               '>'
+               | QLikeFunction '[' NonRBracketOrEscapedBrackets_Many           ']'
+               | QLikeFunction '/' NonForwardSlashOrEscapedForwardSlashes_Many '/'
+               | QLikeFunction '!' NonExclamPointOrEscapedExclamPoints_Many    '!'
+               | QLikeFunction '()'
+               | QLikeFunction '{}'
+               | QLikeFunction '<>'
+               | QLikeFunction '[]'
+               | QLikeFunction '//'
+               | QLikeFunction '!!'
 
 QLikeFunction ~ OpKeywordQ
               | OpKeywordQq
