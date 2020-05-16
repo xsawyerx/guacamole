@@ -4,6 +4,7 @@ use Guacamole::Test;
 
 parses('sub foo');
 parses('sub foo;');
+parses('sub foo () {1}');
 parses('sub foo :attr {1}');
 parses('sub foo : attr {1}');
 parses('sub foo : attra :attrb {1}');

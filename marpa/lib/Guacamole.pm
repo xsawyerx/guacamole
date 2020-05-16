@@ -99,7 +99,7 @@ SubAttrsDefinitionSeq ::= SubAttrsDefinition SubAttrsDefinitionSeq
 SubAttrsDefinition ::= Colon IdentComp SubAttrArgs
                      | Colon IdentComp
 
-SubSigsDefinition  ::= LParen Expression RParen
+SubSigsDefinition ::= ParenExpr
 
 PhaseStatement ::= PhaseName
 
