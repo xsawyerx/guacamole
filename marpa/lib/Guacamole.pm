@@ -204,7 +204,6 @@ SubCall ::= Ident CallArgs
           | VarCode CallArgs
 
 CallArgs ::= ParenExpr
-           | LParen RParen
 
 Block ::= LBrace RBrace
         | LBrace StatementSeq RBrace
