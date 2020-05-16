@@ -200,8 +200,11 @@ VarArrayTop ::= SigilArrayTop VarName
 VarName ::= Ident
           | VarScalar
 
-SubCall ::= Ident CallArgs
+SubCall ::= NonQLikeIdent CallArgs
           | VarCode CallArgs
+
+NonQLikeIdent ::= NonQLikeFunctionName
+                | NonQLikeFunctionName Ident
 
 CallArgs ::= ParenExpr
 
@@ -1000,6 +1003,17 @@ QLikeFunction ~ OpKeywordQ
               | OpKeywordQr
 
 ###
+
+NonQLikeFunctionName ::= NonQLetter
+                       | NonQLetter NonQLetter
+                       | NonQLetter NonWLetter
+                       | NonQLetter NonXLetter
+                       | NonQLetter NonRLetter
+
+NonQLetter ~ [a-pr-z]
+NonWLetter ~ [a-vx-z]
+NonRLetter ~ [a-qs-z]
+NonXLetter ~ [a-wy-z]
 
 IdentComp  ~ [a-zA-Z_]+
 PackageSep ~ '::'
