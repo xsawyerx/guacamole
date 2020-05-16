@@ -23,6 +23,7 @@ Statement ::= BlockLevelExpression StatementModifier
             | NoStatement
             | RequireStatement
             | PackageStatement
+            | SubStatement
 
 LoopStatement ::= ForStatement
                 | WhileStatement
@@ -81,6 +82,23 @@ PackageStatement ::= OpKeywordPackage Ident VersionExpr Block
                    | OpKeywordPackage Ident VersionExpr
                    | OpKeywordPackage Ident Block
                    | OpKeywordPackage Ident
+
+SubStatement ::= PhaseStatement Block
+               | OpKeywordSub PhaseStatement Block
+               | OpKeywordSub Ident SubDefinition
+               | OpKeywordSub Ident
+
+SubDefinition ::= SubAttrsDefinition SubSigsDefinition Block
+                | SubAttrsDefinition Block
+                | SubSigsDefinition Block
+                |  Block
+
+SubAttrsDefinition ::= Colon IdentComp SubAttrArgs
+                     | Colon IdentComp
+
+SubSigsDefinition  ::= LParen Expression RParen
+
+PhaseStatement ::= PhaseName
 
 Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
             | ConditionIfExpr ConditionElseExpr
@@ -1122,6 +1140,11 @@ UnderscoreSub     ~ '__SUB__'
 UnderscoreData    ~ '__DATA__'
 UnderscoreEnd     ~ '__END__'
 
+PhaseName ~ 'BEGIN' | 'CHECK' | 'INIT' | 'UNITCHECK' | 'END'
+
+SubAttrArgs ~ '(' NonRParenOrEscapedParens_Many ')'
+            | '(' ')'
+
 OpArrow   ~ '->'
 OpInc     ~ '++' | '--'
 OpPower   ~ '**'
@@ -1326,7 +1349,7 @@ OpKeywordSrand            ~ 'srand'
 OpKeywordStat             ~ 'stat'
 OpKeywordState            ~ 'state'
 OpKeywordStudy            ~ 'study'
-# TODO: OpKeywordSub              ~ 'sub'
+OpKeywordSub              ~ 'sub'
 OpKeywordSubstr           ~ 'substr'
 OpKeywordSymlink          ~ 'symlink'
 OpKeywordSyscall          ~ 'syscall'
