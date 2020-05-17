@@ -1043,6 +1043,8 @@ QLikeValueExprWithMods
     | QLikeFunctionWithMods '[]' RegexModifiers
     | QLikeFunctionWithMods '//' RegexModifiers
     | QLikeFunctionWithMods '!!' RegexModifiers
+    | '/' NonForwardSlashOrEscapedForwardSlashes_Many '/' RegexModifiers
+    | '//' RegexModifiers
 
 QLikeFunctionWithMods ~ OpKeywordQr
                       | OpKeywordM

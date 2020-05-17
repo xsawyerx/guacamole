@@ -56,4 +56,9 @@ foreach my $function (@q_functions) {
     }
 }
 
+parses('$foo =~ /foo/');
+parses('$foo =~ /foo/xms');
+parses('$foo =~ //');
+parses('$foo =~ //xms');
+
 done_testing;
