@@ -1011,18 +1011,19 @@ OpFile ::=
 
 QLikeValue ::= QLikeValueExpr
 
-QLikeValueExpr ~ QLikeFunction '(' NonRParenOrEscapedParens_Many               ')'
-               | QLikeFunction '{' NonRBraceOrEscapedBraces_Many               '}'
-               | QLikeFunction '<' NonRAngleOrEscapedAngles_Many               '>'
-               | QLikeFunction '[' NonRBracketOrEscapedBrackets_Many           ']'
-               | QLikeFunction '/' NonForwardSlashOrEscapedForwardSlashes_Many '/'
-               | QLikeFunction '!' NonExclamPointOrEscapedExclamPoints_Many    '!'
-               | QLikeFunction '()'
-               | QLikeFunction '{}'
-               | QLikeFunction '<>'
-               | QLikeFunction '[]'
-               | QLikeFunction '//'
-               | QLikeFunction '!!'
+QLikeValueExpr
+    ~ QLikeFunction '(' NonRParenOrEscapedParens_Many               ')'
+    | QLikeFunction '{' NonRBraceOrEscapedBraces_Many               '}'
+    | QLikeFunction '<' NonRAngleOrEscapedAngles_Many               '>'
+    | QLikeFunction '[' NonRBracketOrEscapedBrackets_Many           ']'
+    | QLikeFunction '/' NonForwardSlashOrEscapedForwardSlashes_Many '/'
+    | QLikeFunction '!' NonExclamPointOrEscapedExclamPoints_Many    '!'
+    | QLikeFunction '()'
+    | QLikeFunction '{}'
+    | QLikeFunction '<>'
+    | QLikeFunction '[]'
+    | QLikeFunction '//'
+    | QLikeFunction '!!'
 
 QLikeFunction ~ OpKeywordQ
               | OpKeywordQq
