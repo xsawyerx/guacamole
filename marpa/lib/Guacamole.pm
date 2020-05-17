@@ -1009,7 +1009,7 @@ OpFile ::=
     | OpFileAccessTime
     | OpFileChangeTime
 
-QLikeValue ::= QLikeValueExpr
+QLikeValue ::= QLikeValueExpr | QLikeValueExprWithMods
 
 QLikeValueExpr
     ~ QLikeFunction '(' NonRParenOrEscapedParens_Many               ')'
@@ -1029,20 +1029,41 @@ QLikeFunction ~ OpKeywordQ
               | OpKeywordQq
               | OpKeywordQx
               | OpKeywordQw
-              | OpKeywordQr
+
+QLikeValueExprWithMods
+    ~ QLikeFunctionWithMods '(' NonRParenOrEscapedParens_Many               ')' RegexModifiers
+    | QLikeFunctionWithMods '{' NonRBraceOrEscapedBraces_Many               '}' RegexModifiers
+    | QLikeFunctionWithMods '<' NonRAngleOrEscapedAngles_Many               '>' RegexModifiers
+    | QLikeFunctionWithMods '[' NonRBracketOrEscapedBrackets_Many           ']' RegexModifiers
+    | QLikeFunctionWithMods '/' NonForwardSlashOrEscapedForwardSlashes_Many '/' RegexModifiers
+    | QLikeFunctionWithMods '!' NonExclamPointOrEscapedExclamPoints_Many    '!' RegexModifiers
+    | QLikeFunctionWithMods '()' RegexModifiers
+    | QLikeFunctionWithMods '{}' RegexModifiers
+    | QLikeFunctionWithMods '<>' RegexModifiers
+    | QLikeFunctionWithMods '[]' RegexModifiers
+    | QLikeFunctionWithMods '//' RegexModifiers
+    | QLikeFunctionWithMods '!!' RegexModifiers
+
+QLikeFunctionWithMods ~ OpKeywordQr
+                      | OpKeywordM
+
+RegexModifiers ~ [a-z]*
 
 ###
 
-NonQLikeFunctionName ::= NonQLetter
+# If it's a single letter, it can't be 'm' or 'q'
+# If it's two letters, it can't be 'qq', 'qw', 'qx', or 'qr'
+NonQLikeFunctionName ::= NonMOrQLetter
                        | NonQLetter NonQLetter
                        | NonQLetter NonWLetter
                        | NonQLetter NonXLetter
                        | NonQLetter NonRLetter
 
-NonQLetter ~ [a-pr-z]
-NonWLetter ~ [a-vx-z]
-NonRLetter ~ [a-qs-z]
-NonXLetter ~ [a-wy-z]
+NonMOrQLetter ~ [a-ln-pr-z]
+NonQLetter    ~ [a-pr-z]
+NonWLetter    ~ [a-vx-z]
+NonRLetter    ~ [a-qs-z]
+NonXLetter    ~ [a-wy-z]
 
 IdentComp  ~ [a-zA-Z_]+
 PackageSep ~ '::'
@@ -1280,6 +1301,7 @@ OpKeywordLocaltime        ~ 'localtime'
 OpKeywordLock             ~ 'lock'
 OpKeywordLog              ~ 'log'
 OpKeywordLstat            ~ 'lstat'
+OpKeywordM                ~ 'm'
 OpKeywordMap              ~ 'map'
 OpKeywordMkdir            ~ 'mkdir'
 OpKeywordMsgctl           ~ 'msgctl'
