@@ -272,13 +272,28 @@ InterpolString ::= DoubleQuote NonDoubleOrEscapedQuote_Many DoubleQuote
                  | DoubleQuote DoubleQuote
 
 ArrowRHS ::= ArrowDerefCall
+           | ArrowDerefVariable
            | ArrowMethodCall
            | ArrowIndirectCall
            | ElemSeq1
 
-ArrowDerefCall    ::= CallArgs
-ArrowMethodCall   ::= Ident CallArgs
-ArrowIndirectCall ::= SigilScalar Ident CallArgs
+ArrowDerefCall     ::= CallArgs
+ArrowDerefVariable ::= DerefVariableArgsAll
+                     | DerefVariableSlice
+ArrowMethodCall    ::= Ident CallArgs
+ArrowIndirectCall  ::= SigilScalar Ident CallArgs
+
+DerefVariableArgsAll ::= SigilScalar   SigilDerefAll
+                       | SigilArray    SigilDerefAll
+                       | SigilHash     SigilDerefAll
+                       | SigilCode     SigilDerefAll
+                       | SigilGlob     SigilDerefAll
+                       | SigilArrayTop
+
+DerefVariableSlice ::= SigilArray LitArray
+                     | SigilArray LitHash
+                     | SigilHash  LitArray
+                     | SigilHash  LitHash
 
 # TODO: (Add the following above)
 #| OpKeywordSplitExpr
@@ -1156,6 +1171,7 @@ SigilHash     ~ '%'
 SigilCode     ~ '&'
 SigilGlob     ~ '*'
 SigilArrayTop ~ '$#'
+SigilDerefAll ~ '*'
 
 LParen   ~ '('
 RParen   ~ ')'
