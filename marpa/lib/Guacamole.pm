@@ -23,6 +23,7 @@ Statement ::= BlockLevelExpression StatementModifier
             | NoStatement
             | RequireStatement
             | PackageStatement
+            | SubStatement
 
 LoopStatement ::= ForStatement
                 | WhileStatement
@@ -81,6 +82,26 @@ PackageStatement ::= OpKeywordPackage Ident VersionExpr Block
                    | OpKeywordPackage Ident VersionExpr
                    | OpKeywordPackage Ident Block
                    | OpKeywordPackage Ident
+
+SubStatement ::= PhaseStatement Block
+               | OpKeywordSub PhaseStatement Block
+               | OpKeywordSub Ident SubDefinition
+               | OpKeywordSub Ident
+
+SubDefinition ::= SubAttrsDefinitionSeq SubSigsDefinition Block
+                | SubAttrsDefinitionSeq Block
+                | SubSigsDefinition Block
+                | Block
+
+SubAttrsDefinitionSeq ::= SubAttrsDefinition SubAttrsDefinitionSeq
+                        | SubAttrsDefinition
+
+SubAttrsDefinition ::= Colon IdentComp SubAttrArgs
+                     | Colon IdentComp
+
+SubSigsDefinition ::= ParenExpr
+
+PhaseStatement ::= PhaseName
 
 Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
             | ConditionIfExpr ConditionElseExpr
@@ -257,7 +278,6 @@ ArrowIndirectCall ::= SigilScalar Ident CallArgs
 
 # TODO: (Add the following above)
 #| OpKeywordSplitExpr
-#| OpKeywordSubExpr
 
 OpNullaryKeywordExpr ::=
       OpKeywordBreakExpr
@@ -279,6 +299,7 @@ OpNullaryKeywordExpr ::=
     | OpKeywordEndprotoentExpr
     | OpKeywordEndserventExpr
     | OpKeywordEvalExpr
+    | OpKeywordSubExpr
     | OpKeywordTimeExpr
     | OpKeywordTimesExpr
     | OpKeywordWaitExpr
@@ -882,7 +903,7 @@ OpKeywordStatExpr             ::= OpKeywordStat ExprKwUnary
 OpKeywordStudyExpr            ::= OpKeywordStudy ExprKwUnary
                                 | OpKeywordStudy
 
-# TODO: OpKeywordSubExpr ::= OpKeywordSub
+OpKeywordSubExpr              ::= OpKeywordSub SubDefinition
 
 OpKeywordSubstrExpr           ::= OpKeywordSubstr ExprKwList
 
@@ -1122,6 +1143,11 @@ UnderscoreSub     ~ '__SUB__'
 UnderscoreData    ~ '__DATA__'
 UnderscoreEnd     ~ '__END__'
 
+PhaseName ~ 'BEGIN' | 'CHECK' | 'INIT' | 'UNITCHECK' | 'END'
+
+SubAttrArgs ~ '(' NonRParenOrEscapedParens_Many ')'
+            | '(' ')'
+
 OpArrow   ~ '->'
 OpInc     ~ '++' | '--'
 OpPower   ~ '**'
@@ -1326,7 +1352,7 @@ OpKeywordSrand            ~ 'srand'
 OpKeywordStat             ~ 'stat'
 OpKeywordState            ~ 'state'
 OpKeywordStudy            ~ 'study'
-# TODO: OpKeywordSub              ~ 'sub'
+OpKeywordSub              ~ 'sub'
 OpKeywordSubstr           ~ 'substr'
 OpKeywordSymlink          ~ 'symlink'
 OpKeywordSyscall          ~ 'syscall'
