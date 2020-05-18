@@ -85,8 +85,8 @@ PackageStatement ::= OpKeywordPackage Ident VersionExpr Block
 
 SubStatement ::= PhaseStatement Block
                | OpKeywordSub PhaseStatement Block
-               | OpKeywordSub Ident SubDefinition
-               | OpKeywordSub Ident
+               | OpKeywordSub NonQLikeIdent SubDefinition
+               | OpKeywordSub NonQLikeIdent
 
 SubDefinition ::= SubAttrsDefinitionSeq SubSigsDefinition Block
                 | SubAttrsDefinitionSeq Block
@@ -1088,18 +1088,64 @@ RegexModifiers ~ [a-z]*
 
 ###
 
+# -> (Plz to be done differently)
 # If it's a single letter, it can't be: m | q | s | y
 # If it's two letters, it can't be: tr | qq | qw | qx | qr
-# (Plz to be done differently)
-NonQLikeFunctionName ::= NonMQSTYLetters
-                       | QLetter NonQRWXLetter
-                       | TLetter NonRLetter
+# We also need to do the same for Phases (BEGIN | CHECK | INIT | UNITCHECK | END) 
 
-NonMQSTYLetters ~ [a-ln-pru-xzA-LN-PRU-XZ_]
-QLetter         ~ 'q'
-NonQRWXLetter   ~ [a-ps-vy-z_]
-TLetter         ~ 't'
-NonRLetter      ~ [a-qs-z_]
+NonQLikeFunctionName ::= SafeLetters
+                       | QLetter NonQRWXLetters
+                       | TLetter NonRLetters
+                       | UpBLetter NonUpELetters                              # <-- phases
+                       | UpBLetter UpELetter NonUpGLetters
+                       | UpBLetter UpELetter UpGLetter NonUpILetters
+                       | UpBLetter UpELetter UpGLetter UpILetter NonUpNLetters # Non-BEGIN
+                       | UpCLetter NonUpHLetters
+                       | UpCLetter UpHLetter NonUpELetters
+                       | UpCLetter UpHLetter UpELetter NonUpCLetters
+                       | UpCLetter UpHLetter UpELetter UpCLetter NonUpKLetters # Non-CHECK
+                       | UpELetter NonUpNLetters
+                       | UpELetter UpNLetter NonUpDLetters                     # Non-END
+                       | UpILetter NonUpNLetters
+                       | UpILetter UpNLetter NonUpILetters
+                       | UpILetter UpNLetter UpILetter NonUpTLetters           # Non-INIT
+                       | UpULetter NonUpNLetters
+                       | UpULetter UpNLetter NonUpILetters
+                       | UpULetter UpNLetter UpILetter NonUpTLetters
+                       | UpULetter UpNLetter UpILetter UpTLetter NonUpCLetters
+                       | UpULetter UpNLetter UpILetter UpTLetter UpCLetter NonUpHLetters
+                       | UpULetter UpNLetter UpILetter UpTLetter UpCLetter UpHLetter NonUpELetters
+                       | UpULetter UpNLetter UpILetter UpTLetter UpCLetter UpHLetter UpELetter NonUpCLetters
+                       | UpULetter UpNLetter UpILetter UpTLetter UpCLetter UpHLetter UpELetter UpCLetter NonUpKLetters # Non-CHECKUNIT
+
+UpBLetter ~ 'B'
+UpCLetter ~ 'C'
+UpELetter ~ 'E'
+UpGLetter ~ 'G'
+UpHLetter ~ 'H'
+UpILetter ~ 'I'
+UpNLetter ~ 'N'
+UpTLetter ~ 'T'
+UpULetter ~ 'U'
+
+NonUpCLetters ~ [A-BD-Za-z_]
+NonUpDLetters ~ [A-CE-Za-z_]
+NonUpELetters ~ [A-DF-Za-z_]
+NonUpGLetters ~ [A-FH-Za-z_]
+NonUpHLetters ~ [A-GI-Za-z_]
+NonUpILetters ~ [A-HJ-Za-z_]
+NonUpKLetters ~ [A-JL-Za-z_]
+NonUpNLetters ~ [A-MO-Za-z_]
+NonUpTLetters ~ [A-SU-Za-z_]
+
+# This does not allow: m, q, s, t, y, B, C, E, I, U
+# That's because they stand for "m", "q*", "s", "tr", "y",
+# and "BEGIN", "UNIT", "END", "INIT", "UNITCHECK
+SafeLetters    ~ [a-ln-pru-xzADF-HJ-TV-Z_]
+QLetter        ~ 'q'
+TLetter        ~ 't'
+NonRLetters    ~ [a-qs-zA-Z_]
+NonQRWXLetters ~ [a-ps-vy-zA-Z_]
 
 IdentComp  ~ [a-zA-Z_]+
 PackageSep ~ '::'
