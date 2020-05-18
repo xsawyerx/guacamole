@@ -19,9 +19,9 @@ Statement ::= BlockLevelExpression StatementModifier
             | Block
             | Condition
             | EllipsisStatement
-            | QLikeExpression
             | UseStatement
             | NoStatement
+            | RequireStatement
 
 LoopStatement ::= ForStatement
                 | WhileStatement
@@ -71,6 +71,10 @@ NoStatement ::= OpKeywordNo Ident VersionExpr Expression
               | OpKeywordNo Ident Expression
               | OpKeywordNo VersionExpr
               | OpKeywordNo Ident
+
+RequireStatement ::= OpKeywordRequire VersionExpr
+                   | OpKeywordRequire Ident
+                   | OpKeywordRequire Expression
 
 Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
             | ConditionIfExpr ConditionElseExpr
@@ -151,10 +155,10 @@ BlockLevelExprNameAnd ::= BlockLevelExprNameAnd OpNameAnd ExprNameNot | BlockLev
 BlockLevelExprNameOr ::= BlockLevelExprNameOr OpNameOr ExprNameAnd | BlockLevelExprNameAnd action => ::first
 BlockLevelExpression ::= BlockLevelExprNameOr action => ::first
 
-Value         ::= Literal | NonLiteral
+Value         ::= Literal | NonLiteral | QLikeValue
 
 # Same as Value above, but with a NonBraceLiteral
-NonBraceValue ::= NonBraceLiteral | NonLiteral
+NonBraceValue ::= NonBraceLiteral | NonLiteral | QLikeValue
 
 NonLiteral ::= Variable action => ::first
              | Modifier Variable action => ::first
@@ -196,11 +200,13 @@ VarArrayTop ::= SigilArrayTop VarName
 VarName ::= Ident
           | VarScalar
 
-SubCall ::= Ident CallArgs
+SubCall ::= NonQLikeIdent CallArgs
           | VarCode CallArgs
 
+NonQLikeIdent ::= NonQLikeFunctionName
+                | NonQLikeFunctionName Ident
+
 CallArgs ::= ParenExpr
-           | LParen RParen
 
 Block ::= LBrace RBrace
         | LBrace StatementSeq RBrace
@@ -245,7 +251,6 @@ ArrowIndirectCall ::= SigilScalar Ident CallArgs
 
 # TODO: (Add the following above)
 #| OpKeywordPackageExpr
-#| OpKeywordRequireExpr
 #| OpKeywordSplitExpr
 #| OpKeywordSubExpr
 
@@ -976,20 +981,20 @@ OpFile ::=
     | OpFileAccessTime
     | OpFileChangeTime
 
-QLikeExpression ::= QLikeExpressionExpr
+QLikeValue ::= QLikeValueExpr
 
-QLikeExpressionExpr ~ QLikeFunction '(' NonRParenOrEscapedParens_Many               ')'
-                    | QLikeFunction '{' NonRBraceOrEscapedBraces_Many               '}'
-                    | QLikeFunction '<' NonRAngleOrEscapedAngles_Many               '>'
-                    | QLikeFunction '[' NonRBracketOrEscapedBrackets_Many           ']'
-                    | QLikeFunction '/' NonForwardSlashOrEscapedForwardSlashes_Many '/'
-                    | QLikeFunction '!' NonExclamPointOrEscapedExclamPoints_Many    '!'
-                    | QLikeFunction '()'
-                    | QLikeFunction '{}'
-                    | QLikeFunction '<>'
-                    | QLikeFunction '[]'
-                    | QLikeFunction '//'
-                    | QLikeFunction '!!'
+QLikeValueExpr ~ QLikeFunction '(' NonRParenOrEscapedParens_Many               ')'
+               | QLikeFunction '{' NonRBraceOrEscapedBraces_Many               '}'
+               | QLikeFunction '<' NonRAngleOrEscapedAngles_Many               '>'
+               | QLikeFunction '[' NonRBracketOrEscapedBrackets_Many           ']'
+               | QLikeFunction '/' NonForwardSlashOrEscapedForwardSlashes_Many '/'
+               | QLikeFunction '!' NonExclamPointOrEscapedExclamPoints_Many    '!'
+               | QLikeFunction '()'
+               | QLikeFunction '{}'
+               | QLikeFunction '<>'
+               | QLikeFunction '[]'
+               | QLikeFunction '//'
+               | QLikeFunction '!!'
 
 QLikeFunction ~ OpKeywordQ
               | OpKeywordQq
@@ -998,6 +1003,17 @@ QLikeFunction ~ OpKeywordQ
               | OpKeywordQr
 
 ###
+
+NonQLikeFunctionName ::= NonQLetter
+                       | NonQLetter NonQLetter
+                       | NonQLetter NonWLetter
+                       | NonQLetter NonXLetter
+                       | NonQLetter NonRLetter
+
+NonQLetter ~ [a-pr-z]
+NonWLetter ~ [a-vx-z]
+NonRLetter ~ [a-qs-z]
+NonXLetter ~ [a-wy-z]
 
 IdentComp  ~ [a-zA-Z_]+
 PackageSep ~ '::'
@@ -1269,7 +1285,7 @@ OpKeywordRecv             ~ 'recv'
 OpKeywordRedo             ~ 'redo'
 OpKeywordRef              ~ 'ref'
 OpKeywordRename           ~ 'rename'
-# TODO: OpKeywordRequire          ~ 'require'
+OpKeywordRequire          ~ 'require'
 OpKeywordReset            ~ 'reset'
 OpKeywordReturn           ~ 'return'
 OpKeywordReverse          ~ 'reverse'

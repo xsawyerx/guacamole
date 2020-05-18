@@ -21,31 +21,31 @@ my @delimiters = (
 
 foreach my $function (@q_functions) {
     foreach my $delimiter_set (@delimiters) {
-        my $simple_string = sprintf '%s%s$foo%s',
+        my $simple_string = sprintf 'say %s%s$foo%s',
                             $function,
                             $delimiter_set->@*;
 
         parses($simple_string);
 
-        my $escaped_string = sprintf '%s%s \\%s $foo \\%s %s',
+        my $escaped_string = sprintf 'say %s%s \\%s $foo \\%s %s',
                              $function,
                              $delimiter_set->@[ 0, 0, 1, 1 ];
 
         parses($escaped_string);
 
         # and one without delimiters
-        my $emptystring = sprintf '%s%s%s', $function,
+        my $emptystring = sprintf 'say %s%s%s', $function,
                           $delimiter_set->@*;
 
         parses($emptystring);
 
-        my $bad_string = sprintf '%s %s%s', $function,
+        my $bad_string = sprintf 'say %s %s%s', $function,
                          $delimiter_set->@*;
 
         like(
-            exception { parses($bad_string) },
+            exception( sub { parse_fail($bad_string) } ),
             qr/Error \s in \s SLIF \s parse/xms,
-            "Failed to parse: $bad_string",
+            "Refuse to parse: $bad_string",
         );
     }
 }
