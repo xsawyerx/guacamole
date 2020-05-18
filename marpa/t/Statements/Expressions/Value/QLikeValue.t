@@ -61,4 +61,28 @@ parses('$foo =~ /foo/xms');
 parses('$foo =~ //');
 parses('$foo =~ //xms');
 
+# Should this work?
+#parses('
+#s {foo}  # Replace foo
+#  {bar}  # with bar.
+#');
+
+parses('$foo =~ /foo/');
+parses('$foo =~ /foo/xms');
+parses('$foo =~ //');
+parses('$foo =~ //xms');
+
+parses('tr/h-k/H-K/');
+parses('y/h-k/H-K/');
+parses('$foo =~ s/foo/bar/');
+parses('$foo =~ s/foo//');
+parses('$foo =~ s///');
+
+parses('tr{h-k}{H-K}');
+parses('y{h-k}{H-K}');
+parses('$foo =~ s{foo}{bar}');
+parses('$foo =~ s{foo}{}');
+parses('$foo =~ s{}{}');
+parses('$foo =~ s{}{}g');
+
 done_testing;
