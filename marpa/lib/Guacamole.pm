@@ -1030,6 +1030,11 @@ QLikeFunction ~ OpKeywordQ
               | OpKeywordQx
               | OpKeywordQw
 
+# Here we begin with "qr//" and "m//" which can have parameters
+# Then we continue with "s///", "tr///", and "y///" which have two args, not one
+# "//" follow at the end
+# This is really ugly :/ because I couldn't use NonRParenOrEscapedParens_Many*
+# (so they become optional)
 QLikeValueExprWithMods
     ~ QLikeFunctionWithMods '(' NonRParenOrEscapedParens_Many               ')' RegexModifiers
     | QLikeFunctionWithMods '{' NonRBraceOrEscapedBraces_Many               '}' RegexModifiers
@@ -1043,29 +1048,58 @@ QLikeValueExprWithMods
     | QLikeFunctionWithMods '[]' RegexModifiers
     | QLikeFunctionWithMods '//' RegexModifiers
     | QLikeFunctionWithMods '!!' RegexModifiers
+    | QLikeSubstWithMods    '(' NonRParenOrEscapedParens_Many               ')(' NonRParenOrEscapedParens_Many               ')' RegexModifiers
+    | QLikeSubstWithMods    '{' NonRBraceOrEscapedBraces_Many               '}{' NonRBraceOrEscapedBraces_Many               '}' RegexModifiers
+    | QLikeSubstWithMods    '<' NonRAngleOrEscapedAngles_Many               '><' NonRAngleOrEscapedAngles_Many               '>' RegexModifiers
+    | QLikeSubstWithMods    '[' NonRBracketOrEscapedBrackets_Many           '][' NonRBracketOrEscapedBrackets_Many             ']' RegexModifiers
+    | QLikeSubstWithMods    '/' NonForwardSlashOrEscapedForwardSlashes_Many '/'  NonForwardSlashOrEscapedForwardSlashes_Many '/' RegexModifiers
+    | QLikeSubstWithMods    '!' NonExclamPointOrEscapedExclamPoints_Many    '!'  NonExclamPointOrEscapedExclamPoints_Many    '!' RegexModifiers
+    | QLikeSubstWithMods    '()' '(' NonRParenOrEscapedParens_Many               ')' RegexModifiers
+    | QLikeSubstWithMods    '{}' '{' NonRBraceOrEscapedBraces_Many               '}' RegexModifiers
+    | QLikeSubstWithMods    '<>' '<' NonRAngleOrEscapedAngles_Many               '>' RegexModifiers
+    | QLikeSubstWithMods    '[]' '[' NonRBracketOrEscapedBrackets_Many           ']' RegexModifiers
+    | QLikeSubstWithMods    '//'     NonForwardSlashOrEscapedForwardSlashes_Many '/' RegexModifiers
+    | QLikeSubstWithMods    '!!'     NonExclamPointOrEscapedExclamPoints_Many    '!' RegexModifiers
+    | QLikeSubstWithMods    '(' NonRParenOrEscapedParens_Many               ')()' RegexModifiers
+    | QLikeSubstWithMods    '{' NonRBraceOrEscapedBraces_Many               '}{}' RegexModifiers
+    | QLikeSubstWithMods    '<' NonRAngleOrEscapedAngles_Many               '><>' RegexModifiers
+    | QLikeSubstWithMods    '[' NonRBracketOrEscapedBrackets_Many           '][]' RegexModifiers
+    | QLikeSubstWithMods    '/' NonForwardSlashOrEscapedForwardSlashes_Many '//' RegexModifiers
+    | QLikeSubstWithMods    '!' NonExclamPointOrEscapedExclamPoints_Many    '!!' RegexModifiers
+    | QLikeSubstWithMods    '()()' RegexModifiers
+    | QLikeSubstWithMods    '{}{}' RegexModifiers
+    | QLikeSubstWithMods    '<><>' RegexModifiers
+    | QLikeSubstWithMods    '[][]' RegexModifiers
+    | QLikeSubstWithMods    '///'  RegexModifiers
+    | QLikeSubstWithMods    '!!!'  RegexModifiers
     | '/' NonForwardSlashOrEscapedForwardSlashes_Many '/' RegexModifiers
     | '//' RegexModifiers
+    | '`' NonBacktickOrEscapedBackticks_Many '`'
+    | '``'
 
 QLikeFunctionWithMods ~ OpKeywordQr
                       | OpKeywordM
+
+QLikeSubstWithMods ~ OpKeywordS
+                   | OpKeywordTr
+                   | OpKeywordY
 
 RegexModifiers ~ [a-z]*
 
 ###
 
-# If it's a single letter, it can't be 'm' or 'q'
-# If it's two letters, it can't be 'qq', 'qw', 'qx', or 'qr'
-NonQLikeFunctionName ::= NonMOrQLetter
-                       | NonQLetter NonQLetter
-                       | NonQLetter NonWLetter
-                       | NonQLetter NonXLetter
-                       | NonQLetter NonRLetter
+# If it's a single letter, it can't be: m | q | s | y
+# If it's two letters, it can't be: tr | qq | qw | qx | qr
+# (Plz to be done differently)
+NonQLikeFunctionName ::= NonMQSTYLetters
+                       | QLetter NonQRWXLetter
+                       | TLetter NonRLetter
 
-NonMOrQLetter ~ [a-ln-pr-z]
-NonQLetter    ~ [a-pr-z]
-NonWLetter    ~ [a-vx-z]
-NonRLetter    ~ [a-qs-z]
-NonXLetter    ~ [a-wy-z]
+NonMQSTYLetters ~ [a-ln-pru-xzA-LN-PRU-XZ_]
+QLetter         ~ 'q'
+NonQRWXLetter   ~ [a-ps-vy-z_]
+TLetter         ~ 't'
+NonRLetter      ~ [a-qs-z_]
 
 IdentComp  ~ [a-zA-Z_]+
 PackageSep ~ '::'
@@ -1161,6 +1195,11 @@ NonExclamPointOrEscapedExclamPoints_Many ~ NonExclamPointOrEscapedExclamPoints+
 NonExclamPointOrEscapedExclamPoints      ~ EscapedExclamPoint | NonExclamPoint
 EscapedExclamPoint                       ~ Escape [!]
 NonExclamPoint                           ~ [^\!]
+
+NonBacktickOrEscapedBackticks_Many ~ NonBacktickOrEscapedBackticks+
+NonBacktickOrEscapedBackticks      ~ EscapedBacktick | NonBacktick
+EscapedBacktick                    ~ Escape [`]
+NonBacktick                        ~ [^\`]
 
 Ellipsis ~ '...'
 
@@ -1350,6 +1389,7 @@ OpKeywordReverse          ~ 'reverse'
 OpKeywordRewinddir        ~ 'rewinddir'
 OpKeywordRindex           ~ 'rindex'
 OpKeywordRmdir            ~ 'rmdir'
+OpKeywordS                ~ 's'
 OpKeywordSay              ~ 'say'
 OpKeywordScalar           ~ 'scalar'
 OpKeywordSeek             ~ 'seek'
@@ -1390,6 +1430,7 @@ OpKeywordSysread          ~ 'sysread'
 OpKeywordSysseek          ~ 'sysseek'
 OpKeywordSystem           ~ 'system'
 OpKeywordSyswrite         ~ 'syswrite'
+OpKeywordTr               ~ 'tr'
 OpKeywordTell             ~ 'tell'
 OpKeywordTelldir          ~ 'telldir'
 OpKeywordTie              ~ 'tie'
@@ -1414,6 +1455,7 @@ OpKeywordWaitpid          ~ 'waitpid'
 OpKeywordWantarray        ~ 'wantarray'
 OpKeywordWarn             ~ 'warn'
 OpKeywordWrite            ~ 'write'
+OpKeywordY                ~ 'y'
 
 OpFileReadableEffective     ~ '-r'
 OpFileWritableEffective     ~ '-w'

@@ -85,4 +85,7 @@ parses('$foo =~ s{foo}{}');
 parses('$foo =~ s{}{}');
 parses('$foo =~ s{}{}g');
 
+parses('`foo`');
+parses('``');
+
 done_testing;
