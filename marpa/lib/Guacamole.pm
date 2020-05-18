@@ -206,9 +206,10 @@ UnderscoreValues ::= UnderscorePackage
                    | UnderscoreLine
                    | UnderscoreSub
 
-UnderscoreTokens ::= UnderscoreValues
-                   | UnderscoreData
-                   | UnderscoreEnd
+# Silence these until they are supported
+#UnderscoreTokens ::= UnderscoreValues
+#                   | UnderscoreData
+#                   | UnderscoreEnd
 
 Variable ::= VarScalar
            | VarArray
@@ -1140,8 +1141,8 @@ UnderscorePackage ~ '__PACKAGE__'
 UnderscoreFile    ~ '__FILE__'
 UnderscoreLine    ~ '__LINE__'
 UnderscoreSub     ~ '__SUB__'
-UnderscoreData    ~ '__DATA__'
-UnderscoreEnd     ~ '__END__'
+#UnderscoreData    ~ '__DATA__'
+#UnderscoreEnd     ~ '__END__'
 
 PhaseName ~ 'BEGIN' | 'CHECK' | 'INIT' | 'UNITCHECK' | 'END'
 
