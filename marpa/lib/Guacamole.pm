@@ -22,6 +22,7 @@ Statement ::= BlockLevelExpression StatementModifier
             | UseStatement
             | NoStatement
             | RequireStatement
+            | PackageStatement
 
 LoopStatement ::= ForStatement
                 | WhileStatement
@@ -75,6 +76,11 @@ NoStatement ::= OpKeywordNo Ident VersionExpr Expression
 RequireStatement ::= OpKeywordRequire VersionExpr
                    | OpKeywordRequire Ident
                    | OpKeywordRequire Expression
+
+PackageStatement ::= OpKeywordPackage Ident VersionExpr Block
+                   | OpKeywordPackage Ident VersionExpr
+                   | OpKeywordPackage Ident Block
+                   | OpKeywordPackage Ident
 
 Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
             | ConditionIfExpr ConditionElseExpr
@@ -250,7 +256,6 @@ ArrowMethodCall   ::= Ident CallArgs
 ArrowIndirectCall ::= SigilScalar Ident CallArgs
 
 # TODO: (Add the following above)
-#| OpKeywordPackageExpr
 #| OpKeywordSplitExpr
 #| OpKeywordSubExpr
 
@@ -735,8 +740,6 @@ OpKeywordOrdExpr              ::= OpKeywordOrd ExprKwUnary
                                 | OpKeywordOrd
 
 OpKeywordPackExpr             ::= OpKeywordPack ExprKwList
-
-# TODO: OpKeywordPackageExpr ::= OpKeywordPackage
 
 OpKeywordPipeExpr             ::= OpKeywordPipe ExprKwList
 
@@ -1261,7 +1264,7 @@ OpKeywordOpendir          ~ 'opendir'
 OpKeywordOrd              ~ 'ord'
 OpKeywordOur              ~ 'our'
 OpKeywordPack             ~ 'pack'
-# TODO: OpKeywordPackage          ~ 'package'
+OpKeywordPackage          ~ 'package'
 OpKeywordPipe             ~ 'pipe'
 OpKeywordPop              ~ 'pop'
 OpKeywordPos              ~ 'pos'
