@@ -187,13 +187,13 @@ Value         ::= Literal | NonLiteral | QLikeValue
 # Same as Value above, but with a NonBraceLiteral
 NonBraceValue ::= NonBraceLiteral | NonLiteral | QLikeValue
 
-NonLiteral ::= Variable action => ::first
-             | Modifier Variable action => ::first
-             | Modifier ParenExpr action => ::first
-             | UnderscoreValues action => ::first
-             | SubCall action => ::first
-             | ParenExpr action => ::first
-             | OpNullaryKeywordExpr action => ::first
+NonLiteral ::= Variable
+             | Modifier Variable
+             | Modifier ParenExpr
+             | UnderscoreValues
+             | SubCall
+             | ParenExpr
+             | OpNullaryKeywordExpr
 
 ParenExpr ::= LParen Expression RParen
             | LParen RParen # support ()
