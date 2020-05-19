@@ -192,13 +192,17 @@ NonLiteral ::= Variable
              | Modifier ParenExpr
              | UnderscoreValues
              | SubCall
-             | ParenExpr
+             | ParenExpr ElemSeq0
              | OpNullaryKeywordExpr
 
 ParenExpr ::= LParen Expression RParen
             | LParen RParen # support ()
 
 Modifier  ::= OpKeywordMy | OpKeywordOur | OpKeywordLocal | OpKeywordState
+
+ElemSeq0 ::= Element*
+ElemSeq1 ::= Element+
+Element  ::= ArrayElem | HashElem
 
 # UnderscoreData and UnderscoreEnd are not values
 UnderscoreValues ::= UnderscorePackage
@@ -218,9 +222,9 @@ Variable ::= VarScalar
            | VarGlob
            | VarArrayTop
 
-VarScalar   ::= SigilScalar VarName
-VarArray    ::= SigilArray VarName
-VarHash     ::= SigilHash VarName
+VarScalar   ::= SigilScalar VarName ElemSeq0
+VarArray    ::= SigilArray VarName ElemSeq0
+VarHash     ::= SigilHash VarName ElemSeq0
 VarCode     ::= SigilCode VarName
 VarGlob     ::= SigilGlob VarName
 VarArrayTop ::= SigilArrayTop VarName
@@ -270,8 +274,7 @@ InterpolString ::= DoubleQuote NonDoubleOrEscapedQuote_Many DoubleQuote
 ArrowRHS ::= ArrowDerefCall
            | ArrowMethodCall
            | ArrowIndirectCall
-           | ArrayElem
-           | HashElem
+           | ElemSeq1
 
 ArrowDerefCall    ::= CallArgs
 ArrowMethodCall   ::= Ident CallArgs
