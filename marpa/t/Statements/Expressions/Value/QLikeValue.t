@@ -9,7 +9,7 @@ use Guacamole::Test;
 # qw is using spaces in between - that's different
 # qr can have regex modifiers - that's different
 # here we're just testing the delimiters
-my @q_functions = ( 'q', 'qq', 'qw', 'qx', 'qr' );
+my @q_functions = ( 'q', 'qq', 'qw', 'qx', 'qr', 'm' );
 
 my @delimiters = (
     [ '(', ')' ], # q(...) | q()
@@ -20,28 +20,36 @@ my @delimiters = (
 );
 
 foreach my $function (@q_functions) {
+    # This condition helps test with modifiers too
+    my $delimiters = ( $function eq 'm' || $function eq 'qr' ) ? 'xms' : '';
+
     foreach my $delimiter_set (@delimiters) {
-        my $simple_string = sprintf 'say %s%s$foo%s',
+        my $simple_string = sprintf 'say %s%s$foo%s%s',
                             $function,
-                            $delimiter_set->@*;
+                            $delimiter_set->@[ 0, 1 ],
+                            $delimiters;
 
         parses($simple_string);
 
-        my $escaped_string = sprintf 'say %s%s \\%s $foo \\%s %s',
+        my $escaped_string = sprintf 'say %s%s \\%s $foo \\%s %s%s',
                              $function,
-                             $delimiter_set->@[ 0, 0, 1, 1 ];
+                             $delimiter_set->@[ 0, 0, 1, 1 ],
+                             $delimiters;
 
         parses($escaped_string);
 
         # and one without delimiters
-        my $emptystring = sprintf 'say %s%s%s', $function,
-                          $delimiter_set->@*;
+        my $emptystring = sprintf 'say %s%s%s%s', $function,
+                          $delimiter_set->@[ 0, 1 ],
+                          $delimiters;
 
         parses($emptystring);
 
         my $bad_string = sprintf 'say %s %s%s', $function,
-                         $delimiter_set->@*;
+                         $delimiter_set->@[ 0, 1 ];
 
+        # q-like value with space will fail
+        # this includes s / m / y / tr
         like(
             exception( sub { parse_fail($bad_string) } ),
             qr/Error \s in \s SLIF \s parse/xms,
@@ -49,5 +57,37 @@ foreach my $function (@q_functions) {
         );
     }
 }
+
+parses('$foo =~ /foo/');
+parses('$foo =~ /foo/xms');
+parses('$foo =~ //');
+parses('$foo =~ //xms');
+
+# Should this work?
+#parses('
+#s {foo}  # Replace foo
+#  {bar}  # with bar.
+#');
+
+parses('$foo =~ /foo/');
+parses('$foo =~ /foo/xms');
+parses('$foo =~ //');
+parses('$foo =~ //xms');
+
+parses('tr/h-k/H-K/');
+parses('y/h-k/H-K/');
+parses('$foo =~ s/foo/bar/');
+parses('$foo =~ s/foo//');
+parses('$foo =~ s///');
+
+parses('tr{h-k}{H-K}');
+parses('y{h-k}{H-K}');
+parses('$foo =~ s{foo}{bar}');
+parses('$foo =~ s{foo}{}');
+parses('$foo =~ s{}{}');
+parses('$foo =~ s{}{}g');
+
+parses('`foo`');
+parses('``');
 
 done_testing;
