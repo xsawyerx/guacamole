@@ -290,9 +290,6 @@ DerefVariableSlice ::= '@[' Expression ']'
                      | '%[' Expression ']'
                      | '%{' Expression '}'
 
-# TODO: (Add the following above)
-#| OpKeywordSplitExpr
-
 OpNullaryKeywordExpr ::=
       OpKeywordBreakExpr
     | OpKeywordForkExpr
