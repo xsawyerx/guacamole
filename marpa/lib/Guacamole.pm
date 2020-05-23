@@ -1108,14 +1108,11 @@ NonQLikeFunctionName ::= NonQLikeLetters
                        | TLetter NonRLetter
 
 # QLike letters are: m / q / s / t / y
-NonQLikeLetters ~ [a-ln-pru-xzA-Z_]+
+NonQLikeLetters ~ [a-ln-pru-xzA-Z_]
 QLetter         ~ 'q'
 TLetter         ~ 't'
-NonRLetter      ~ [a-qs-zA-Z_]+
-NonQRWXLetters  ~ [a-ps-vy-zA-Z_]+
-
-
-
+NonRLetter      ~ [a-qs-zA-Z_]
+NonQRWXLetters  ~ [a-ps-vy-zA-Z_]
 
 IdentComp  ~ [a-zA-Z_]+
 PackageSep ~ '::'
