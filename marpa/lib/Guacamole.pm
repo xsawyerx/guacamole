@@ -1088,64 +1088,24 @@ RegexModifiers ~ [a-z]*
 
 ###
 
-# -> (Plz to be done differently)
-# If it's a single letter, it can't be: m | q | s | y
-# If it's two letters, it can't be: tr | qq | qw | qx | qr
-# We also need to do the same for Phases (BEGIN | CHECK | INIT | UNITCHECK | END) 
+# NonQLikeFunction name is anything but:
+# q / qq / qw / qx / qr
+# s / m / tr / y
+# Subroutines are not allowed to be name as such
 
-NonQLikeFunctionName ::= SafeLetters
+NonQLikeFunctionName ::= NonQLikeLetters
                        | QLetter NonQRWXLetters
-                       | TLetter NonRLetters
-                       | UpBLetter NonUpELetters                              # <-- phases
-                       | UpBLetter UpELetter NonUpGLetters
-                       | UpBLetter UpELetter UpGLetter NonUpILetters
-                       | UpBLetter UpELetter UpGLetter UpILetter NonUpNLetters # Non-BEGIN
-                       | UpCLetter NonUpHLetters
-                       | UpCLetter UpHLetter NonUpELetters
-                       | UpCLetter UpHLetter UpELetter NonUpCLetters
-                       | UpCLetter UpHLetter UpELetter UpCLetter NonUpKLetters # Non-CHECK
-                       | UpELetter NonUpNLetters
-                       | UpELetter UpNLetter NonUpDLetters                     # Non-END
-                       | UpILetter NonUpNLetters
-                       | UpILetter UpNLetter NonUpILetters
-                       | UpILetter UpNLetter UpILetter NonUpTLetters           # Non-INIT
-                       | UpULetter NonUpNLetters
-                       | UpULetter UpNLetter NonUpILetters
-                       | UpULetter UpNLetter UpILetter NonUpTLetters
-                       | UpULetter UpNLetter UpILetter UpTLetter NonUpCLetters
-                       | UpULetter UpNLetter UpILetter UpTLetter UpCLetter NonUpHLetters
-                       | UpULetter UpNLetter UpILetter UpTLetter UpCLetter UpHLetter NonUpELetters
-                       | UpULetter UpNLetter UpILetter UpTLetter UpCLetter UpHLetter UpELetter NonUpCLetters
-                       | UpULetter UpNLetter UpILetter UpTLetter UpCLetter UpHLetter UpELetter UpCLetter NonUpKLetters # Non-CHECKUNIT
+                       | TLetter NonRLetter
 
-UpBLetter ~ 'B'
-UpCLetter ~ 'C'
-UpELetter ~ 'E'
-UpGLetter ~ 'G'
-UpHLetter ~ 'H'
-UpILetter ~ 'I'
-UpNLetter ~ 'N'
-UpTLetter ~ 'T'
-UpULetter ~ 'U'
+# QLike letters are: m / q / s / t / y
+NonQLikeLetters ~ [a-ln-pru-xzA-Z_]+
+QLetter         ~ 'q'
+TLetter         ~ 't'
+NonRLetter      ~ [a-qs-zA-Z_]+
+NonQRWXLetters  ~ [a-ps-vy-zA-Z_]+
 
-NonUpCLetters ~ [A-BD-Za-z_]
-NonUpDLetters ~ [A-CE-Za-z_]
-NonUpELetters ~ [A-DF-Za-z_]
-NonUpGLetters ~ [A-FH-Za-z_]
-NonUpHLetters ~ [A-GI-Za-z_]
-NonUpILetters ~ [A-HJ-Za-z_]
-NonUpKLetters ~ [A-JL-Za-z_]
-NonUpNLetters ~ [A-MO-Za-z_]
-NonUpTLetters ~ [A-SU-Za-z_]
 
-# This does not allow: m, q, s, t, y, B, C, E, I, U
-# That's because they stand for "m", "q*", "s", "tr", "y",
-# and "BEGIN", "UNIT", "END", "INIT", "UNITCHECK
-SafeLetters    ~ [a-ln-pru-xzADF-HJ-TV-Z_]
-QLetter        ~ 'q'
-TLetter        ~ 't'
-NonRLetters    ~ [a-qs-zA-Z_]
-NonQRWXLetters ~ [a-ps-vy-zA-Z_]
+
 
 IdentComp  ~ [a-zA-Z_]+
 PackageSep ~ '::'
@@ -1552,6 +1512,10 @@ whitespace ~ [\s]+
 <hash comment body>               ~ <hash comment char>*
 <vertical space char>             ~ [\x{A}\x{B}\x{C}\x{D}\x{2028}\x{2029}]
 <hash comment char>               ~ [^\x{A}\x{B}\x{C}\x{D}\x{2028}\x{2029}]
+
+:lexeme ~ PhaseName              priority => 1
+:lexeme ~ QLikeValueExpr         priority => 1
+:lexeme ~ QLikeValueExprWithMods priority => 1
 
 };
 

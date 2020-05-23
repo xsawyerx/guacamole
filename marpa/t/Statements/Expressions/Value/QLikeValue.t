@@ -20,8 +20,8 @@ my @delimiters = (
 );
 
 foreach my $function (@q_functions) {
-    my $has_delimiters = $function eq 'm' || $function eq 'qr';
-    my $delimiters     = $has_delimiters ? 'xms' : '';
+    # This condition helps test with modifiers too
+    my $delimiters = ( $function eq 'm' || $function eq 'qr' ) ? 'xms' : '';
 
     foreach my $delimiter_set (@delimiters) {
         my $simple_string = sprintf 'say %s%s$foo%s%s',
@@ -48,6 +48,8 @@ foreach my $function (@q_functions) {
         my $bad_string = sprintf 'say %s %s%s', $function,
                          $delimiter_set->@[ 0, 1 ];
 
+        # q-like value with space will fail
+        # this includes s / m / y / tr
         like(
             exception( sub { parse_fail($bad_string) } ),
             qr/Error \s in \s SLIF \s parse/xms,
