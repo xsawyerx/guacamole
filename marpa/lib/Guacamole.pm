@@ -283,12 +283,7 @@ ArrowDerefVariable ::= DerefVariableArgsAll
 ArrowMethodCall    ::= Ident CallArgs
 ArrowIndirectCall  ::= SigilScalar Ident CallArgs
 
-DerefVariableArgsAll ::= SigilScalar   SigilDerefAll
-                       | SigilArray    SigilDerefAll
-                       | SigilHash     SigilDerefAll
-                       | SigilCode     SigilDerefAll
-                       | SigilGlob     SigilDerefAll
-                       | SigilArrayTop
+DerefVariableArgsAll ::= '$*' | '@*' | '%*' | '&*' | '**' | SigilArrayTop
 
 DerefVariableSlice ::= '@[' Expression ']'
                      | '@{' Expression '}'
@@ -1171,7 +1166,6 @@ SigilHash     ~ '%'
 SigilCode     ~ '&'
 SigilGlob     ~ '*'
 SigilArrayTop ~ '$#'
-SigilDerefAll ~ '*'
 
 LParen   ~ '('
 RParen   ~ ')'
