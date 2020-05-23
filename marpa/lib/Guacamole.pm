@@ -290,10 +290,10 @@ DerefVariableArgsAll ::= SigilScalar   SigilDerefAll
                        | SigilGlob     SigilDerefAll
                        | SigilArrayTop
 
-DerefVariableSlice ::= SigilArray LitArray
-                     | SigilArray LitHash
-                     | SigilHash  LitArray
-                     | SigilHash  LitHash
+DerefVariableSlice ::= '@[' Expression ']'
+                     | '@{' Expression '}'
+                     | '%[' Expression ']'
+                     | '%{' Expression '}'
 
 # TODO: (Add the following above)
 #| OpKeywordSplitExpr
