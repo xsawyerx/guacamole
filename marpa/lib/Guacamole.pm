@@ -299,6 +299,8 @@ PackageArrowRHS ::= ArrowMethodCall
                   | ArrowIndirectCall
 
 NonQLikeIdent ::= NonQLikeFunctionName
+                | NonQLikeFunctionName PackageSep
+                | NonQLikeFunctionName PackageSep Ident
                 | NonQLikeFunctionName Ident
 
 CallArgs ::= ParenExpr
