@@ -204,6 +204,7 @@ NonLiteral ::= Variable
              | Modifier ParenExpr
              | UnderscoreValues
              | SubCall
+             | PackageArrow
              | ParenExpr ElemSeq0
              | OpNullaryKeywordExpr
 
@@ -246,6 +247,11 @@ VarName ::= Ident
 
 SubCall ::= NonQLikeIdent CallArgs
           | VarCode CallArgs
+
+PackageArrow  ::= NonQLikeIdent OpArrow PackageArrowRHS
+
+PackageArrowRHS ::= ArrowMethodCall
+                  | ArrowIndirectCall
 
 NonQLikeIdent ::= NonQLikeFunctionName
                 | NonQLikeFunctionName Ident
