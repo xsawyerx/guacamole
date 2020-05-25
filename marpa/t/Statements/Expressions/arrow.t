@@ -15,7 +15,7 @@ parses('"Foo"->thing()');
 parses('Foo->thing()');
 
 ok(
-    exception( sub { parses('Foo->thing') } ),
+    exception( sub { parse_fail('Foo->thing') } ),
     'Failed: Foo->thing',
 );
 
