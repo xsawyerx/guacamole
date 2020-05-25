@@ -65,7 +65,7 @@ sub parsent {
 
     foreach my $tree (@trees) {
         my $ast = cleanup($tree);
-        print dump_tree($ast);
+        diag( dump_tree($ast) );
     }
 }
 
