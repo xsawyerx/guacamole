@@ -12,18 +12,24 @@ Program ::= StatementSeq
 StatementSeq ::= Statement
                | Statement Semicolon
                | Statement Semicolon StatementSeq
+               | BlockStatement
+               | BlockStatement StatementSeq
+
+# Statements that end with a block and do not need a semicolon terminator.
+BlockStatement ::= LoopStatement
+                 | PackageStatement
+                 | SubStatement
+                 | Condition
+                 | Block
 
 Statement ::= BlockLevelExpression StatementModifier
             | BlockLevelExpression
-            | LoopStatement
-            | Block
-            | Condition
             | EllipsisStatement
             | UseStatement
             | NoStatement
             | RequireStatement
-            | PackageStatement
-            | SubStatement
+            | PackageDeclaration
+            | SubDeclaration
 
 LoopStatement ::= ForStatement
                 | WhileStatement
@@ -79,14 +85,15 @@ RequireStatement ::= OpKeywordRequire VersionExpr
                    | OpKeywordRequire Expression
 
 PackageStatement ::= OpKeywordPackage Ident VersionExpr Block
-                   | OpKeywordPackage Ident VersionExpr
                    | OpKeywordPackage Ident Block
-                   | OpKeywordPackage Ident
+PackageDeclaration ::= OpKeywordPackage Ident VersionExpr
+                     | OpKeywordPackage Ident
 
 SubStatement ::= PhaseStatement Block
                | OpKeywordSub PhaseStatement Block
                | OpKeywordSub NonQLikeIdent SubDefinition
-               | OpKeywordSub NonQLikeIdent
+
+SubDeclaration ::= OpKeywordSub NonQLikeIdent
 
 SubDefinition ::= SubAttrsDefinitionSeq SubSigsDefinition Block
                 | SubAttrsDefinitionSeq Block
