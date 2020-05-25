@@ -10,8 +10,6 @@ parses('4');
 parses('44');
 parses('44.4');
 parses('-44.4');
-parses('Inf');  # infinite
-parses('-Inf'); # negative infinite
 
 # LitArray
 parses('[]');
