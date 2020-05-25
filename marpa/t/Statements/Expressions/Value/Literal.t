@@ -1,7 +1,5 @@
 use strict;
 use warnings;
-use experimental qw< postderef >;
-
 use Guacamole::Test;
 
 # LitNumber
