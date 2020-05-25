@@ -39,6 +39,8 @@ sub parses {
 sub parses_as {
     my ( $text, $user_trees ) = @_;
 
+    local $Test::Builder::Level += 1;
+
     my $trees             = parses($text);
     my @dumped_trees      = map dump_tree( cleanup($_) ), @{$trees};
     my @dumped_user_trees = map dump_tree( cleanup($_) ), @{$user_trees};
