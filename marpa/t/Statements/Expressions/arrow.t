@@ -14,9 +14,6 @@ parses('$foo->thing()');
 parses('"Foo"->thing()');
 parses('Foo->thing()');
 
-ok(
-    exception( sub { parse_fail('Foo->thing') } ),
-    'Failed: Foo->thing',
-);
+parsent('Foo->thing');
 
 done_testing;

@@ -12,18 +12,11 @@ use Guacamole::AST qw/cleanup/;
 use Exporter "import";
 
 our @EXPORT = qw(
-    parse_fail
     parses
     parses_as
     parsent
     done_testing
 );
-
-sub parse_fail {
-    my ($text) = @_;
-    local $Test::Builder::Level += 1;
-    Guacamole->parse($text);
-}
 
 sub parses {
     my ($text) = @_;

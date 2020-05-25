@@ -50,11 +50,7 @@ foreach my $function (@q_functions) {
 
         # q-like value with space will fail
         # this includes s / m / y / tr
-        like(
-            exception( sub { parse_fail($bad_string) } ),
-            qr/Error \s in \s SLIF \s parse/xms,
-            "Refuse to parse: $bad_string",
-        );
+        parsent($bad_string);
     }
 }
 
