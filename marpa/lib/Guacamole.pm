@@ -277,12 +277,12 @@ BlockLevelExpression  ::= BlockLevelExprNameOr action => ::first
 
 Value         ::= Literal | NonLiteral | QLikeValue
 
-# FIXME: cleanup
-ExprKwList ::= ExprComma
-ExprKwAssign ::= ExprKwAssignR
-ExprKwUnary ::= ExprKwUnaryR
-NonBraceExprKwList ::= NonBraceExprComma
-NonBraceExprKwUnary ::= NonBraceExprKwUnaryR
+# Arguments of operators according to the operator precedence
+OpUnaryKeywordArg         ::= ExprKwUnaryR
+OpUnaryKeywordArgNonBrace ::= NonBraceExprKwUnaryR
+OpAssignKeywordArg        ::= ExprAssignR
+OpListKeywordArg          ::= ExprComma
+OpListKeywordArgNonBrace  ::= NonBraceExprComma
 
 # Same as Value above, but with a NonBraceLiteral
 NonBraceValue ::= NonBraceLiteral | NonLiteral | QLikeValue
@@ -614,141 +614,141 @@ OpAssignKeywordExpr ::=
     | OpKeywordNextExpr
     | OpKeywordRedoExpr
 
-OpKeywordAbsExpr              ::= OpKeywordAbs ExprKwUnary
+OpKeywordAbsExpr              ::= OpKeywordAbs OpUnaryKeywordArg
                                 | OpKeywordAbs
 
-OpKeywordAcceptExpr           ::= OpKeywordAccept ExprKwList
+OpKeywordAcceptExpr           ::= OpKeywordAccept OpListKeywordArg
 
-OpKeywordAlarmExpr            ::= OpKeywordAlarm ExprKwUnary
+OpKeywordAlarmExpr            ::= OpKeywordAlarm OpUnaryKeywordArg
                                 | OpKeywordAlarm
 
-OpKeywordAtan2Expr            ::= OpKeywordAtan2 ExprKwList
+OpKeywordAtan2Expr            ::= OpKeywordAtan2 OpListKeywordArg
 
-OpKeywordBindExpr             ::= OpKeywordBind ExprKwList
+OpKeywordBindExpr             ::= OpKeywordBind OpListKeywordArg
 
-OpKeywordBinmodeExpr          ::= OpKeywordBinmode ExprKwList
+OpKeywordBinmodeExpr          ::= OpKeywordBinmode OpListKeywordArg
 
-OpKeywordBlessExpr            ::= OpKeywordBless ExprKwList
+OpKeywordBlessExpr            ::= OpKeywordBless OpListKeywordArg
 
 OpKeywordBreakExpr            ::= OpKeywordBreak Label
                                 | OpKeywordBreak
 
-OpKeywordCallerExpr           ::= OpKeywordCaller ExprKwUnary
+OpKeywordCallerExpr           ::= OpKeywordCaller OpUnaryKeywordArg
                                 | OpKeywordCaller
 
-OpKeywordChdirExpr            ::= OpKeywordChdir ExprKwUnary
+OpKeywordChdirExpr            ::= OpKeywordChdir OpUnaryKeywordArg
                                 | OpKeywordChdir
 
-OpKeywordChmodExpr            ::= OpKeywordChmod ExprKwList
+OpKeywordChmodExpr            ::= OpKeywordChmod OpListKeywordArg
 
-OpKeywordChompExpr            ::= OpKeywordChomp ExprKwUnary
+OpKeywordChompExpr            ::= OpKeywordChomp OpUnaryKeywordArg
                                 | OpKeywordChomp
 
-OpKeywordChopExpr             ::= OpKeywordChop ExprKwUnary
+OpKeywordChopExpr             ::= OpKeywordChop OpUnaryKeywordArg
                                 | OpKeywordChop
 
-OpKeywordChownExpr            ::= OpKeywordChown ExprKwList
+OpKeywordChownExpr            ::= OpKeywordChown OpListKeywordArg
 
-OpKeywordChrExpr              ::= OpKeywordChr ExprKwUnary
+OpKeywordChrExpr              ::= OpKeywordChr OpUnaryKeywordArg
                                 | OpKeywordChr
 
-OpKeywordChrootExpr           ::= OpKeywordChroot ExprKwUnary
+OpKeywordChrootExpr           ::= OpKeywordChroot OpUnaryKeywordArg
                                 | OpKeywordChroot
 
-OpKeywordCloseExpr            ::= OpKeywordClose ExprKwUnary
+OpKeywordCloseExpr            ::= OpKeywordClose OpUnaryKeywordArg
                                 | OpKeywordClose
 
-OpKeywordClosedirExpr         ::= OpKeywordClosedir ExprKwUnary
+OpKeywordClosedirExpr         ::= OpKeywordClosedir OpUnaryKeywordArg
 
-OpKeywordConnectExpr          ::= OpKeywordConnect ExprKwList
+OpKeywordConnectExpr          ::= OpKeywordConnect OpListKeywordArg
 
-OpKeywordCosExpr              ::= OpKeywordCos ExprKwUnary
+OpKeywordCosExpr              ::= OpKeywordCos OpUnaryKeywordArg
 
-OpKeywordCryptExpr            ::= OpKeywordCrypt ExprKwList
+OpKeywordCryptExpr            ::= OpKeywordCrypt OpListKeywordArg
 
-OpKeywordDbmcloseExpr         ::= OpKeywordDbmclose ExprKwUnary
+OpKeywordDbmcloseExpr         ::= OpKeywordDbmclose OpUnaryKeywordArg
 
-OpKeywordDbmopenExpr          ::= OpKeywordDbmopen ExprKwList
+OpKeywordDbmopenExpr          ::= OpKeywordDbmopen OpListKeywordArg
 
-OpKeywordDefinedExpr          ::= OpKeywordDefined ExprKwUnary
+OpKeywordDefinedExpr          ::= OpKeywordDefined OpUnaryKeywordArg
                                 | OpKeywordDefined
 
-OpKeywordDeleteExpr           ::= OpKeywordDelete ExprKwUnary
+OpKeywordDeleteExpr           ::= OpKeywordDelete OpUnaryKeywordArg
 
-OpKeywordDieExpr              ::= OpKeywordDie ExprKwList
+OpKeywordDieExpr              ::= OpKeywordDie OpListKeywordArg
 
 OpKeywordDoExpr               ::= OpKeywordDo Block
-                                | OpKeywordDo NonBraceExprKwUnary
+                                | OpKeywordDo OpUnaryKeywordArgNonBrace
 
-OpKeywordDumpExpr             ::= OpKeywordDump ExprKwAssign
+OpKeywordDumpExpr             ::= OpKeywordDump OpAssignKeywordArg
                                 | OpKeywordDump Label
                                 | OpKeywordDump
 
-OpKeywordEachExpr             ::= OpKeywordEach ExprKwUnary
+OpKeywordEachExpr             ::= OpKeywordEach OpUnaryKeywordArg
 
-OpKeywordEofExpr              ::= OpKeywordEof ExprKwUnary
+OpKeywordEofExpr              ::= OpKeywordEof OpUnaryKeywordArg
                                 | OpKeywordEof
 
 OpKeywordEvalExpr             ::= OpKeywordEval Block
 
-OpKeywordEvalbytesExpr        ::= OpKeywordEvalbytes ExprKwUnary
+OpKeywordEvalbytesExpr        ::= OpKeywordEvalbytes OpUnaryKeywordArg
                                 | OpKeywordEvalbytes
 
-OpKeywordExistsExpr           ::= OpKeywordExists ExprKwUnary
+OpKeywordExistsExpr           ::= OpKeywordExists OpUnaryKeywordArg
 
-OpKeywordExitExpr             ::= OpKeywordExit ExprKwUnary
+OpKeywordExitExpr             ::= OpKeywordExit OpUnaryKeywordArg
                                 | OpKeywordExit
 
-OpKeywordExpExpr              ::= OpKeywordExp ExprKwUnary
+OpKeywordExpExpr              ::= OpKeywordExp OpUnaryKeywordArg
                                 | OpKeywordExp
 
-OpKeywordFcExpr               ::= OpKeywordFc ExprKwUnary
+OpKeywordFcExpr               ::= OpKeywordFc OpUnaryKeywordArg
                                 | OpKeywordFc
 
-OpKeywordFcntlExpr            ::= OpKeywordFcntl ExprKwList
+OpKeywordFcntlExpr            ::= OpKeywordFcntl OpListKeywordArg
 
-OpKeywordFilenoExpr           ::= OpKeywordFileno ExprKwUnary
+OpKeywordFilenoExpr           ::= OpKeywordFileno OpUnaryKeywordArg
 
-OpKeywordFlockExpr            ::= OpKeywordFlock ExprKwList
+OpKeywordFlockExpr            ::= OpKeywordFlock OpListKeywordArg
 
 OpKeywordForkExpr             ::= OpKeywordFork
 
-OpKeywordGetcExpr             ::= OpKeywordGetc ExprKwUnary
+OpKeywordGetcExpr             ::= OpKeywordGetc OpUnaryKeywordArg
                                 | OpKeywordGetc
 
 OpKeywordGetloginExpr         ::= OpKeywordGetlogin
 
-OpKeywordGetpeernameExpr      ::= OpKeywordGetpeername ExprKwUnary
+OpKeywordGetpeernameExpr      ::= OpKeywordGetpeername OpUnaryKeywordArg
 
-OpKeywordGetpgrpExpr          ::= OpKeywordGetpgrp ExprKwUnary
+OpKeywordGetpgrpExpr          ::= OpKeywordGetpgrp OpUnaryKeywordArg
 
 OpKeywordGetppidExpr          ::= OpKeywordGetppid
 
-OpKeywordGetpriorityExpr      ::= OpKeywordGetpriority ExprKwList
+OpKeywordGetpriorityExpr      ::= OpKeywordGetpriority OpListKeywordArg
 
-OpKeywordGetpwnamExpr         ::= OpKeywordGetpwnam ExprKwUnary
+OpKeywordGetpwnamExpr         ::= OpKeywordGetpwnam OpUnaryKeywordArg
 
-OpKeywordGetgrnamExpr         ::= OpKeywordGetgrnam ExprKwUnary
+OpKeywordGetgrnamExpr         ::= OpKeywordGetgrnam OpUnaryKeywordArg
 
-OpKeywordGethostbynameExpr    ::= OpKeywordGethostbyname ExprKwUnary
+OpKeywordGethostbynameExpr    ::= OpKeywordGethostbyname OpUnaryKeywordArg
 
-OpKeywordGetnetbynameExpr     ::= OpKeywordGetnetbyname ExprKwUnary
+OpKeywordGetnetbynameExpr     ::= OpKeywordGetnetbyname OpUnaryKeywordArg
 
-OpKeywordGetprotobynameExpr   ::= OpKeywordGetprotobyname ExprKwUnary
+OpKeywordGetprotobynameExpr   ::= OpKeywordGetprotobyname OpUnaryKeywordArg
 
-OpKeywordGetpwuidExpr         ::= OpKeywordGetpwuid ExprKwUnary
+OpKeywordGetpwuidExpr         ::= OpKeywordGetpwuid OpUnaryKeywordArg
 
-OpKeywordGetgrgidExpr         ::= OpKeywordGetgrgid ExprKwUnary
+OpKeywordGetgrgidExpr         ::= OpKeywordGetgrgid OpUnaryKeywordArg
 
-OpKeywordGetservbynameExpr    ::= OpKeywordGetservbyname ExprKwList
+OpKeywordGetservbynameExpr    ::= OpKeywordGetservbyname OpListKeywordArg
 
-OpKeywordGethostbyaddrExpr    ::= OpKeywordGethostbyaddr ExprKwList
+OpKeywordGethostbyaddrExpr    ::= OpKeywordGethostbyaddr OpListKeywordArg
 
-OpKeywordGetnetbyaddrExpr     ::= OpKeywordGetnetbyaddr ExprKwList
+OpKeywordGetnetbyaddrExpr     ::= OpKeywordGetnetbyaddr OpListKeywordArg
 
-OpKeywordGetprotobynumberExpr ::= OpKeywordGetprotobynumber ExprKwUnary
+OpKeywordGetprotobynumberExpr ::= OpKeywordGetprotobynumber OpUnaryKeywordArg
 
-OpKeywordGetservbyportExpr    ::= OpKeywordGetservbyport ExprKwList
+OpKeywordGetservbyportExpr    ::= OpKeywordGetservbyport OpListKeywordArg
 
 OpKeywordGetpwentExpr         ::= OpKeywordGetpwent
 
@@ -766,13 +766,13 @@ OpKeywordSetpwentExpr         ::= OpKeywordSetpwent
 
 OpKeywordSetgrentExpr         ::= OpKeywordSetgrent
 
-OpKeywordSethostentExpr       ::= OpKeywordSethostent ExprKwUnary
+OpKeywordSethostentExpr       ::= OpKeywordSethostent OpUnaryKeywordArg
 
-OpKeywordSetnetentExpr        ::= OpKeywordSetnetent ExprKwUnary
+OpKeywordSetnetentExpr        ::= OpKeywordSetnetent OpUnaryKeywordArg
 
-OpKeywordSetprotoentExpr      ::= OpKeywordSetprotoent ExprKwUnary
+OpKeywordSetprotoentExpr      ::= OpKeywordSetprotoent OpUnaryKeywordArg
 
-OpKeywordSetserventExpr       ::= OpKeywordSetservent ExprKwUnary
+OpKeywordSetserventExpr       ::= OpKeywordSetservent OpUnaryKeywordArg
 
 OpKeywordEndpwentExpr         ::= OpKeywordEndpwent
 
@@ -786,313 +786,313 @@ OpKeywordEndprotoentExpr      ::= OpKeywordEndprotoent
 
 OpKeywordEndserventExpr       ::= OpKeywordEndservent
 
-OpKeywordExecExpr             ::= OpKeywordExec Block ExprKwList
-                                | OpKeywordExec NonBraceExprKwList
+OpKeywordExecExpr             ::= OpKeywordExec Block OpListKeywordArg
+                                | OpKeywordExec OpListKeywordArgNonBrace
 
-OpKeywordGetsocknameExpr      ::= OpKeywordGetsockname ExprKwUnary
+OpKeywordGetsocknameExpr      ::= OpKeywordGetsockname OpUnaryKeywordArg
 
-OpKeywordGetsockoptExpr       ::= OpKeywordGetsockopt ExprKwList
+OpKeywordGetsockoptExpr       ::= OpKeywordGetsockopt OpListKeywordArg
 
-OpKeywordGlobExpr             ::= OpKeywordGlob ExprKwList
+OpKeywordGlobExpr             ::= OpKeywordGlob OpListKeywordArg
                                 | OpKeywordGlob
 
-OpKeywordGmtimeExpr           ::= OpKeywordGmtime ExprKwUnary
+OpKeywordGmtimeExpr           ::= OpKeywordGmtime OpUnaryKeywordArg
                                 | OpKeywordGmtime
 
 # &NAME is an expression too
-OpKeywordGotoExpr             ::= OpKeywordGoto ExprKwAssign
+OpKeywordGotoExpr             ::= OpKeywordGoto OpAssignKeywordArg
                                 | OpKeywordGoto Label
 
-OpKeywordGrepExpr             ::= OpKeywordGrep Block ExprKwList
-                                | OpKeywordGrep NonBraceExprKwList
+OpKeywordGrepExpr             ::= OpKeywordGrep Block OpListKeywordArg
+                                | OpKeywordGrep OpListKeywordArgNonBrace
 
-OpKeywordHexExpr              ::= OpKeywordHex ExprKwUnary
+OpKeywordHexExpr              ::= OpKeywordHex OpUnaryKeywordArg
                                 | OpKeywordHex
 
-OpKeywordIndexExpr            ::= OpKeywordIndex ExprKwList
+OpKeywordIndexExpr            ::= OpKeywordIndex OpListKeywordArg
 
-OpKeywordIntExpr              ::= OpKeywordInt ExprKwUnary
+OpKeywordIntExpr              ::= OpKeywordInt OpUnaryKeywordArg
                                 | OpKeywordInt
 
-OpKeywordIoctlExpr            ::= OpKeywordIoctl ExprKwList
+OpKeywordIoctlExpr            ::= OpKeywordIoctl OpListKeywordArg
 
-OpKeywordJoinExpr             ::= OpKeywordJoin ExprKwList
+OpKeywordJoinExpr             ::= OpKeywordJoin OpListKeywordArg
 
-OpKeywordKeysExpr             ::= OpKeywordKeys ExprKwUnary
+OpKeywordKeysExpr             ::= OpKeywordKeys OpUnaryKeywordArg
 
-OpKeywordKillExpr             ::= OpKeywordKill ExprKwList
+OpKeywordKillExpr             ::= OpKeywordKill OpListKeywordArg
                                 | OpKeywordKill Expression
 
-OpKeywordLastExpr             ::= OpKeywordLast ExprKwAssign
+OpKeywordLastExpr             ::= OpKeywordLast OpAssignKeywordArg
                                 | OpKeywordLast Label
                                 | OpKeywordLast
 
-OpKeywordLcExpr               ::= OpKeywordLc ExprKwUnary
+OpKeywordLcExpr               ::= OpKeywordLc OpUnaryKeywordArg
                                 | OpKeywordLc
 
-OpKeywordLcfirstExpr          ::= OpKeywordLcfirst ExprKwUnary
+OpKeywordLcfirstExpr          ::= OpKeywordLcfirst OpUnaryKeywordArg
                                 | OpKeywordLcfirst
 
-OpKeywordLengthExpr           ::= OpKeywordLength ExprKwUnary
+OpKeywordLengthExpr           ::= OpKeywordLength OpUnaryKeywordArg
                                 | OpKeywordLength
 
-OpKeywordLinkExpr             ::= OpKeywordLink ExprKwList
+OpKeywordLinkExpr             ::= OpKeywordLink OpListKeywordArg
 
-OpKeywordListenExpr           ::= OpKeywordListen ExprKwList
+OpKeywordListenExpr           ::= OpKeywordListen OpListKeywordArg
 
-OpKeywordLocaltimeExpr        ::= OpKeywordLocaltime ExprKwUnary
+OpKeywordLocaltimeExpr        ::= OpKeywordLocaltime OpUnaryKeywordArg
                                 | OpKeywordLocaltime
 
-OpKeywordLockExpr             ::= OpKeywordLock ExprKwUnary
+OpKeywordLockExpr             ::= OpKeywordLock OpUnaryKeywordArg
 
-OpKeywordLogExpr              ::= OpKeywordLog ExprKwUnary
+OpKeywordLogExpr              ::= OpKeywordLog OpUnaryKeywordArg
                                 | OpKeywordLog
 
-OpKeywordLstatExpr            ::= OpKeywordLstat ExprKwUnary
+OpKeywordLstatExpr            ::= OpKeywordLstat OpUnaryKeywordArg
                                 | OpKeywordLstat
 
-OpKeywordMapExpr              ::= OpKeywordMap Block ExprKwList
-                                | OpKeywordMap NonBraceExprKwList
+OpKeywordMapExpr              ::= OpKeywordMap Block OpListKeywordArg
+                                | OpKeywordMap OpListKeywordArgNonBrace
 
-OpKeywordMkdirExpr            ::= OpKeywordMkdir ExprKwList
+OpKeywordMkdirExpr            ::= OpKeywordMkdir OpListKeywordArg
                                 | OpKeywordMkdir
 
-OpKeywordMsgctlExpr           ::= OpKeywordMsgctl ExprKwList
+OpKeywordMsgctlExpr           ::= OpKeywordMsgctl OpListKeywordArg
 
-OpKeywordMsggetExpr           ::= OpKeywordMsgget ExprKwList
+OpKeywordMsggetExpr           ::= OpKeywordMsgget OpListKeywordArg
 
-OpKeywordMsgrcvExpr           ::= OpKeywordMsgrcv ExprKwList
+OpKeywordMsgrcvExpr           ::= OpKeywordMsgrcv OpListKeywordArg
 
-OpKeywordMsgsndExpr           ::= OpKeywordMsgsnd ExprKwList
+OpKeywordMsgsndExpr           ::= OpKeywordMsgsnd OpListKeywordArg
 
-OpKeywordNextExpr             ::= OpKeywordNext ExprKwAssign
+OpKeywordNextExpr             ::= OpKeywordNext OpAssignKeywordArg
                                 | OpKeywordNext Label
                                 | OpKeywordNext
 
-OpKeywordOctExpr              ::= OpKeywordOct ExprKwUnary
+OpKeywordOctExpr              ::= OpKeywordOct OpUnaryKeywordArg
                                 | OpKeywordOct
 
-OpKeywordOpenExpr             ::= OpKeywordOpen ExprKwList
+OpKeywordOpenExpr             ::= OpKeywordOpen OpListKeywordArg
 
-OpKeywordOpendirExpr          ::= OpKeywordOpendir ExprKwList
+OpKeywordOpendirExpr          ::= OpKeywordOpendir OpListKeywordArg
 
-OpKeywordOrdExpr              ::= OpKeywordOrd ExprKwUnary
+OpKeywordOrdExpr              ::= OpKeywordOrd OpUnaryKeywordArg
                                 | OpKeywordOrd
 
-OpKeywordPackExpr             ::= OpKeywordPack ExprKwList
+OpKeywordPackExpr             ::= OpKeywordPack OpListKeywordArg
 
-OpKeywordPipeExpr             ::= OpKeywordPipe ExprKwList
+OpKeywordPipeExpr             ::= OpKeywordPipe OpListKeywordArg
 
-OpKeywordPopExpr              ::= OpKeywordPop ExprKwUnary
+OpKeywordPopExpr              ::= OpKeywordPop OpUnaryKeywordArg
                                 | OpKeywordPop
 
-OpKeywordPosExpr              ::= OpKeywordPos ExprKwUnary
+OpKeywordPosExpr              ::= OpKeywordPos OpUnaryKeywordArg
                                 | OpKeywordPos
 
-OpKeywordPrintExpr            ::= OpKeywordPrint Block ExprKwList
-                                | OpKeywordPrint NonBraceExprKwList
+OpKeywordPrintExpr            ::= OpKeywordPrint Block OpListKeywordArg
+                                | OpKeywordPrint OpListKeywordArgNonBrace
                                 | OpKeywordPrint Block
                                 | OpKeywordPrint
 
-OpKeywordPrintfExpr           ::= OpKeywordPrintf Block ExprKwList
-                                | OpKeywordPrintf NonBraceExprKwList
+OpKeywordPrintfExpr           ::= OpKeywordPrintf Block OpListKeywordArg
+                                | OpKeywordPrintf OpListKeywordArgNonBrace
                                 | OpKeywordPrintf Block
 
-OpKeywordPrototypeExpr        ::= OpKeywordPrototype ExprKwUnary
+OpKeywordPrototypeExpr        ::= OpKeywordPrototype OpUnaryKeywordArg
                                 | OpKeywordPrototype
 
-OpKeywordPushExpr             ::= OpKeywordPush ExprKwList
+OpKeywordPushExpr             ::= OpKeywordPush OpListKeywordArg
 
-OpKeywordQuotemetaExpr        ::= OpKeywordQuotemeta ExprKwUnary
+OpKeywordQuotemetaExpr        ::= OpKeywordQuotemeta OpUnaryKeywordArg
                                 | OpKeywordQuotemeta
 
-OpKeywordRandExpr             ::= OpKeywordRand ExprKwUnary
+OpKeywordRandExpr             ::= OpKeywordRand OpUnaryKeywordArg
                                 | OpKeywordRand
 
-OpKeywordReadExpr             ::= OpKeywordRead ExprKwList
+OpKeywordReadExpr             ::= OpKeywordRead OpListKeywordArg
 
-OpKeywordReaddirExpr          ::= OpKeywordReaddir ExprKwUnary
+OpKeywordReaddirExpr          ::= OpKeywordReaddir OpUnaryKeywordArg
 
-OpKeywordReadlineExpr         ::= OpKeywordReadline ExprKwUnary
+OpKeywordReadlineExpr         ::= OpKeywordReadline OpUnaryKeywordArg
                                 | OpKeywordReadline
 
-OpKeywordReadlinkExpr         ::= OpKeywordReadlink ExprKwUnary
+OpKeywordReadlinkExpr         ::= OpKeywordReadlink OpUnaryKeywordArg
                                 | OpKeywordReadlink
 
-OpKeywordReadpipeExpr         ::= OpKeywordReadpipe ExprKwUnary
+OpKeywordReadpipeExpr         ::= OpKeywordReadpipe OpUnaryKeywordArg
                                 | OpKeywordReadpipe
 
-OpKeywordRecvExpr             ::= OpKeywordRecv ExprKwList
+OpKeywordRecvExpr             ::= OpKeywordRecv OpListKeywordArg
 
-OpKeywordRedoExpr             ::= OpKeywordRedo ExprKwAssign
+OpKeywordRedoExpr             ::= OpKeywordRedo OpAssignKeywordArg
                                 | OpKeywordRedo Label
                                 | OpKeywordRedo
 
-OpKeywordRefExpr              ::= OpKeywordRef ExprKwUnary
+OpKeywordRefExpr              ::= OpKeywordRef OpUnaryKeywordArg
                                 | OpKeywordRef
 
-OpKeywordRenameExpr           ::= OpKeywordRename ExprKwList
+OpKeywordRenameExpr           ::= OpKeywordRename OpListKeywordArg
 
-OpKeywordResetExpr            ::= OpKeywordReset ExprKwUnary
+OpKeywordResetExpr            ::= OpKeywordReset OpUnaryKeywordArg
                                 | OpKeywordReset
 
-OpKeywordReturnExpr           ::= OpKeywordReturn ExprKwList
+OpKeywordReturnExpr           ::= OpKeywordReturn OpListKeywordArg
                                 | OpKeywordReturn
 
-OpKeywordReverseExpr          ::= OpKeywordReverse ExprKwList
+OpKeywordReverseExpr          ::= OpKeywordReverse OpListKeywordArg
 
-OpKeywordRewinddirExpr        ::= OpKeywordRewinddir ExprKwUnary
+OpKeywordRewinddirExpr        ::= OpKeywordRewinddir OpUnaryKeywordArg
                                 | OpKeywordRewinddir
 
-OpKeywordRindexExpr           ::= OpKeywordRindex ExprKwList
+OpKeywordRindexExpr           ::= OpKeywordRindex OpListKeywordArg
                                 | OpKeywordRindex
 
-OpKeywordRmdirExpr            ::= OpKeywordRmdir ExprKwUnary
+OpKeywordRmdirExpr            ::= OpKeywordRmdir OpUnaryKeywordArg
                                 | OpKeywordRmdir
 
-OpKeywordSayExpr              ::= OpKeywordSay Block ExprKwList
-                                | OpKeywordSay NonBraceExprKwList
+OpKeywordSayExpr              ::= OpKeywordSay Block OpListKeywordArg
+                                | OpKeywordSay OpListKeywordArgNonBrace
                                 | OpKeywordSay Block
                                 | OpKeywordSay
 
-OpKeywordScalarExpr           ::= OpKeywordScalar ExprKwUnary
+OpKeywordScalarExpr           ::= OpKeywordScalar OpUnaryKeywordArg
 
-OpKeywordSeekExpr             ::= OpKeywordSeek ExprKwList
+OpKeywordSeekExpr             ::= OpKeywordSeek OpListKeywordArg
 
-OpKeywordSeekdirExpr          ::= OpKeywordSeekdir ExprKwList
+OpKeywordSeekdirExpr          ::= OpKeywordSeekdir OpListKeywordArg
 
-OpKeywordSelectExpr           ::= OpKeywordSelect ExprKwList
+OpKeywordSelectExpr           ::= OpKeywordSelect OpListKeywordArg
 
-OpKeywordSemctlExpr           ::= OpKeywordSemctl ExprKwList
+OpKeywordSemctlExpr           ::= OpKeywordSemctl OpListKeywordArg
 
-OpKeywordSemgetExpr           ::= OpKeywordSemget ExprKwList
+OpKeywordSemgetExpr           ::= OpKeywordSemget OpListKeywordArg
 
-OpKeywordSemopExpr            ::= OpKeywordSemop ExprKwList
+OpKeywordSemopExpr            ::= OpKeywordSemop OpListKeywordArg
 
-OpKeywordSendExpr             ::= OpKeywordSend ExprKwList
+OpKeywordSendExpr             ::= OpKeywordSend OpListKeywordArg
 
-OpKeywordSetpgrpExpr          ::= OpKeywordSetpgrp ExprKwList
+OpKeywordSetpgrpExpr          ::= OpKeywordSetpgrp OpListKeywordArg
 
-OpKeywordSetpriorityExpr      ::= OpKeywordSetpriority ExprKwList
+OpKeywordSetpriorityExpr      ::= OpKeywordSetpriority OpListKeywordArg
 
-OpKeywordSetsockoptExpr       ::= OpKeywordSetsockopt ExprKwList
+OpKeywordSetsockoptExpr       ::= OpKeywordSetsockopt OpListKeywordArg
 
-OpKeywordShiftExpr            ::= OpKeywordShift ExprKwUnary
+OpKeywordShiftExpr            ::= OpKeywordShift OpUnaryKeywordArg
                                 | OpKeywordShift
 
-OpKeywordShmctlExpr           ::= OpKeywordShmctl ExprKwList
+OpKeywordShmctlExpr           ::= OpKeywordShmctl OpListKeywordArg
 
-OpKeywordShmgetExpr           ::= OpKeywordShmget ExprKwList
+OpKeywordShmgetExpr           ::= OpKeywordShmget OpListKeywordArg
 
-OpKeywordShmreadExpr          ::= OpKeywordShmread ExprKwList
+OpKeywordShmreadExpr          ::= OpKeywordShmread OpListKeywordArg
 
-OpKeywordShmwriteExpr         ::= OpKeywordShmwrite ExprKwList
+OpKeywordShmwriteExpr         ::= OpKeywordShmwrite OpListKeywordArg
 
-OpKeywordShutdownExpr         ::= OpKeywordShutdown ExprKwList
+OpKeywordShutdownExpr         ::= OpKeywordShutdown OpListKeywordArg
 
-OpKeywordSinExpr              ::= OpKeywordSin ExprKwUnary
+OpKeywordSinExpr              ::= OpKeywordSin OpUnaryKeywordArg
                                 | OpKeywordSin
 
-OpKeywordSleepExpr            ::= OpKeywordSleep ExprKwUnary
+OpKeywordSleepExpr            ::= OpKeywordSleep OpUnaryKeywordArg
                                 | OpKeywordSleep
 
-OpKeywordSocketExpr           ::= OpKeywordSocket ExprKwList
+OpKeywordSocketExpr           ::= OpKeywordSocket OpListKeywordArg
 
-OpKeywordSocketpairExpr       ::= OpKeywordSocketpair ExprKwList
+OpKeywordSocketpairExpr       ::= OpKeywordSocketpair OpListKeywordArg
 
-OpKeywordSortExpr             ::= OpKeywordSort Block ExprKwList
-                                | OpKeywordSort VarScalar ExprKwList
-                                | OpKeywordSort NonBraceExprKwList
+OpKeywordSortExpr             ::= OpKeywordSort Block OpListKeywordArg
+                                | OpKeywordSort VarScalar OpListKeywordArg
+                                | OpKeywordSort OpListKeywordArgNonBrace
 
-OpKeywordSpliceExpr           ::= OpKeywordSplice ExprKwList
+OpKeywordSpliceExpr           ::= OpKeywordSplice OpListKeywordArg
 
-OpKeywordSplitExpr            ::= OpKeywordSplit ExprKwList
+OpKeywordSplitExpr            ::= OpKeywordSplit OpListKeywordArg
 
-OpKeywordSprintfExpr          ::= OpKeywordSprintf ExprKwList
+OpKeywordSprintfExpr          ::= OpKeywordSprintf OpListKeywordArg
 
-OpKeywordSqrtExpr             ::= OpKeywordSqrt ExprKwUnary
+OpKeywordSqrtExpr             ::= OpKeywordSqrt OpUnaryKeywordArg
                                 | OpKeywordSqrt
 
-OpKeywordSrandExpr            ::= OpKeywordSrand ExprKwUnary
+OpKeywordSrandExpr            ::= OpKeywordSrand OpUnaryKeywordArg
                                 | OpKeywordSrand
 
-OpKeywordStatExpr             ::= OpKeywordStat ExprKwUnary
+OpKeywordStatExpr             ::= OpKeywordStat OpUnaryKeywordArg
                                 | OpKeywordStat
 
-OpKeywordStudyExpr            ::= OpKeywordStudy ExprKwUnary
+OpKeywordStudyExpr            ::= OpKeywordStudy OpUnaryKeywordArg
                                 | OpKeywordStudy
 
 OpKeywordSubExpr              ::= OpKeywordSub SubDefinition
 
-OpKeywordSubstrExpr           ::= OpKeywordSubstr ExprKwList
+OpKeywordSubstrExpr           ::= OpKeywordSubstr OpListKeywordArg
 
-OpKeywordSymlinkExpr          ::= OpKeywordSymlink ExprKwList
+OpKeywordSymlinkExpr          ::= OpKeywordSymlink OpListKeywordArg
 
-OpKeywordSyscallExpr          ::= OpKeywordSyscall ExprKwList
+OpKeywordSyscallExpr          ::= OpKeywordSyscall OpListKeywordArg
 
-OpKeywordSysopenExpr          ::= OpKeywordSysopen ExprKwList
+OpKeywordSysopenExpr          ::= OpKeywordSysopen OpListKeywordArg
 
-OpKeywordSysreadExpr          ::= OpKeywordSysread ExprKwList
+OpKeywordSysreadExpr          ::= OpKeywordSysread OpListKeywordArg
 
-OpKeywordSysseekExpr          ::= OpKeywordSysseek ExprKwList
+OpKeywordSysseekExpr          ::= OpKeywordSysseek OpListKeywordArg
 
-OpKeywordSyswriteExpr         ::= OpKeywordSyswrite ExprKwList
+OpKeywordSyswriteExpr         ::= OpKeywordSyswrite OpListKeywordArg
 
-OpKeywordSystemExpr           ::= OpKeywordSystem Block ExprKwList
-                                | OpKeywordSystem NonBraceExprKwList
+OpKeywordSystemExpr           ::= OpKeywordSystem Block OpListKeywordArg
+                                | OpKeywordSystem OpListKeywordArgNonBrace
 
-OpKeywordTellExpr             ::= OpKeywordTell ExprKwUnary
+OpKeywordTellExpr             ::= OpKeywordTell OpUnaryKeywordArg
                                 | OpKeywordTell
 
-OpKeywordTelldirExpr          ::= OpKeywordTelldir ExprKwUnary
+OpKeywordTelldirExpr          ::= OpKeywordTelldir OpUnaryKeywordArg
 
-OpKeywordTieExpr              ::= OpKeywordTie ExprKwList
+OpKeywordTieExpr              ::= OpKeywordTie OpListKeywordArg
 
-OpKeywordTiedExpr             ::= OpKeywordTied ExprKwUnary
+OpKeywordTiedExpr             ::= OpKeywordTied OpUnaryKeywordArg
 
 OpKeywordTimeExpr             ::= OpKeywordTime
 
 OpKeywordTimesExpr            ::= OpKeywordTimes
 
-OpKeywordTruncateExpr         ::= OpKeywordTruncate ExprKwList
+OpKeywordTruncateExpr         ::= OpKeywordTruncate OpListKeywordArg
 
-OpKeywordUcExpr               ::= OpKeywordUc ExprKwUnary
+OpKeywordUcExpr               ::= OpKeywordUc OpUnaryKeywordArg
                                 | OpKeywordUc
 
-OpKeywordUcfirstExpr          ::= OpKeywordUcfirst ExprKwUnary
+OpKeywordUcfirstExpr          ::= OpKeywordUcfirst OpUnaryKeywordArg
                                 | OpKeywordUcfirst
 
-OpKeywordUmaskExpr            ::= OpKeywordUmask ExprKwUnary
+OpKeywordUmaskExpr            ::= OpKeywordUmask OpUnaryKeywordArg
                                 | OpKeywordUmask
 
-OpKeywordUndefExpr            ::= OpKeywordUndef ExprKwUnary
+OpKeywordUndefExpr            ::= OpKeywordUndef OpUnaryKeywordArg
                                 | OpKeywordUndef
 
-OpKeywordUnlinkExpr           ::= OpKeywordUnlink ExprKwUnary
+OpKeywordUnlinkExpr           ::= OpKeywordUnlink OpUnaryKeywordArg
                                 | OpKeywordUnlink
 
-OpKeywordUnpackExpr           ::= OpKeywordUnpack ExprKwList
+OpKeywordUnpackExpr           ::= OpKeywordUnpack OpListKeywordArg
 
-OpKeywordUnshiftExpr          ::= OpKeywordUnshift ExprKwList
+OpKeywordUnshiftExpr          ::= OpKeywordUnshift OpListKeywordArg
 
-OpKeywordUntieExpr            ::= OpKeywordUntie ExprKwUnary
+OpKeywordUntieExpr            ::= OpKeywordUntie OpUnaryKeywordArg
 
-OpKeywordUtimeExpr            ::= OpKeywordUtime ExprKwUnary
+OpKeywordUtimeExpr            ::= OpKeywordUtime OpUnaryKeywordArg
 
-OpKeywordValuesExpr           ::= OpKeywordValues ExprKwUnary
+OpKeywordValuesExpr           ::= OpKeywordValues OpUnaryKeywordArg
 
-OpKeywordVecExpr              ::= OpKeywordVec ExprKwList
+OpKeywordVecExpr              ::= OpKeywordVec OpListKeywordArg
 
 OpKeywordWaitExpr             ::= OpKeywordWait
 
-OpKeywordWaitpidExpr          ::= OpKeywordWaitpid ExprKwList
+OpKeywordWaitpidExpr          ::= OpKeywordWaitpid OpListKeywordArg
 
 OpKeywordWantarrayExpr        ::= OpKeywordWantarray
 
-OpKeywordWarnExpr             ::= OpKeywordWarn ExprKwList
+OpKeywordWarnExpr             ::= OpKeywordWarn OpListKeywordArg
                                 | OpKeywordWarn
 
-OpKeywordWriteExpr            ::= OpKeywordWrite ExprKwList
+OpKeywordWriteExpr            ::= OpKeywordWrite OpListKeywordArg
                                 | OpKeywordWrite
 
 OpFile ::=
