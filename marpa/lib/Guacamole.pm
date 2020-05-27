@@ -131,103 +131,146 @@ ConditionForeachPostfixExpr ::= ConditionForeach Expression
 Label ::= IdentComp Colon
 
 # this is based on the order of ops in `perldoc perlop`
-ExprValueL    ::= Value
-ExprValueR    ::= Value | OpListKeywordExpr
-ExprArrowL    ::= ExprArrowL  OpArrow   ArrowRHS      | ExprValueL   action => ::first
-ExprArrowR    ::= ExprArrowL  OpArrow   ArrowRHS      | ExprValueR   action => ::first
-ExprIncL      ::= OpInc ExprArrowL | ExprArrowR OpInc | ExprArrowL   action => ::first
-ExprIncR      ::= OpInc ExprArrowR | ExprArrowL OpInc | ExprArrowR   action => ::first
-ExprPowerL    ::= ExprIncL    OpPower   ExprPowerL    | ExprIncL     action => ::first
-ExprPowerR    ::= ExprIncL    OpPower   ExprPowerR    | ExprIncR     action => ::first
-ExprUnaryL    ::= OpUnary     ExprUnaryL              | ExprPowerL   action => ::first
-ExprUnaryR    ::= OpUnary     ExprUnaryR              | ExprPowerR   action => ::first
-ExprRegexL    ::= ExprRegexL  OpRegex   ExprUnaryL    | ExprUnaryL   action => ::first
-ExprRegexR    ::= ExprRegexL  OpRegex   ExprUnaryR    | ExprUnaryR   action => ::first
-ExprMulL      ::= ExprMulL    OpMulti   ExprRegexL    | ExprRegexL   action => ::first
-ExprMulR      ::= ExprMulL    OpMulti   ExprRegexR    | ExprRegexR   action => ::first
-ExprAddL      ::= ExprAddL    OpAdd     ExprMulL      | ExprMulL     action => ::first
-ExprAddR      ::= ExprAddL    OpAdd     ExprMulR      | ExprMulR     action => ::first
-ExprShiftL    ::= ExprShiftL  OpShift   ExprAddL      | ExprAddL     action => ::first
-ExprShiftR    ::= ExprShiftL  OpShift   ExprAddR      | ExprAddR     action => ::first
-ExprKwUnaryL  ::= OpUnaryKeywordExpr                  | ExprShiftL   action => ::first
-ExprKwUnaryR  ::= OpUnaryKeywordExpr                  | ExprShiftR   action => ::first
-ExprFileL     ::= OpFile      ExprFileL               | ExprKwUnaryL action => ::first
-ExprFileR     ::= OpFile      ExprFileR               | ExprKwUnaryR action => ::first
-ExprNeqL      ::= ExprFileL   OpInequal ExprFileL     | ExprFileL    action => ::first
-ExprNeqR      ::= ExprFileL   OpInequal ExprFileR     | ExprFileR    action => ::first
-ExprEqL       ::= ExprNeqL    OpEqual   ExprNeqL      | ExprNeqL     action => ::first
-ExprEqR       ::= ExprNeqL    OpEqual   ExprNeqR      | ExprNeqR     action => ::first
-ExprBinAndL   ::= ExprBinAndL OpBinAnd  ExprEqL       | ExprEqL      action => ::first
-ExprBinAndR   ::= ExprBinAndL OpBinAnd  ExprEqR       | ExprEqR      action => ::first
-ExprBinOrL    ::= ExprBinOrL  OpBinOr   ExprBinAndL   | ExprBinAndL  action => ::first
-ExprBinOrR    ::= ExprBinOrL  OpBinOr   ExprBinAndR   | ExprBinAndR  action => ::first
-ExprLogAndL   ::= ExprLogAndL OpLogAnd  ExprBinOrL    | ExprBinOrL   action => ::first
-ExprLogAndR   ::= ExprLogAndL OpLogAnd  ExprBinOrR    | ExprBinOrR   action => ::first
-ExprLogOrL    ::= ExprLogOrL  OpLogOr   ExprLogAndL   | ExprLogAndL  action => ::first
-ExprLogOrR    ::= ExprLogOrL  OpLogOr   ExprLogAndR   | ExprLogAndR  action => ::first
-ExprRangeL    ::= ExprLogOrL  OpRange   ExprLogOrL    | ExprLogOrL   action => ::first
-ExprRangeR    ::= ExprLogOrL  OpRange   ExprLogOrR    | ExprLogOrR   action => ::first
-ExprCondL     ::= ExprRangeL  OpTriThen ExprRangeL OpTriElse ExprCondL | ExprRangeL action => ::first
-ExprCondR     ::= ExprRangeL  OpTriThen ExprRangeR OpTriElse ExprCondR | ExprRangeR action => ::first
-ExprAssignL   ::= ExprCondL   OpAssign  ExprKwAssignL  | ExprCondL     action => ::first
-ExprAssignR   ::= ExprCondL   OpAssign  ExprKwAssignR  | ExprCondR     action => ::first
-ExprKwAssignL ::= OpAssignKeywordExpr                | ExprAssignL   action => ::first
-ExprKwAssignR ::= OpAssignKeywordExpr                | ExprAssignR   action => ::first
-ExprComma     ::= ExprKwAssignL  OpComma  ExprComma  | ExprKwAssignR action => ::first
-ExprNameNot   ::= OpNameNot   ExprNameNot            | ExprComma     action => ::first
-ExprNameAnd   ::= ExprNameAnd OpNameAnd ExprNameNot  | ExprNameNot   action => ::first
-ExprNameOr    ::= ExprNameOr  OpNameOr  ExprNameAnd  | ExprNameAnd   action => ::first
-Expression    ::=                                      ExprNameOr    action => ::first
+# 0 can be LHS of assignment and up
+# L can be LHS of comma and up
+# R can be LHS of anything
+ExprValue0    ::= Value
+ExprValueL    ::= Value | OpAssignKeywordExpr
+ExprValueR    ::= Value | OpListKeywordExpr | OpAssignKeywordExpr
+ExprArrow0    ::= ExprArrow0  OpArrow   ArrowRHS        | ExprValue0   action => ::first
+ExprArrowL    ::= ExprArrow0  OpArrow   ArrowRHS        | ExprValueL   action => ::first
+ExprArrowR    ::= ExprArrow0  OpArrow   ArrowRHS        | ExprValueR   action => ::first
+ExprInc0      ::= OpInc ExprArrow0 | ExprArrowR OpInc   | ExprArrow0   action => ::first
+ExprIncL      ::= OpInc ExprArrowL | ExprArrowR OpInc   | ExprArrowL   action => ::first
+ExprIncR      ::= OpInc ExprArrowR | ExprArrowL OpInc   | ExprArrowR   action => ::first
+ExprPower0    ::= ExprInc0    OpPower   ExprPower0      | ExprInc0     action => ::first
+ExprPowerL    ::= ExprInc0    OpPower   ExprPowerL      | ExprIncL     action => ::first
+ExprPowerR    ::= ExprInc0    OpPower   ExprPowerR      | ExprIncR     action => ::first
+ExprUnary0    ::= OpUnary     ExprUnary0                | ExprPower0   action => ::first
+ExprUnaryL    ::= OpUnary     ExprUnaryL                | ExprPowerL   action => ::first
+ExprUnaryR    ::= OpUnary     ExprUnaryR                | ExprPowerR   action => ::first
+ExprRegex0    ::= ExprRegex0  OpRegex   ExprUnary0      | ExprUnary0   action => ::first
+ExprRegexL    ::= ExprRegex0  OpRegex   ExprUnaryL      | ExprUnaryL   action => ::first
+ExprRegexR    ::= ExprRegex0  OpRegex   ExprUnaryR      | ExprUnaryR   action => ::first
+ExprMul0      ::= ExprMul0    OpMulti   ExprRegex0      | ExprRegex0   action => ::first
+ExprMulL      ::= ExprMul0    OpMulti   ExprRegexL      | ExprRegexL   action => ::first
+ExprMulR      ::= ExprMul0    OpMulti   ExprRegexR      | ExprRegexR   action => ::first
+ExprAdd0      ::= ExprAdd0    OpAdd     ExprMul0        | ExprMul0     action => ::first
+ExprAddL      ::= ExprAdd0    OpAdd     ExprMulL        | ExprMulL     action => ::first
+ExprAddR      ::= ExprAdd0    OpAdd     ExprMulR        | ExprMulR     action => ::first
+ExprShift0    ::= ExprShift0  OpShift   ExprAdd0        | ExprAdd0     action => ::first
+ExprShiftL    ::= ExprShift0  OpShift   ExprAddL        | ExprAddL     action => ::first
+ExprShiftR    ::= ExprShift0  OpShift   ExprAddR        | ExprAddR     action => ::first
+ExprKwUnary0  ::= OpUnaryKeywordExpr                    | ExprShift0   action => ::first
+ExprKwUnaryL  ::= OpUnaryKeywordExpr                    | ExprShiftL   action => ::first
+ExprKwUnaryR  ::= OpUnaryKeywordExpr                    | ExprShiftR   action => ::first
+ExprFile0     ::= OpFile      ExprFile0                 | ExprKwUnary0 action => ::first
+ExprFileL     ::= OpFile      ExprFileL                 | ExprKwUnaryL action => ::first
+ExprFileR     ::= OpFile      ExprFileR                 | ExprKwUnaryR action => ::first
+ExprNeq0      ::= ExprFile0   OpInequal ExprFile0       | ExprFile0    action => ::first
+ExprNeqL      ::= ExprFile0   OpInequal ExprFileL       | ExprFileL    action => ::first
+ExprNeqR      ::= ExprFile0   OpInequal ExprFileR       | ExprFileR    action => ::first
+ExprEq0       ::= ExprNeq0    OpEqual   ExprNeq0        | ExprNeq0     action => ::first
+ExprEqL       ::= ExprNeq0    OpEqual   ExprNeqL        | ExprNeqL     action => ::first
+ExprEqR       ::= ExprNeq0    OpEqual   ExprNeqR        | ExprNeqR     action => ::first
+ExprBinAnd0   ::= ExprBinAnd0 OpBinAnd  ExprEq0         | ExprEq0      action => ::first
+ExprBinAndL   ::= ExprBinAnd0 OpBinAnd  ExprEqL         | ExprEqL      action => ::first
+ExprBinAndR   ::= ExprBinAnd0 OpBinAnd  ExprEqR         | ExprEqR      action => ::first
+ExprBinOr0    ::= ExprBinOr0  OpBinOr   ExprBinAnd0     | ExprBinAnd0  action => ::first
+ExprBinOrL    ::= ExprBinOr0  OpBinOr   ExprBinAndL     | ExprBinAndL  action => ::first
+ExprBinOrR    ::= ExprBinOr0  OpBinOr   ExprBinAndR     | ExprBinAndR  action => ::first
+ExprLogAnd0   ::= ExprLogAnd0 OpLogAnd  ExprBinOr0      | ExprBinOr0   action => ::first
+ExprLogAndL   ::= ExprLogAnd0 OpLogAnd  ExprBinOrL      | ExprBinOrL   action => ::first
+ExprLogAndR   ::= ExprLogAnd0 OpLogAnd  ExprBinOrR      | ExprBinOrR   action => ::first
+ExprLogOr0    ::= ExprLogOr0  OpLogOr   ExprLogAnd0     | ExprLogAnd0  action => ::first
+ExprLogOrL    ::= ExprLogOr0  OpLogOr   ExprLogAndL     | ExprLogAndL  action => ::first
+ExprLogOrR    ::= ExprLogOr0  OpLogOr   ExprLogAndR     | ExprLogAndR  action => ::first
+ExprRange0    ::= ExprLogOr0  OpRange   ExprLogOr0      | ExprLogOr0   action => ::first
+ExprRangeL    ::= ExprLogOr0  OpRange   ExprLogOrL      | ExprLogOrL   action => ::first
+ExprRangeR    ::= ExprLogOr0  OpRange   ExprLogOrR      | ExprLogOrR   action => ::first
+ExprCond0     ::= ExprRange0  OpTriThen ExprRange0 OpTriElse ExprCond0 | ExprRange0 action => ::first
+ExprCondL     ::= ExprRange0  OpTriThen ExprRangeL OpTriElse ExprCondL | ExprRangeL action => ::first
+ExprCondR     ::= ExprRange0  OpTriThen ExprRangeR OpTriElse ExprCondR | ExprRangeR action => ::first
+ExprAssignL   ::= ExprCond0   OpAssign  ExprAssignL     | OpAssignKeywordExpr
+                                                        | ExprCondL     action => ::first
+ExprAssignR   ::= ExprCond0   OpAssign  ExprAssignR     | ExprCondR     action => ::first
+ExprComma     ::= ExprAssignL OpComma   ExprComma       | ExprAssignR   action => ::first
+ExprNameNot   ::= OpNameNot   ExprNameNot               | ExprComma     action => ::first
+ExprNameAnd   ::= ExprNameAnd OpNameAnd ExprNameNot     | ExprNameNot   action => ::first
+ExprNameOr    ::= ExprNameOr  OpNameOr  ExprNameAnd     | ExprNameAnd   action => ::first
+Expression    ::=                                         ExprNameOr    action => ::first
 
 # These will never be evaluated as a hashref (LiteralHash)
 # because hashrefs are not allowed to be top-level
 # Being combined combined with '+' or 'return' means they aren't top-level,
 # but follow top-level tokens ('+' or 'return')
-NonBraceExprValueL    ::= NonBraceValue
+NonBraceExprValue0    ::= NonBraceValue
+NonBraceExprValueL    ::= NonBraceValue | OpAssignKeywordExpr
 NonBraceExprValueR    ::= NonBraceValue | OpListKeywordExpr | OpAssignKeywordExpr
-NonBraceExprArrowL    ::= NonBraceExprArrowL  OpArrow   ArrowRHS      | NonBraceExprValueL   action => ::first
-NonBraceExprArrowR    ::= NonBraceExprArrowL  OpArrow   ArrowRHS      | NonBraceExprValueR   action => ::first
-NonBraceExprIncL      ::= OpInc ExprArrowL | NonBraceExprArrowR OpInc | NonBraceExprArrowL   action => ::first
-NonBraceExprIncR      ::= OpInc ExprArrowR | NonBraceExprArrowL OpInc | NonBraceExprArrowR   action => ::first
-NonBraceExprPowerL    ::= NonBraceExprIncL    OpPower   ExprPowerL    | NonBraceExprIncL     action => ::first
-NonBraceExprPowerR    ::= NonBraceExprIncL    OpPower   ExprPowerR    | NonBraceExprIncR     action => ::first
-NonBraceExprUnaryL    ::= OpUnary     ExprUnaryL                      | NonBraceExprPowerL   action => ::first
-NonBraceExprUnaryR    ::= OpUnary     ExprUnaryR                      | NonBraceExprPowerR   action => ::first
-NonBraceExprRegexL    ::= NonBraceExprRegexL  OpRegex   ExprUnaryL    | NonBraceExprUnaryL   action => ::first
-NonBraceExprRegexR    ::= NonBraceExprRegexL  OpRegex   ExprUnaryR    | NonBraceExprUnaryR   action => ::first
-NonBraceExprMulL      ::= NonBraceExprMulL    OpMulti   ExprRegexL    | NonBraceExprRegexL   action => ::first
-NonBraceExprMulR      ::= NonBraceExprMulL    OpMulti   ExprRegexR    | NonBraceExprRegexR   action => ::first
-NonBraceExprAddL      ::= NonBraceExprAddL    OpAdd     ExprMulL      | NonBraceExprMulL     action => ::first
-NonBraceExprAddR      ::= NonBraceExprAddL    OpAdd     ExprMulR      | NonBraceExprMulR     action => ::first
-NonBraceExprShiftL    ::= NonBraceExprShiftL  OpShift   ExprAddL      | NonBraceExprAddL     action => ::first
-NonBraceExprShiftR    ::= NonBraceExprShiftL  OpShift   ExprAddR      | NonBraceExprAddR     action => ::first
-NonBraceExprKwUnaryL  ::= OpUnaryKeywordExpr                          | NonBraceExprShiftL   action => ::first
-NonBraceExprKwUnaryR  ::= OpUnaryKeywordExpr                          | NonBraceExprShiftR   action => ::first
-NonBraceExprFileL     ::= OpFile      ExprFileL                       | NonBraceExprKwUnaryL action => ::first
-NonBraceExprFileR     ::= OpFile      ExprFileR                       | NonBraceExprKwUnaryR action => ::first
-NonBraceExprNeqL      ::= NonBraceExprFileL   OpInequal ExprFileL     | NonBraceExprFileL    action => ::first
-NonBraceExprNeqR      ::= NonBraceExprFileL   OpInequal ExprFileR     | NonBraceExprFileR    action => ::first
-NonBraceExprEqL       ::= NonBraceExprNeqL    OpEqual   ExprNeqL      | NonBraceExprNeqL     action => ::first
-NonBraceExprEqR       ::= NonBraceExprNeqL    OpEqual   ExprNeqR      | NonBraceExprNeqR     action => ::first
-NonBraceExprBinAndL   ::= NonBraceExprBinAndL OpBinAnd  ExprEqL       | NonBraceExprEqL      action => ::first
-NonBraceExprBinAndR   ::= NonBraceExprBinAndL OpBinAnd  ExprEqR       | NonBraceExprEqR      action => ::first
-NonBraceExprBinOrL    ::= NonBraceExprBinOrL  OpBinOr   ExprBinAndL   | NonBraceExprBinAndL  action => ::first
-NonBraceExprBinOrR    ::= NonBraceExprBinOrL  OpBinOr   ExprBinAndR   | NonBraceExprBinAndR  action => ::first
-NonBraceExprLogAndL   ::= NonBraceExprLogAndL OpLogAnd  ExprBinOrL    | NonBraceExprBinOrL   action => ::first
-NonBraceExprLogAndR   ::= NonBraceExprLogAndL OpLogAnd  ExprBinOrR    | NonBraceExprBinOrR   action => ::first
-NonBraceExprLogOrL    ::= NonBraceExprLogOrL  OpLogOr   ExprLogAndL   | NonBraceExprLogAndL  action => ::first
-NonBraceExprLogOrR    ::= NonBraceExprLogOrL  OpLogOr   ExprLogAndR   | NonBraceExprLogAndR  action => ::first
-NonBraceExprRangeL    ::= NonBraceExprLogOrL  OpRange   ExprLogOrL    | NonBraceExprLogOrL   action => ::first
-NonBraceExprRangeR    ::= NonBraceExprLogOrL  OpRange   ExprLogOrR    | NonBraceExprLogOrR   action => ::first
-NonBraceExprCondL     ::= NonBraceExprRangeL  OpTriThen ExprRangeL OpTriElse ExprCondL | NonBraceExprRangeL action => ::first
-NonBraceExprCondR     ::= NonBraceExprRangeL  OpTriThen ExprRangeR OpTriElse ExprCondR | NonBraceExprRangeR action => ::first
-NonBraceExprAssignL   ::= NonBraceExprCondL   OpAssign  ExprAssignL  | NonBraceExprCondL    action => ::first
-NonBraceExprAssignR   ::= NonBraceExprCondL   OpAssign  ExprAssignR  | NonBraceExprCondR    action => ::first
-NonBraceExprComma     ::= NonBraceExprAssignL OpComma ExprComma      | NonBraceExprAssignR  action => ::first
+
+NonBraceExprArrow0    ::= NonBraceExprArrow0  OpArrow   ArrowRHS        | NonBraceExprValue0   action => ::first
+NonBraceExprArrowL    ::= NonBraceExprArrow0  OpArrow   ArrowRHS        | NonBraceExprValueL   action => ::first
+NonBraceExprArrowR    ::= NonBraceExprArrow0  OpArrow   ArrowRHS        | NonBraceExprValueR   action => ::first
+NonBraceExprInc0      ::= OpInc ExprArrow0 | NonBraceExprArrowR OpInc   | ExprArrow0   action => ::first
+NonBraceExprIncL      ::= OpInc ExprArrowL | NonBraceExprArrowR OpInc   | ExprArrowL   action => ::first
+NonBraceExprIncR      ::= OpInc ExprArrowR | NonBraceExprArrowL OpInc   | ExprArrowR   action => ::first
+NonBraceExprPower0    ::= NonBraceExprInc0    OpPower   ExprPower0      | NonBraceExprInc0     action => ::first
+NonBraceExprPowerL    ::= NonBraceExprInc0    OpPower   ExprPowerL      | NonBraceExprIncL     action => ::first
+NonBraceExprPowerR    ::= NonBraceExprInc0    OpPower   ExprPowerR      | NonBraceExprIncR     action => ::first
+NonBraceExprUnary0    ::= OpUnary     ExprUnary0                | NonBraceExprPower0   action => ::first
+NonBraceExprUnaryL    ::= OpUnary     ExprUnaryL                | NonBraceExprPowerL   action => ::first
+NonBraceExprUnaryR    ::= OpUnary     ExprUnaryR                | NonBraceExprPowerR   action => ::first
+NonBraceExprRegex0    ::= NonBraceExprRegex0  OpRegex   ExprUnary0      | NonBraceExprUnary0   action => ::first
+NonBraceExprRegexL    ::= NonBraceExprRegex0  OpRegex   ExprUnaryL      | NonBraceExprUnaryL   action => ::first
+NonBraceExprRegexR    ::= NonBraceExprRegex0  OpRegex   ExprUnaryR      | NonBraceExprUnaryR   action => ::first
+NonBraceExprMul0      ::= NonBraceExprMul0    OpMulti   ExprRegex0      | NonBraceExprRegex0   action => ::first
+NonBraceExprMulL      ::= NonBraceExprMul0    OpMulti   ExprRegexL      | NonBraceExprRegexL   action => ::first
+NonBraceExprMulR      ::= NonBraceExprMul0    OpMulti   ExprRegexR      | NonBraceExprRegexR   action => ::first
+NonBraceExprAdd0      ::= NonBraceExprAdd0    OpAdd     ExprMul0        | NonBraceExprMul0     action => ::first
+NonBraceExprAddL      ::= NonBraceExprAdd0    OpAdd     ExprMulL        | NonBraceExprMulL     action => ::first
+NonBraceExprAddR      ::= NonBraceExprAdd0    OpAdd     ExprMulR        | NonBraceExprMulR     action => ::first
+NonBraceExprShift0    ::= NonBraceExprShift0  OpShift   ExprAdd0        | NonBraceExprAdd0     action => ::first
+NonBraceExprShiftL    ::= NonBraceExprShift0  OpShift   ExprAddL        | NonBraceExprAddL     action => ::first
+NonBraceExprShiftR    ::= NonBraceExprShift0  OpShift   ExprAddR        | NonBraceExprAddR     action => ::first
+NonBraceExprKwUnary0  ::= OpUnaryKeywordExpr                    | NonBraceExprShift0   action => ::first
+NonBraceExprKwUnaryL  ::= OpUnaryKeywordExpr                    | NonBraceExprShiftL   action => ::first
+NonBraceExprKwUnaryR  ::= OpUnaryKeywordExpr                    | NonBraceExprShiftR   action => ::first
+NonBraceExprFile0     ::= OpFile      ExprFile0                 | NonBraceExprKwUnary0 action => ::first
+NonBraceExprFileL     ::= OpFile      ExprFileL                 | NonBraceExprKwUnaryL action => ::first
+NonBraceExprFileR     ::= OpFile      ExprFileR                 | NonBraceExprKwUnaryR action => ::first
+NonBraceExprNeq0      ::= NonBraceExprFile0   OpInequal ExprFile0       | NonBraceExprFile0    action => ::first
+NonBraceExprNeqL      ::= NonBraceExprFile0   OpInequal ExprFileL       | NonBraceExprFileL    action => ::first
+NonBraceExprNeqR      ::= NonBraceExprFile0   OpInequal ExprFileR       | NonBraceExprFileR    action => ::first
+NonBraceExprEq0       ::= NonBraceExprNeq0    OpEqual   ExprNeq0        | NonBraceExprNeq0     action => ::first
+NonBraceExprEqL       ::= NonBraceExprNeq0    OpEqual   ExprNeqL        | NonBraceExprNeqL     action => ::first
+NonBraceExprEqR       ::= NonBraceExprNeq0    OpEqual   ExprNeqR        | NonBraceExprNeqR     action => ::first
+NonBraceExprBinAnd0   ::= NonBraceExprBinAnd0 OpBinAnd  ExprEq0         | NonBraceExprEq0      action => ::first
+NonBraceExprBinAndL   ::= NonBraceExprBinAnd0 OpBinAnd  ExprEqL         | NonBraceExprEqL      action => ::first
+NonBraceExprBinAndR   ::= NonBraceExprBinAnd0 OpBinAnd  ExprEqR         | NonBraceExprEqR      action => ::first
+NonBraceExprBinOr0    ::= NonBraceExprBinOr0  OpBinOr   ExprBinAnd0     | NonBraceExprBinAnd0  action => ::first
+NonBraceExprBinOrL    ::= NonBraceExprBinOr0  OpBinOr   ExprBinAndL     | NonBraceExprBinAndL  action => ::first
+NonBraceExprBinOrR    ::= NonBraceExprBinOr0  OpBinOr   ExprBinAndR     | NonBraceExprBinAndR  action => ::first
+NonBraceExprLogAnd0   ::= NonBraceExprLogAnd0 OpLogAnd  ExprBinOr0      | NonBraceExprBinOr0   action => ::first
+NonBraceExprLogAndL   ::= NonBraceExprLogAnd0 OpLogAnd  ExprBinOrL      | NonBraceExprBinOrL   action => ::first
+NonBraceExprLogAndR   ::= NonBraceExprLogAnd0 OpLogAnd  ExprBinOrR      | NonBraceExprBinOrR   action => ::first
+NonBraceExprLogOr0    ::= NonBraceExprLogOr0  OpLogOr   ExprLogAnd0     | NonBraceExprLogAnd0  action => ::first
+NonBraceExprLogOrL    ::= NonBraceExprLogOr0  OpLogOr   ExprLogAndL     | NonBraceExprLogAndL  action => ::first
+NonBraceExprLogOrR    ::= NonBraceExprLogOr0  OpLogOr   ExprLogAndR     | NonBraceExprLogAndR  action => ::first
+NonBraceExprRange0    ::= NonBraceExprLogOr0  OpRange   ExprLogOr0      | NonBraceExprLogOr0   action => ::first
+NonBraceExprRangeL    ::= NonBraceExprLogOr0  OpRange   ExprLogOrL      | NonBraceExprLogOrL   action => ::first
+NonBraceExprRangeR    ::= NonBraceExprLogOr0  OpRange   ExprLogOrR      | NonBraceExprLogOrR   action => ::first
+NonBraceExprCond0     ::= NonBraceExprRange0  OpTriThen ExprRange0 OpTriElse ExprCond0 | NonBraceExprRange0 action => ::first
+NonBraceExprCondL     ::= NonBraceExprRange0  OpTriThen ExprRangeL OpTriElse ExprCondL | NonBraceExprRangeL action => ::first
+NonBraceExprCondR     ::= NonBraceExprRange0  OpTriThen ExprRangeR OpTriElse ExprCondR | NonBraceExprRangeR action => ::first
+NonBraceExprAssignL   ::= NonBraceExprCond0   OpAssign  ExprAssignL     | OpAssignKeywordExpr
+                                                        | NonBraceExprCondL     action => ::first
+NonBraceExprAssignR   ::= NonBraceExprCond0   OpAssign  ExprAssignR     | NonBraceExprCondR     action => ::first
+
+
+NonBraceExprComma     ::= NonBraceExprAssignL OpComma ExprComma    | NonBraceExprAssignR action => ::first
 
 # Comma is only allowed if it follows a keyword operator, to avoid block/hash disambiguation in perl.
-BlockLevelExprKwList  ::= NonBraceExprAssignR action => ::first
-BlockLevelExprNameNot ::= OpNameNot ExprNameNot | BlockLevelExprKwList action => ::first
+BlockLevelExprNameNot ::= OpNameNot ExprNameNot | NonBraceExprAssignR action => ::first
 BlockLevelExprNameAnd ::= BlockLevelExprNameAnd OpNameAnd ExprNameNot | BlockLevelExprNameNot action => ::first
 BlockLevelExprNameOr  ::= BlockLevelExprNameOr OpNameOr ExprNameAnd | BlockLevelExprNameAnd action => ::first
 BlockLevelExpression  ::= BlockLevelExprNameOr action => ::first
