@@ -86,4 +86,23 @@ parses('$foo =~ s{}{}g');
 parses('`foo`');
 parses('``');
 
+# make sure we didn't screw up non q-like subroutine parsing
+parses('z()');
+parses('qz()');
+parses('qxx()');
+parses('qX()');
+parses('QX()');
+parses('Q()');
+parses('S()');
+parses('Sr()');
+parses('sr()');
+parses('M()');
+parses('mr()');
+parses('T()');
+parses('TR()');
+parses('Tr()');
+parses('tR()');
+parses('trz()');
+parses('rtz()'); # this somehow raised a bug, keeping it
+
 done_testing;
