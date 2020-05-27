@@ -1234,15 +1234,12 @@ VersionNumberSegment ~ [0-9] [0-9] [0-9]
                      | [0-9] [0-9]
                      | [0-9]
 
-LitNumber ::= Negative Digits Period Digits
-            | Digits Period Digits
-            | Negative Digits
-            | Negative Infinite
-            | Infinite
-            | Digits
+LitNumber ::= LitNumberDec
+LitNumberDec ~ Digits Period Digits
+             | Digits Period
+             | Period Digits
+             | Digits
 
-Infinite    ~ 'Inf'
-Negative    ~ '-'
 Period      ~ '.'
 Digits      ~ [0-9]+
 SingleQuote ~ [']
