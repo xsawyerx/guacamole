@@ -211,9 +211,9 @@ NonBraceExprValueR    ::= NonBraceValue | OpListKeywordExpr | OpAssignKeywordExp
 NonBraceExprArrow0    ::= NonBraceExprArrow0  OpArrow   ArrowRHS        | NonBraceExprValue0   action => ::first
 NonBraceExprArrowL    ::= NonBraceExprArrow0  OpArrow   ArrowRHS        | NonBraceExprValueL   action => ::first
 NonBraceExprArrowR    ::= NonBraceExprArrow0  OpArrow   ArrowRHS        | NonBraceExprValueR   action => ::first
-NonBraceExprInc0      ::= OpInc ExprArrow0 | NonBraceExprArrowR OpInc   | ExprArrow0   action => ::first
-NonBraceExprIncL      ::= OpInc ExprArrowL | NonBraceExprArrowR OpInc   | ExprArrowL   action => ::first
-NonBraceExprIncR      ::= OpInc ExprArrowR | NonBraceExprArrowL OpInc   | ExprArrowR   action => ::first
+NonBraceExprInc0      ::= OpInc ExprArrow0 | NonBraceExprArrowR OpInc   | NonBraceExprArrow0   action => ::first
+NonBraceExprIncL      ::= OpInc ExprArrowL | NonBraceExprArrowR OpInc   | NonBraceExprArrowL   action => ::first
+NonBraceExprIncR      ::= OpInc ExprArrowR | NonBraceExprArrowL OpInc   | NonBraceExprArrowR   action => ::first
 NonBraceExprPower0    ::= NonBraceExprInc0    OpPower   ExprPower0      | NonBraceExprInc0     action => ::first
 NonBraceExprPowerL    ::= NonBraceExprInc0    OpPower   ExprPowerL      | NonBraceExprIncL     action => ::first
 NonBraceExprPowerR    ::= NonBraceExprInc0    OpPower   ExprPowerR      | NonBraceExprIncR     action => ::first
