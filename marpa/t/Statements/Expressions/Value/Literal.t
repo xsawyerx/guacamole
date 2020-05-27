@@ -6,13 +6,9 @@ use Test::More;
 # LitNumber
 parses('4');
 parses('44');
-
-TODO: {
-    local $TODO = 'We still get confused between unary, concat, and numbers';
-    parses('-4');
-    parses('44.4');
-    parses('-44.4');
-}
+parses('-4');
+parses('44.4');
+parses('-44.4');
 
 # LitArray
 parses('[]');
