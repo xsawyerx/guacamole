@@ -19,6 +19,7 @@ parses('sub foo :prototype($@\@) ($thing, $id = $auto_id++) {1}');
 
 parses('Foo->method();');
 parsent('Foo::->method();');
+parsent('Foo->method;');
 
 # make sure we didn't screw up non q-like subroutines
 
