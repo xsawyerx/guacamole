@@ -1668,13 +1668,13 @@ sub parse {
     or do {
         my $err = $@;
         if (!@values) {
-            for my $nterm (reverse qw/Program Statement Expression SubCall Ident/) {
+            for my $nterm (reverse qw/Program BlockStatement Statement NonBraceExprComma BlockLevelExpression Expression SubCall Ident/) {
                 my ($start, $length) = $rec->last_completed($nterm);
                 next unless defined $start;
                 my $range = $rec->substring($start, $length);
                 my $expect = $rec->terminals_expected();
                 my $progress = $rec->show_progress();
-                die "$err\nFailed to parse past: $range (char $start, length $length), expected @$expect\n$progress";
+                die "$err\nFailed to parse past: $range (char $start, length $length), expected " . ( join ',', @{$expect} );# . "\n$progress";
             }
             die "Failed to parse, dunno why.";
         }
