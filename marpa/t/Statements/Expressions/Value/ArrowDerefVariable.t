@@ -11,8 +11,9 @@ foreach my $lead_sigil (qw< $ @ % & * >) {
     parsent($fail_str);
 }
 
-parses('$foo->$#');
-parsent('$foo->$ #');
+parses('$foo->$#*');
+parsent('$foo->$#');
+parsent('$foo->$# *');
 
 foreach my $slice_sigil (qw< @ % >) {
     parses("\$foo->$slice_sigil\[ 0, 3 \]");

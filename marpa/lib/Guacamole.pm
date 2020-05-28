@@ -391,7 +391,7 @@ ArrowDerefVariable ::= DerefVariableArgsAll
 ArrowMethodCall    ::= Ident CallArgs
 ArrowIndirectCall  ::= SigilScalar Ident CallArgs
 
-DerefVariableArgsAll ::= '$*' | '@*' | '%*' | '&*' | '**' | SigilArrayTop
+DerefVariableArgsAll ::= '$*' | '@*' | '%*' | '&*' | '**' | '$#*'
 
 DerefVariableSlice ::= '@[' Expression ']'
                      | '@{' Expression '}'
