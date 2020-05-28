@@ -5,10 +5,6 @@ use Test::More;
 
 parses('a()');
 parses('a::b()');
-
-TODO: {
-    local $TODO = 'We don\'t yet separate between Idents for SubCall and classes';
-    parsent('a::()');
-}
+parsent('a::()');
 
 done_testing();
