@@ -63,7 +63,7 @@ sub parsent {
         1;
     };
     my $err = $@;
-    ok !defined $res && defined $err, "'$text': did not parse";
+    ok( !defined $res && defined $err, "'$text': did not parse" );
 
     foreach my $tree (@trees) {
         my $ast = cleanup($tree);
