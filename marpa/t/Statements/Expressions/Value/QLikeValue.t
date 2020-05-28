@@ -87,22 +87,43 @@ parses('`foo`');
 parses('``');
 
 # make sure we didn't screw up non q-like subroutine parsing
-parses('z()');
-parses('qz()');
-parses('qxx()');
-parses('qX()');
-parses('QX()');
-parses('Q()');
-parses('S()');
-parses('Sr()');
-parses('sr()');
-parses('M()');
-parses('mr()');
-parses('T()');
-parses('TR()');
-parses('Tr()');
-parses('tR()');
+
+foreach my $func ( qw< q qq qw qx qr s m y tr > ) {
+    if ( length $func == 1 ) {
+        # single q-like letter
+        parses('z()');   # NonQLike single char
+        parses("${func}z()");  # NonQLike double char with leading q
+        parses("$func\_z()"); # NonQLike with underscore, leading q
+        parses("$func\_()");  # NonQLike with underscore, leading q
+        parses("_$func()");  # NonQLike with underscore, leading q
+        parses( uc($func) . '()');
+    }
+
+
+    if ( length $func == 2 ) {
+        my ( $letter1, $letter2 ) = split //xms, $func;
+        # double q-like letters
+        parses( sprintf '%s_()', $func );
+        parses( sprintf '%s_%s()', $letter1, $letter2 );
+        parses( sprintf '%s%s()', $func, $letter1 );
+        parses( sprintf '%s%s()', $func, $letter2 );
+        parses( sprintf '%sl()', $func );
+        parses( sprintf '%sl%s()', $letter1, $letter2 );
+        parses( sprintf '%s%s()', $letter1, uc $letter2 );
+        parses( sprintf '%s%s()',  uc $letter1, $letter2 );
+        parses( sprintf '%s()',  uc $func );
+    }
+}
+
+parses('t()');
+parses('r()');
+parses('x()');
+parses('w()');
+
+parsent('14()'); # Numbers cannot be subnames
+parsent('14_f()'); # Numbers cannot be subnames, even with underscores
+parsent('14f()'); # Numbers cannot be subnames, even with letters
 parses('trz()');
-parses('rtz()'); # this somehow raised a bug, keeping it
+parses('rtz()');
 
 done_testing;
