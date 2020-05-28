@@ -1625,6 +1625,7 @@ whitespace ~ [\s]+
 :lexeme ~ PhaseName              priority => 1
 :lexeme ~ QLikeValueExpr         priority => 1
 :lexeme ~ QLikeValueExprWithMods priority => 1
+:lexeme ~ VersionNumber          priority => 1
 
 };
 
