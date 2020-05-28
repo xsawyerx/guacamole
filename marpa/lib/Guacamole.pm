@@ -341,10 +341,33 @@ PackageArrow  ::= NonQLikeIdent OpArrow PackageArrowRHS
 PackageArrowRHS ::= ArrowMethodCall
                   | ArrowIndirectCall
 
-NonQLikeIdent ::= NonQLikeFunctionName
-                | NonQLikeFunctionName PackageSep
-                | NonQLikeFunctionName PackageSep Ident
-                | NonQLikeFunctionName Ident
+NonQLikeIdent ::= SubName
+                | SubName PackageSep Ident
+
+# This entire silly dance is done because:
+# 1. We define delimited values (q-like/s/m/tr/y) without spaces after delimiters
+# 2. Any of these can have parens as delimiters
+# 3. Thus, with a space and parens, it will be parsed as a function
+# So we must prevent "s ()" to exist as a subroutine name
+# --> If we remove the automatic ignoring of spaces, we won't need this
+SubName ::= LeadingSubLetter
+          | NonQLikeLetters AllSubLetters
+          | QLetter NonQRWXLetters
+          | QLetter NonQRWXLetters AllSubLetters
+          | QLetter QLetter AllSubLetters
+          | QLetter RLetter AllSubLetters
+          | QLetter WLetter AllSubLetters
+          | QLetter XLetter AllSubLetters
+          | SLetter AllSubLetters
+          | MLetter AllSubLetters
+          | TLetter NonRLetter
+          | TLetter NonRLetter AllSubLetters
+          | TLetter RLetter AllSubLetters
+          | YLetter AllSubLetters
+
+Ident ::= AllSubLetters
+        | AllSubLetters PackageSep
+        | AllSubLetters PackageSep Ident
 
 CallArgs ::= ParenExpr
 
@@ -354,10 +377,6 @@ Block ::= LBrace RBrace
 ArrayElem ::= LBracket Expression RBracket
 
 HashElem ::= LBrace Expression RBrace
-
-Ident ::= IdentComp
-        | IdentComp PackageSep Ident
-        | Ident PackageSep
 
 NonBraceLiteral ::= LitNumber
                   | LitArray
@@ -1207,19 +1226,21 @@ RegexModifiers ~ [a-z]*
 # q / qq / qw / qx / qr
 # s / m / tr / y
 # Subroutines are not allowed to be name as such
+NonQLikeLetters  ~ [a-ln-pru-xzA-Z_]
+LeadingSubLetter ~ [a-ln-prtu-xzA-Z_]
+AllSubLetters    ~ [a-zA-Z0-9_]+
+NonQRWXLetters   ~ [a-ps-vy-zA-Z0-9_]
+NonRLetter       ~ [a-qs-zA-Z0-9_]
+MLetter          ~ 'm'
+QLetter          ~ 'q'
+RLetter          ~ 'r'
+SLetter          ~ 's'
+TLetter          ~ 't'
+WLetter          ~ 'w'
+XLetter          ~ 'x'
+YLetter          ~ 'y'
 
-NonQLikeFunctionName ::= NonQLikeLetters
-                       | QLetter NonQRWXLetters
-                       | TLetter NonRLetter
-
-# QLike letters are: m / q / s / t / y
-NonQLikeLetters ~ [a-ln-pru-xzA-Z_]
-QLetter         ~ 'q'
-TLetter         ~ 't'
-NonRLetter      ~ [a-qs-zA-Z_]
-NonQRWXLetters  ~ [a-ps-vy-zA-Z_]
-
-IdentComp  ~ [a-zA-Z_]+
+IdentComp  ~ [a-zA-Z_0-9]+
 PackageSep ~ '::'
 
 VersionExpr           ::= VersionNumber
