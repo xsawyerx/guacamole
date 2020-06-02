@@ -51,20 +51,22 @@ sub _process_elem ($struct) {
 
         }
     }
-};
+}
 
 sub _build_items ($self) {
     my $struct = clone( $self->struct() );
 
     _process_elem($struct);
-};
+
+    return $struct;
+}
 
 sub next ($self) {
-
-};
+    1;
+}
 
 no Moose;
-__PACKAGE__->meta->make_immutable();
+__PACKAGE__->meta()->make_immutable();
 
 1;
 
