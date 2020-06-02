@@ -295,6 +295,23 @@ NonLiteral ::= Variable
              | PackageArrow
              | ParenExpr ElemSeq0
              | OpNullaryKeywordExpr
+             | DiamondExpr
+
+DiamondExpr ::= Diamond
+              | DoubleDiamond
+
+# This is written this way because of whitespace rules
+Diamond ~ '<' '$' VarIdent '>'
+        | '<>'
+
+# This is written this way because of whitespace rules
+DoubleDiamond ~ '<<' '$' VarIdent '>>'
+              | '<<>>'
+
+# This is here only for the Diamond/DoubleDiamond
+# because using VarName would allow a space
+# bah...
+VarIdent ~ [a-zA-Z0-9_]+
 
 ParenExpr ::= LParen Expression RParen
             | LParen RParen # support ()
