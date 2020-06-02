@@ -909,11 +909,15 @@ OpKeywordPosExpr              ::= OpKeywordPos OpUnaryKeywordArg
                                 | OpKeywordPos
 
 OpKeywordPrintExpr            ::= OpKeywordPrint Block OpListKeywordArg
+                                | OpKeywordPrint BuiltinFilehandle OpListKeywordArgNonBrace
+                                | OpKeywordPrint BuiltinFilehandle
                                 | OpKeywordPrint OpListKeywordArgNonBrace
                                 | OpKeywordPrint Block
                                 | OpKeywordPrint
 
 OpKeywordPrintfExpr           ::= OpKeywordPrintf Block OpListKeywordArg
+                                | OpKeywordPrintf BuiltinFilehandle OpListKeywordArgNonBrace
+                                | OpKeywordPrintf BuiltinFilehandle
                                 | OpKeywordPrintf OpListKeywordArgNonBrace
                                 | OpKeywordPrintf Block
 
@@ -970,6 +974,8 @@ OpKeywordRmdirExpr            ::= OpKeywordRmdir OpUnaryKeywordArg
                                 | OpKeywordRmdir
 
 OpKeywordSayExpr              ::= OpKeywordSay Block OpListKeywordArg
+                                | OpKeywordSay BuiltinFilehandle OpListKeywordArgNonBrace
+                                | OpKeywordSay BuiltinFilehandle
                                 | OpKeywordSay OpListKeywordArgNonBrace
                                 | OpKeywordSay Block
                                 | OpKeywordSay
@@ -1629,6 +1635,8 @@ ConditionWhile   ~ 'while'
 ConditionUntil   ~ 'until'
 ConditionFor     ~ 'for'
 ConditionForeach ~ 'foreach'
+
+BuiltinFilehandle ~ 'STDIN' | 'STDOUT' | 'STDERR' | 'ARGV' | 'ARGVOUT' | 'DATA'
 
 # Ignore whitespace
 :discard ~ whitespace
