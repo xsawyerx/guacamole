@@ -299,7 +299,8 @@ OpListKeywordArgNonBrace  ::= NonBraceExprComma
 # Same as Value above, but with a NonBraceLiteral
 NonBraceValue ::= NonBraceLiteral | NonLiteral | QLikeValue
 
-NonLiteral ::= Variable
+NonLiteral ::= GlobalVariable
+             | Variable
              | Modifier Variable
              | Modifier ParenExpr
              | UnderscoreValues
@@ -308,6 +309,85 @@ NonLiteral ::= Variable
              | ParenExpr ElemSeq0
              | OpNullaryKeywordExpr
              | DiamondExpr
+
+GlobalVariable ~ '$!'
+               | '$"'
+               | '$#'
+               | '$%'
+               | '$&'
+               | '$' [']
+               | '$('
+               | '$)'
+               | '$*'
+               | '$+'
+               | '$,'
+               | '$-'
+               | '$.'
+               | '$/'
+               | '$:'
+               | '$;'
+               | '$<'
+               | '$='
+               | '$>'
+               | '$?'
+               | '$@'
+               | '$['
+               | '$\\'
+               | '$]'
+               | '$^'
+               | '$_'
+               | '$`'
+               | '$|'
+               | '$~'
+               | '$$'
+               | '$^A'
+               | '$^C'
+               | '${^CHILD_ERROR_NATIVE}'
+               | '$^D'
+               | '$<*digits*>'
+               | '$^E'
+               | '${^ENCODING}'
+               | '$^F'
+               | '${^GLOBAL_PHASE}'
+               | '$^H'
+               | '$^I'
+               | '$^L'
+               | '${^LAST_FH}'
+               | '$^M'
+               | '${^MATCH}'
+               | '$^N'
+               | '$^O'
+               | '${^OPEN}'
+               | '$^P'
+               | '${^POSTMATCH}'
+               | '${^PREMATCH}'
+               | '$^R'
+               | '${^RE_COMPILE_RECURSION_LIMIT}'
+               | '${^RE_DEBUG_FLAGS}'
+               | '${^RE_TRIE_MAXBUF}'
+               | '$^S'
+               | '${^SAFE_LOCALES}'
+               | '$^T'
+               | '${^TAINT}'
+               | '${^UNICODE}'
+               | '${^UTF8CACHE}'
+               | '${^UTF8LOCALE}'
+               | '$^V'
+               | '$^W'
+               | '${^WARNING_BITS}'
+               | '${^WIN32_SLOPPY_STAT}'
+               | '$^X'
+               | '@+'
+               | '@-'
+               | '@_'
+               | '@{^CAPTURE}'
+               | '%!'
+               | '%+'
+               | '%-'
+               | '%{^CAPTURE}'
+               | '%{^CAPTURE_ALL}'
+               | '%^H'
+
 
 DiamondExpr ::= Diamond
               | DoubleDiamond
