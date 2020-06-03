@@ -5,7 +5,7 @@ use Marpa::R2;
 
 my $grammar_source = q{
 lexeme default = latm => 1
-:default ::= action => [ name, values ]
+:default ::= action => [ name, start, values ]
 
 Program ::= StatementSeq
 
@@ -1766,6 +1766,21 @@ whitespace ~ [\s]+
 
 our $grammar = Marpa::R2::Scanless::G->new({ source => \$grammar_source });
 
+sub add_line_column {
+    my ( $rec, $value ) = @_;
+    my @values = ($value);
+
+    while ( my $value = shift @values ) {
+        ref $value
+            or next;
+
+        my $line_column = join ':', $rec->line_column( $value->[1] );
+        splice @{$value}, 1, 1, $line_column;
+
+        push @values, @{$value};
+    }
+}
+
 sub parse {
     my ($class, $text) = @_;
 
@@ -1776,6 +1791,7 @@ sub parse {
     eval {
         $rec->read(\$text);
         while (my $value = $rec->value()) {
+            add_line_column( $rec, ${$value} );
             push @values, $$value;
         }
         1;
