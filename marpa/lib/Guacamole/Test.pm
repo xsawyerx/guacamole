@@ -7,7 +7,6 @@ use Data::Dumper;
 
 use Guacamole;
 use Guacamole::Dumper qw/dump_tree/;
-use Guacamole::AST qw/cleanup/;
 
 use Exporter "import";
 
@@ -29,7 +28,7 @@ sub parses {
 
     # debugging
     # use DDP;
-    # my @dumped_trees = map dump_tree( cleanup($_) ), @trees;
+    # my @dumped_trees = map dump_tree($_), @trees;
     # p @dumped_trees;
 
     is( scalar(@trees), 1, "'$text': parsed unambiguously" );
@@ -42,8 +41,8 @@ sub parses_as {
     local $Test::Builder::Level += 1;
 
     my $trees             = parses($text);
-    my @dumped_trees      = map dump_tree( cleanup($_) ), @{$trees};
-    my @dumped_user_trees = map dump_tree( cleanup($_) ), @{$user_trees};
+    my @dumped_trees      = map dump_tree($_), @{$trees};
+    my @dumped_user_trees = map dump_tree($_), @{$user_trees};
 
     is_deeply(
         \@dumped_user_trees,
@@ -66,8 +65,7 @@ sub parsent {
     ok( !defined $res && defined $err, "'$text': did not parse" );
 
     foreach my $tree (@trees) {
-        my $ast = cleanup($tree);
-        diag( dump_tree($ast) );
+        diag( dump_tree($tree) );
     }
 }
 
