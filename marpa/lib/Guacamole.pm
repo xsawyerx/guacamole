@@ -1766,18 +1766,37 @@ whitespace ~ [\s]+
 
 our $grammar = Marpa::R2::Scanless::G->new({ source => \$grammar_source });
 
-sub add_line_column {
-    my ( $rec, $value ) = @_;
-    my @values = ($value);
+sub build_struct {
+    my ( $rec, $initial_valueref ) = @_;
+    my @values = ($initial_valueref);
 
-    while ( my $value = shift @values ) {
-        ref $value
-            or next;
+    while ( my $valueref = shift @values ) {
+        if ( ! ref ${$valueref} ) {
+            ${$valueref} = {
+                'type'  => ':bare',
+                'value' => ${$valueref},
+            };
 
-        my $line_column = join ':', $rec->line_column( $value->[1] );
-        splice @{$value}, 1, 1, $line_column;
+            next;
+        }
 
-        push @values, @{$value};
+        my $name      = shift @{ ${$valueref} };
+        my $start_pos = shift @{ ${$valueref} };
+        my $length    = shift @{ ${$valueref} };
+        my @children  = @{ ${$valueref} };
+
+        my ( $line, $column ) = $rec->line_column($start_pos);
+        ${$valueref} = {
+            'name'      => $name,
+            'type'      => 'lexeme',
+            'start_pos' => $start_pos,
+            'length'    => $length,
+            'children'  => \@children,
+            'line'      => $line,
+            'column'    => $column,
+        };
+
+        push @values, map \$_, @{ ${$valueref}->{'children'} }
     }
 }
 
@@ -1791,7 +1810,7 @@ sub parse {
     eval {
         $rec->read(\$text);
         while (my $value = $rec->value()) {
-            add_line_column( $rec, ${$value} );
+            build_struct( $rec, $value );
             push @values, $$value;
         }
         1;
