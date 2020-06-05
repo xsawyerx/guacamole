@@ -201,8 +201,7 @@ ExprCondR     ::= ExprRange0  OpTriThen ExprRangeR OpTriElse ExprCondR | ExprRan
 ExprAssignL   ::= ExprCond0   OpAssign  ExprAssignL     | OpAssignKeywordExpr
                                                         | ExprCondL     action => ::first
 ExprAssignR   ::= ExprCond0   OpAssign  ExprAssignR     | ExprCondR     action => ::first
-ExprComma     ::= ExprAssignL OpComma   ExprComma
-                | ExprAssignL OpComma   ExprComma OpComma | ExprAssignR   action => ::first
+ExprComma     ::= ExprAssignL OpComma ExprComma | ExprAssignL OpComma | ExprAssignR action => ::first
 ExprNameNot   ::= OpNameNot   ExprNameNot               | ExprComma     action => ::first
 ExprNameAnd   ::= ExprNameAnd OpNameAnd ExprNameNot     | ExprNameNot   action => ::first
 ExprNameOr    ::= ExprNameOr  OpNameOr  ExprNameAnd     | ExprNameAnd   action => ::first
