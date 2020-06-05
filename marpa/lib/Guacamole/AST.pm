@@ -11,33 +11,26 @@ our @EXPORT_OK = qw/traverse cleanup/;
 my %_clean_paren_type = (
     "ParenExpr" => [ "(", ")" ],
     "ArrayElem" => [ "[", "]" ],
-    "HashElem" => [ "{", "}" ],
-    "LitArray" => [ "[", "]" ],
-    "LitHash" => [ "{", "}" ],
-    "Block" => [ "{", "}" ],
+    "HashElem"  => [ "{", "}" ],
+    "LitArray"  => [ "[", "]" ],
+    "LitHash"   => [ "{", "}" ],
+    "Block"     => [ "{", "}" ],
 );
 
 sub clean_paren {
     my $node = shift;
 
-    return $node unless ref $node;
-    my ($head, @list) = @$node;
+    $node->{'type'} eq ':bare'
+        and return $node;
 
-    my $paren = $_clean_paren_type{$head};
+    my $paren = $_clean_paren_type{ $node->{'name'} };
     return $node unless defined $paren;
 
-    die "bad $head structure" . Dumper($node)
-        unless shift @list eq $paren->[0] && pop @list eq $paren->[1];
-    
-    return [ $head, @list ];
-}
+    die "bad node structure: " . Dumper($node)
+        unless shift @{ $node->{'children'} } eq $paren->[0]
+            && pop   @{ $node->{'children'} } eq $paren->[1];
 
-
-
-
-
-
-
+    return $node;
 }
 
 sub traverse {
@@ -48,7 +41,7 @@ sub traverse {
     }
 
     my $node2 = $visitor->($node);
-    return ref $node2 ? [ map traverse($_, $visitor), @$node2 ] : $node2;
+    return ref $node2 ? [ map traverse($_, $visitor), @{ $node2->{'children'} } ] : $node2;
 }
 
 # Apply all cleanups to the tree.
@@ -59,6 +52,5 @@ sub cleanup {
 
     return $node;
 }
-
 
 1;
