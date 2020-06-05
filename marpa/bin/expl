@@ -5,10 +5,9 @@ use lib "$Bin/../lib";
 
 use Guacamole;
 use Guacamole::Dumper qw/dump_tree/;
-use Guacamole::AST qw/cleanup/;
 
 my $src = shift @ARGV;
 foreach my $ast (Guacamole->parse($src)) {
-    print dump_tree(cleanup($ast));
+    print dump_tree($ast);
 }
 
