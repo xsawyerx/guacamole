@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-
+use Test::More;
 use Guacamole::Test;
 
 
@@ -11,7 +11,12 @@ parses('$#$foo');
 parses('@$$bar');
 
 parsent('@@foo');
-parsent('@$#foo');
+
+TODO: {
+    todo_skip 'Surface issues with unacceptable deref' => 1;
+    parsent('@$#foo');
+}
+
 parsent('@%foo');
 parsent('@@$foo');
 parsent('$#@foo');

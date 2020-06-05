@@ -7,8 +7,13 @@ parses('<>');
 parses('<$fh>');
 parses('<<>>');
 parses('<<$fh>>');
-parsent('< $fh >');
-parsent('<< $fh >>');
+
+TODO: {
+    todo_skip 'Reserve whitespace policy to avoid unacceptable spacing' => 2;
+    parsent('< $fh >');
+    parsent('<< $fh >>');
+}
+
 parsent('<@fh>');
 parsent('<<@fh>>');
 parsent('<fh>');
@@ -20,14 +25,9 @@ parses('while ( my $line = <>) {...}');
 parses('while (<<>>) {...}');
 parses('while ( my $line = <<>>) {...}');
 
-TODO: {
-    local $TODO = 'Support both diamond operators and builtin filehandles';
-
-    parses('while (<STDIN>) {...}');
-    parses('while ( my $line = <STDIN>) {...}');
-
-    parses('while (<<STDIN>>) {...}');
-    parses('while ( my $line = <<STDIN>>) {...}');
-}
+parses('while (<STDIN>) {...}');
+parses('while ( my $line = <STDIN>) {...}');
+parses('while (<<STDIN>>) {...}');
+parses('while ( my $line = <<STDIN>>) {...}');
 
 done_testing();
