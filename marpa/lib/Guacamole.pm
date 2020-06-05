@@ -5,7 +5,7 @@ use Marpa::R2;
 
 my $grammar_source = q{
 lexeme default = latm => 1
-:default ::= action => [ name, start, values ]
+:default ::= action => [ name, start, length, values ]
 
 Program ::= StatementSeq
 
