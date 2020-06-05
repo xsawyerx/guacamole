@@ -6,5 +6,6 @@ parses('$foo = { "a" => "b" }');
 parses('$foo = { "a" => "b", }');
 parses('$foo = [ 1, 2 ]');
 parses('$foo = [ 1, 2, ]');
+parses('$foo = [ 1, ]');
 
 done_testing();
