@@ -7,7 +7,6 @@ use Exporter "import";
 
 our @EXPORT_OK = qw/dump_tree/;
 
-
 sub dump_tree {
     my ($tree, $offset) = @_;
     return join "", map "$_\n", _dump_tree_inner($tree, "", $offset);
@@ -18,10 +17,20 @@ sub _dump_tree_inner {
     $indent //= "";
     $offset //= "  ";
 
-    my ($head, @tail) = @$tree;
-    die "wtfbbq" if ref $head;
+    ref $tree eq 'HASH'
+        or die "Bad token object: $tree";
 
-    if (any { ref $_ } @tail) {
+    my $head = $tree->{
+        $tree->{'type'} eq ':bare'
+        ? 'value'
+        : 'name'
+    };
+
+    my @tail = $tree->{'type'} eq ':bare'
+             ? ()
+             : @{ $tree->{'children'} };
+
+    if ( any { ref $_ } @tail ) {
         my @rest = map { ref $_ ? _dump_tree_inner($_, "$indent$offset", $offset) : "$indent$offset'$_'" } @tail;
 
         my @clean = map { s/^\s+//r } @rest;
