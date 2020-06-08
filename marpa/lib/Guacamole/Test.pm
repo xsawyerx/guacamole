@@ -20,7 +20,7 @@ our @EXPORT = qw(
 sub parses {
     my ($text) = @_;
 
-    local $Test::Builder::Level += 1;
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my @trees;
     eval { @trees = Guacamole->parse($text); }
@@ -38,7 +38,7 @@ sub parses {
 sub parses_as {
     my ( $text, $user_trees ) = @_;
 
-    local $Test::Builder::Level += 1;
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my $trees             = parses($text);
     my @dumped_trees      = map dump_tree($_), @{$trees};
@@ -54,7 +54,7 @@ sub parses_as {
 sub parsent {
     my ($text) = @_;
 
-    local $Test::Builder::Level += 1;
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my @trees;
     my $res = eval {

@@ -9,7 +9,7 @@ parses('<<>>');
 parses('<<$fh>>');
 
 TODO: {
-    todo_skip 'Reserve whitespace policy to avoid unacceptable spacing' => 2;
+    local $TODO = 'Reserve whitespace policy to avoid unacceptable spacing';
     parsent('< $fh >');
     parsent('<< $fh >>');
 }
