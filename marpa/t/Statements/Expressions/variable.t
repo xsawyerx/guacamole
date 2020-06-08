@@ -3,19 +3,17 @@ use warnings;
 use Test::More;
 use Guacamole::Test;
 
-
 parses('$foo');
 parses('$#foo::bar');
-parses('%$foo::bar::baz');
-parses('$#$foo');
-parses('@$$bar');
+parsent('%$foo::bar::baz');
+parses('%{ $foo::bar::baz }');
+parsent('$#$foo');
+parses('$#{ $foo }');
+parsent('@$$bar');
+parses('@{ ${$bar} }');
 
 parsent('@@foo');
-
-TODO: {
-    todo_skip 'Surface issues with unacceptable deref' => 1;
-    parsent('@$#foo');
-}
+parsent('@$#foo');
 
 parsent('@%foo');
 parsent('@@$foo');
@@ -23,7 +21,8 @@ parsent('$#@foo');
 
 parses('&foo()');
 parsent('$foo()');
-parses('&$foo()');
+parsent('&$foo()');
+parses('$foo->()');
 parsent('$$foo()');
 
 parses('$foo[5]');

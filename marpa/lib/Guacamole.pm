@@ -301,6 +301,7 @@ NonBraceValue ::= NonBraceLiteral | NonLiteral | QLikeValue
 
 NonLiteral ::= GlobalVariable
              | Variable
+             | DerefVariable
              | Modifier Variable
              | Modifier ParenExpr
              | UnderscoreValues
@@ -437,7 +438,6 @@ VarGlob     ::= SigilGlob VarName
 VarArrayTop ::= SigilArrayTop VarName
 
 VarName ::= Ident
-          | VarScalar
 
 SubCall ::= NonQLikeIdent CallArgs
           | VarCode CallArgs
@@ -522,6 +522,12 @@ DerefVariableSlice ::= '@[' Expression ']'
                      | '@{' Expression '}'
                      | '%[' Expression ']'
                      | '%{' Expression '}'
+
+DerefVariable ::= SigilScalar   Block
+                | SigilArray    Block
+                | SigilHash     Block
+                | SigilGlob     Block
+                | SigilArrayTop Block
 
 OpNullaryKeywordExpr ::=
       OpKeywordBreakExpr
