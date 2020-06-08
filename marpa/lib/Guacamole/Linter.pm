@@ -8,44 +8,41 @@ use Test::More;
 use Module::Runtime qw< use_module >;
 use Guacamole::Linter::Iterator;
 
-our @EXPORT = qw< lint_fail lint_success done_testing >;
+our @EXPORT = qw< lint_ok lint_nok done_testing >;
 
 sub run ( $subclass, $string ) {
     # Forget about this for now
-    #my $class  = __PACKAGE__ . '::' . $subclass;
-    #use_module($class);
+    my $class  = "Guacamole::Linter::Policy::$subclass";
+    use_module($class);
 
     my $struct = [ Guacamole->parse($string) ];
-    my $iter   = Guacamole::Linter::Iterator->new(
-        'struct' => $struct
-    );
+    $class->lint($struct);
 
-    return $iter;
+    return $struct;
 }
 
-# Forget these for now...
-#sub lint_fail ( $subclass, $string, $desc = '' ) {
-#    my $iter = run( $subclass, $string );
-#
-#    eval {
-#        #$class->lint($iter);
-#        1;
-#    } or do {
-#        my $error = 'Cannot parse';
-#        ok($error, $desc || "[$string] failed: $error");
-#        return;
-#    };
-#
-#    ok( 0, $desc || "[$string] did not fail" );
-#};
-#
-#sub lint_success ( $subclass, $string ) {
-#    my $iter = run( $subclass, $string );
-#
-#    ok(
-#        $class->lint($iter),
-#        "[$string] lints well"
-#    );
-#};
+sub lint_ok ( $subclass, $string, $desc = '' ) {
+    my $error;
+    eval {
+        run( $subclass, $string );
+        1;
+    } or do {
+        $error = $@ // 'Zombie error';
+    };
+
+    ok($error, $desc || "Lint detected issue: $string");
+}
+
+sub lint_nok ( $subclass, $string, $desc = '' ) {
+    my $error;
+    eval {
+        run( $subclass, $string );
+        1;
+    } or do {
+        $error = $@ // 'Zombie error';
+    };
+
+    ok( !$error, $desc || "Lint did not detect issue: $string" );
+}
 
 1;
