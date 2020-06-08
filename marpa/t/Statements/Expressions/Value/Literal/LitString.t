@@ -7,7 +7,7 @@ parses(q{"Foo"});
 parses(q{"Fo#o"});
 
 TODO: {
-    todo_skip 'Strings beginning with #' => 2;
+    local $TODO = 'Strings beginning with #';
     parses(q{"#Foo"});
     parses(q{'#Foo'});
 }

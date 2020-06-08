@@ -14,7 +14,7 @@ foreach my $lead_sigil (qw< $ @ % & * >) {
 parses('$foo->$#*');
 
 TODO: {
-    todo_skip 'Expose bad $# patterns' => 2;
+    local $TODO = 'Expose bad $# patterns';
     parsent('$foo->$#');
     parsent('$foo->$# *');
 }
