@@ -1,13 +1,16 @@
 use strict;
 use warnings;
-use Guacamole::Linter;
+use Test::More;
+use Guacamole::Linter::Test;
 
-lint_ok( 'ProhibitSingleArgArraySlice', 'say $foo->@[ 1 ]' );
-lint_ok( 'ProhibitSingleArgArraySlice', 'say $foo->@[ "foo" ]' );
-lint_ok( 'ProhibitSingleArgArraySlice', 'say $foo->@[ $foo ]' );
-lint_ok( 'ProhibitSingleArgArraySlice', 'say $foo->@[ scalar foo() ]' );
-lint_nok( 'ProhibitSingleArgArraySlice', 'say $foo->@[ foo() ]' );
-lint_nok( 'ProhibitSingleArgArraySlice', 'say $foo->@[ 1, 2 ]' );
-lint_nok( 'ProhibitSingleArgArraySlice', 'say $foo->@[ "foo", "bar" ]' );
+my $test = Guacamole::Linter::Test->new();
+
+$test->lint_ok( 'ProhibitSingleArgArraySlice', 'say $foo->@[ 1 ]' );
+$test->lint_ok( 'ProhibitSingleArgArraySlice', 'say $foo->@[ "foo" ]' );
+$test->lint_ok( 'ProhibitSingleArgArraySlice', 'say $foo->@[ $foo ]' );
+$test->lint_ok( 'ProhibitSingleArgArraySlice', 'say $foo->@[ scalar foo() ]' );
+$test->lint_nok( 'ProhibitSingleArgArraySlice', 'say $foo->@[ foo() ]' );
+$test->lint_nok( 'ProhibitSingleArgArraySlice', 'say $foo->@[ 1, 2 ]' );
+$test->lint_nok( 'ProhibitSingleArgArraySlice', 'say $foo->@[ "foo", "bar" ]' );
 
 done_testing();

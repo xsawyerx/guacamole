@@ -1,48 +1,24 @@
 package Guacamole::Linter;
-use strict;
-use warnings;
+# ABSTRACT: A next generation linter
+
+use Moose;
 use standard;
 use experimental qw< postderef signatures >;
-use Exporter qw< import >;
-use Test::More;
 use Module::Runtime qw< use_module >;
 use Guacamole::Linter::Iterator;
 
-our @EXPORT = qw< lint_ok lint_nok done_testing >;
-
-sub run ( $subclass, $string ) {
-    # Forget about this for now
-    my $class  = "Guacamole::Linter::Policy::$subclass";
+sub run ( $self, $policy_name, $string ) {
+    my $class = "Guacamole::Linter::Policy::$policy_name";
     use_module($class);
+    my $policy = $class->new();
 
     my $struct = [ Guacamole->parse($string) ];
-    $class->lint($struct);
+    $policy->lint($struct);
 
     return $struct;
 }
 
-sub lint_ok ( $subclass, $string, $desc = '' ) {
-    my $error;
-    eval {
-        run( $subclass, $string );
-        1;
-    } or do {
-        $error = $@ // 'Zombie error';
-    };
-
-    ok($error, $desc || "Lint detected issue: $string");
-}
-
-sub lint_nok ( $subclass, $string, $desc = '' ) {
-    my $error;
-    eval {
-        run( $subclass, $string );
-        1;
-    } or do {
-        $error = $@ // 'Zombie error';
-    };
-
-    ok( !$error, $desc || "Lint did not detect issue: $string" );
-}
+__PACKAGE__->meta()->make_immutable();
+no Moose;
 
 1;
