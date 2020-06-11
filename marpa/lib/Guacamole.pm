@@ -2,6 +2,9 @@ package Guacamole;
 use strict;
 use warnings;
 use Marpa::R2;
+use constant {
+    'DEBUG' => 0,
+};
 
 my $grammar_source = q{
 lexeme default = latm => 1
@@ -1809,13 +1812,23 @@ sub build_struct {
 sub parse {
     my ($class, $text) = @_;
 
-    my $rec = Marpa::R2::Scanless::R->new({ grammar => $grammar });
+    my %args = (
+        'grammar' => $grammar,
+
+        DEBUG()
+        ? (
+            'trace_terminals' => 1,
+            'trace_values'    => 1,
+          )
+        : (),
+    );
+
+    my $rec = Marpa::R2::Scanless::R->new( \%args );
 
     my @values;
-
     eval {
-        $rec->read(\$text);
-        while (my $value = $rec->value()) {
+        my $res = $rec->read( \$text );
+        while ( my $value = $rec->value() ) {
             build_struct( $rec, $value );
             push @values, $$value;
         }
