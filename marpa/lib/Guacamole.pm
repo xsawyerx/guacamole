@@ -71,26 +71,26 @@ StatementModifier ::= ConditionIfPostfixExpr
 
 EllipsisStatement ::= Ellipsis
 
-UseStatement ::= OpKeywordUse Ident VersionExpr Expression
-               | OpKeywordUse Ident VersionExpr
-               | OpKeywordUse Ident Expression
+UseStatement ::= OpKeywordUse ClassIdent VersionExpr Expression
+               | OpKeywordUse ClassIdent VersionExpr
+               | OpKeywordUse ClassIdent Expression
                | OpKeywordUse VersionExpr
-               | OpKeywordUse Ident
+               | OpKeywordUse ClassIdent
 
-NoStatement ::= OpKeywordNo Ident VersionExpr Expression
-              | OpKeywordNo Ident VersionExpr
-              | OpKeywordNo Ident Expression
+NoStatement ::= OpKeywordNo ClassIdent VersionExpr Expression
+              | OpKeywordNo ClassIdent VersionExpr
+              | OpKeywordNo ClassIdent Expression
               | OpKeywordNo VersionExpr
-              | OpKeywordNo Ident
+              | OpKeywordNo ClassIdent
 
 RequireStatement ::= OpKeywordRequire VersionExpr
-                   | OpKeywordRequire Ident
+                   | OpKeywordRequire ClassIdent
                    | OpKeywordRequire Expression
 
-PackageStatement ::= OpKeywordPackage Ident VersionExpr Block
-                   | OpKeywordPackage Ident Block
-PackageDeclaration ::= OpKeywordPackage Ident VersionExpr
-                     | OpKeywordPackage Ident
+PackageStatement ::= OpKeywordPackage ClassIdent VersionExpr Block
+                   | OpKeywordPackage ClassIdent Block
+PackageDeclaration ::= OpKeywordPackage ClassIdent VersionExpr
+                     | OpKeywordPackage ClassIdent
 
 SubStatement ::= PhaseStatement Block
                | OpKeywordSub PhaseStatement Block
@@ -302,8 +302,7 @@ OpListKeywordArgNonBrace  ::= NonBraceExprComma
 # Same as Value above, but with a NonBraceLiteral
 NonBraceValue ::= NonBraceLiteral | NonLiteral | QLikeValue
 
-NonLiteral ::= GlobalVariable
-             | Variable
+NonLiteral ::= Variable
              | DerefVariable
              | Modifier Variable
              | Modifier ParenExpr
@@ -313,85 +312,6 @@ NonLiteral ::= GlobalVariable
              | ParenExpr ElemSeq0
              | OpNullaryKeywordExpr
              | DiamondExpr
-
-GlobalVariable ~ '$!'
-               | '$"'
-               | '$#'
-               | '$%'
-               | '$&'
-               | '$' [']
-               | '$('
-               | '$)'
-               | '$*'
-               | '$+'
-               | '$,'
-               | '$-'
-               | '$.'
-               | '$/'
-               | '$:'
-               | '$;'
-               | '$<'
-               | '$='
-               | '$>'
-               | '$?'
-               | '$@'
-               | '$['
-               | '$\\'
-               | '$]'
-               | '$^'
-               | '$_'
-               | '$`'
-               | '$|'
-               | '$~'
-               | '$$'
-               | '$^A'
-               | '$^C'
-               | '${^CHILD_ERROR_NATIVE}'
-               | '$^D'
-               | '$<*digits*>'
-               | '$^E'
-               | '${^ENCODING}'
-               | '$^F'
-               | '${^GLOBAL_PHASE}'
-               | '$^H'
-               | '$^I'
-               | '$^L'
-               | '${^LAST_FH}'
-               | '$^M'
-               | '${^MATCH}'
-               | '$^N'
-               | '$^O'
-               | '${^OPEN}'
-               | '$^P'
-               | '${^POSTMATCH}'
-               | '${^PREMATCH}'
-               | '$^R'
-               | '${^RE_COMPILE_RECURSION_LIMIT}'
-               | '${^RE_DEBUG_FLAGS}'
-               | '${^RE_TRIE_MAXBUF}'
-               | '$^S'
-               | '${^SAFE_LOCALES}'
-               | '$^T'
-               | '${^TAINT}'
-               | '${^UNICODE}'
-               | '${^UTF8CACHE}'
-               | '${^UTF8LOCALE}'
-               | '$^V'
-               | '$^W'
-               | '${^WARNING_BITS}'
-               | '${^WIN32_SLOPPY_STAT}'
-               | '$^X'
-               | '@+'
-               | '@-'
-               | '@_'
-               | '@{^CAPTURE}'
-               | '%!'
-               | '%+'
-               | '%-'
-               | '%{^CAPTURE}'
-               | '%{^CAPTURE_ALL}'
-               | '%^H'
-
 
 DiamondExpr ::= Diamond
               | DoubleDiamond
@@ -426,28 +346,25 @@ UnderscoreValues ::= UnderscorePackage
 #                   | UnderscoreData
 #                   | UnderscoreEnd
 
-Variable ::= VarScalar
+Variable ::= GlobalVarExpr
+           | VarScalar
            | VarArray
            | VarHash
            | VarCode
            | VarGlob
            | VarArrayTop
 
-VarScalar   ::= SigilScalar VarName ElemSeq0
-VarArray    ::= SigilArray VarName ElemSeq0
-VarHash     ::= SigilHash VarName ElemSeq0
-VarCode     ::= SigilCode VarName
-VarGlob     ::= SigilGlob VarName
-VarArrayTop ::= SigilArrayTop VarName
+GlobalVarExpr ::= '$#'
+                | SigilScalar GlobalVariables ElemSeq0
+                | SigilArray  GlobalVariables ElemSeq0
+                | SigilHash   GlobalVariables ElemSeq0
 
-# This is tricky because
-# $x is ok, $3 is ok, $x::3 is ok, $3::x is not ok
-# so we define it as Digits are okay
-# otherwise, a proper ident, which eliminated $3::x but also $x::3
-VarName ::= DigitsExpr
-         || Ident
-
-DigitsExpr ::= [0-9]+
+VarScalar   ::= SigilScalar VarIdentExpr ElemSeq0
+VarArray    ::= SigilArray VarIdentExpr ElemSeq0
+VarHash     ::= SigilHash VarIdentExpr ElemSeq0
+VarCode     ::= SigilCode VarIdentExpr
+VarGlob     ::= SigilGlob VarIdentExpr
+VarArrayTop ::= SigilArrayTop VarIdentExpr
 
 SubCall ::= SubNameCallExpr CallArgs
           | VarCode CallArgs
@@ -492,13 +409,91 @@ SubNameNonQLike ~
                 | 'm' AllSubLetters                # m[*]
                 | 'y' AllSubLetters                # y[*]
 
-# These are sort of the same but not
-# Idents are defined differently for different purposes
-# Subroutine names are defined using one ident
-# Calling subroutines with arrow are defined using another ident
 # Variables are defined using a different ident
-# Namespaced variables ($x::y) are defined with another ident
-Ident ::= SubNameExpr
+# Namespaced variables ($x::y) might have a different ident
+VarIdentExpr ::= VarIdent
+               | VarIdentExpr PackageSep VarIdent
+
+VarIdent ~ NonGlobalVarLetters
+         | NonGlobalVarLetters AllVarLetters
+         | '_' AllVarLetters
+
+NonGlobalVarLetters ~ [a-zA-Z]+
+AllVarLetters       ~ [a-zA-Z0-9_]+
+
+GlobalVariables ~ '!'
+                | '"'
+                | '%'
+                | '&'
+                | [']
+                | '('
+                | ')'
+                | '*'
+                | '+'
+                | ','
+                | '-'
+                | '.'
+                | '/'
+                | ':'
+                | ';'
+                | '<'
+                | '='
+                | '>'
+                | '?'
+                | '@'
+                | '['
+                | '\\'
+                | ']'
+                | '^'
+                | '_'
+                | '`'
+                | '|'
+                | '~'
+                | '$'
+                | '^A'
+                | '^C'
+                | '{^CHILD_ERROR_NATIVE}'
+                | '^D'
+                | '^E'
+                | '{^ENCODING}'
+                | '^F'
+                | '{^GLOBAL_PHASE}'
+                | '^H'
+                | '^I'
+                | '^L'
+                | '{^LAST_FH}'
+                | '^M'
+                | '{^MATCH}'
+                | '^N'
+                | '^O'
+                | '{^OPEN}'
+                | '^P'
+                | '{^POSTMATCH}'
+                | '{^PREMATCH}'
+                | '^R'
+                | '{^RE_COMPILE_RECURSION_LIMIT}'
+                | '{^RE_DEBUG_FLAGS}'
+                | '{^RE_TRIE_MAXBUF}'
+                | '^S'
+                | '{^SAFE_LOCALES}'
+                | '^T'
+                | '{^TAINT}'
+                | '{^UNICODE}'
+                | '{^UTF8CACHE}'
+                | '{^UTF8LOCALE}'
+                | '^V'
+                | '^W'
+                | '{^WARNING_BITS}'
+                | '{^WIN32_SLOPPY_STAT}'
+                | '^X'
+                | '{^CAPTURE}'
+                | '{^CAPTURE_ALL}'
+                | Digits
+
+# This uses the same definition as subroutine names
+# In the future, we might want to split those
+# but they are basically the same
+ClassIdent ::= SubNameExpr
 
 CallArgs ::= ParenExpr
 
@@ -538,8 +533,8 @@ ArrowRHS ::= ArrowDerefCall
 ArrowDerefCall     ::= CallArgs
 ArrowDerefVariable ::= DerefVariableArgsAll
                      | DerefVariableSlice
-ArrowMethodCall    ::= Ident CallArgs
-ArrowIndirectCall  ::= SigilScalar Ident CallArgs
+ArrowMethodCall    ::= SubNameExpr CallArgs
+ArrowIndirectCall  ::= SigilScalar VarIdentExpr CallArgs
 
 DerefVariableArgsAll ::= '$*' | '@*' | '%*' | '&*' | '**' | '$#*'
 
@@ -1759,9 +1754,13 @@ whitespace ~ [\s]+
 <vertical space char>             ~ [\x{A}\x{B}\x{C}\x{D}\x{2028}\x{2029}]
 <hash comment char>               ~ [^\x{A}\x{B}\x{C}\x{D}\x{2028}\x{2029}]
 
+# Recognize phases before subroutines
 :lexeme ~ PhaseName              priority => 1
+
+# Recognize q* / s / m / y / tr before subroutines
 :lexeme ~ QLikeValueExpr         priority => 1
 :lexeme ~ QLikeValueExprWithMods priority => 1
+
 :lexeme ~ VersionNumber          priority => 1
 
 # Prioritize keywords over functions
@@ -2041,7 +2040,7 @@ sub parse {
     or do {
         my $err = $@;
         if (!@values) {
-            for my $nterm (reverse qw/Program BlockStatement Statement NonBraceExprComma BlockLevelExpression Expression SubCall Ident/) {
+            for my $nterm (reverse qw/Program BlockStatement Statement NonBraceExprComma BlockLevelExpression Expression SubCall VarIdentExpr SubNameExpr/) {
                 my ($start, $length) = $rec->last_completed($nterm);
                 next unless defined $start;
                 my $range = $rec->substring($start, $length);
