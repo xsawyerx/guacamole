@@ -10,13 +10,13 @@ my $grammar_source = q{
 lexeme default = latm => 1
 :default ::= action => [ name, start, length, values ]
 
-Program ::= StatementSeq
+Program ::= (WS_Any) StatementSeq (WS_Any)
 
-StatementSeq ::= Statement
-               | Statement Semicolon
-               | Statement Semicolon StatementSeq
-               | BlockStatement
-               | BlockStatement StatementSeq
+StatementSeq ::= Statement (WS_Any)
+               | Statement (WS_Any) Semicolon
+               | Statement (WS_Any) Semicolon (WS_Any) StatementSeq
+               | BlockStatement (WS_Any)
+               | BlockStatement (WS_Any) StatementSeq
 
 # Statements that end with a block and do not need a semicolon terminator.
 BlockStatement ::= LoopStatement
@@ -25,7 +25,7 @@ BlockStatement ::= LoopStatement
                  | Condition
                  | Block
 
-Statement ::= BlockLevelExpression StatementModifier
+Statement ::= BlockLevelExpression (WS_Many) StatementModifier
             | BlockLevelExpression
             | EllipsisStatement
             | UseStatement
@@ -38,29 +38,29 @@ LoopStatement ::= ForStatement
                 | WhileStatement
                 | UntilStatement
 
-ForStatement ::= ForStatementOp LParen Statement Semicolon Statement Semicolon Statement RParen Block ContinueExpr
-               | ForStatementOp LParen Statement Semicolon Statement Semicolon Statement RParen Block
-               | ForStatementOp OpKeywordMy VarScalar LParen Expression RParen Block ContinueExpr
-               | ForStatementOp OpKeywordMy VarScalar LParen Expression RParen Block
-               | ForStatementOp VarScalar LParen Expression RParen Block ContinueExpr
-               | ForStatementOp VarScalar LParen Expression RParen Block
-               | ForStatementOp LParen Semicolon Semicolon RParen Block ContinueExpr
-               | ForStatementOp LParen Semicolon Semicolon RParen Block
-               | ForStatementOp LParen Expression RParen Block ContinueExpr
-               | ForStatementOp LParen Expression RParen Block
+ForStatement ::= ForStatementOp (WS_Any) LParen (WS_Any) Statement (WS_Any) Semicolon (WS_Any) Statement (WS_Any) Semicolon (WS_Any) Statement (WS_Any) RParen (WS_Any) Block (WS_Any) ContinueExpr
+               | ForStatementOp (WS_Any) LParen (WS_Any) Statement (WS_Any) Semicolon (WS_Any) Statement (WS_Any) Semicolon (WS_Any) Statement (WS_Any) RParen (WS_Any) Block
+               | ForStatementOp (WS_Many) OpKeywordMy (WS_Many) VarScalar (WS_Any) LParen (WS_Any) Expression (WS_Any) RParen (WS_Any) Block (WS_Any) ContinueExpr
+               | ForStatementOp (WS_Many) OpKeywordMy (WS_Many) VarScalar (WS_Any) LParen (WS_Any) Expression (WS_Any) RParen (WS_Any) Block
+               | ForStatementOp (WS_Many) VarScalar (WS_Any) LParen (WS_Any) Expression (WS_Any) RParen (WS_Any) Block (WS_Any) ContinueExpr
+               | ForStatementOp (WS_Many) VarScalar (WS_Any) LParen (WS_Any) Expression (WS_Any) RParen (WS_Any) Block
+               | ForStatementOp (WS_Many) LParen (WS_Any) Semicolon (WS_Any) Semicolon (WS_Any) RParen (WS_Any) Block (WS_Any) ContinueExpr
+               | ForStatementOp (WS_Many) LParen (WS_Any) Semicolon (WS_Any) Semicolon (WS_Any) RParen (WS_Any) Block
+               | ForStatementOp (WS_Many) LParen (WS_Any) Expression (WS_Any) RParen (WS_Any) Block (WS_Any) ContinueExpr
+               | ForStatementOp (WS_Many) LParen (WS_Any) Expression (WS_Any) RParen (WS_Any) Block
 
-ContinueExpr ::= OpKeywordContinue Block
+ContinueExpr ::= OpKeywordContinue (WS_Many) Block
 
 ForStatementOp ::= OpKeywordFor
                  | OpKeywordForeach
 
-WhileStatement ::= ConditionWhile LParen Expression RParen Block OpKeywordContinue Block
-                 | ConditionWhile LParen Expression RParen Block
-                 | ConditionWhile LParen RParen Block OpKeywordContinue Block
-                 | ConditionWhile LParen RParen Block
+WhileStatement ::= ConditionWhile (WS_Any) LParen (WS_Any) Expression (WS_Any) RParen (WS_Any) Block (WS_Any) OpKeywordContinue (WS_Any) Block
+                 | ConditionWhile (WS_Any) LParen (WS_Any) Expression (WS_Any) RParen (WS_Any) Block
+                 | ConditionWhile (WS_Any) LParen (WS_Any) RParen (WS_Any) Block (WS_Any) OpKeywordContinue (WS_Any) Block
+                 | ConditionWhile (WS_Any) LParen (WS_Any) RParen (WS_Any) Block
 
-UntilStatement ::= ConditionUntil LParen Expression RParen Block OpKeywordContinue Block
-                 | ConditionUntil LParen Expression RParen Block
+UntilStatement ::= ConditionUntil (WS_Any) LParen (WS_Any) Expression (WS_Any) RParen (WS_Any) Block (WS_Any) OpKeywordContinue (WS_Any) Block
+                 | ConditionUntil (WS_Any) LParen (WS_Any) Expression (WS_Any) RParen (WS_Any) Block
 
 StatementModifier ::= ConditionIfPostfixExpr
                     | ConditionUnlessPostfixExpr
@@ -71,65 +71,66 @@ StatementModifier ::= ConditionIfPostfixExpr
 
 EllipsisStatement ::= Ellipsis
 
-UseStatement ::= OpKeywordUse Ident VersionExpr Expression
-               | OpKeywordUse Ident VersionExpr
-               | OpKeywordUse Ident Expression
-               | OpKeywordUse VersionExpr
-               | OpKeywordUse Ident
+UseStatement ::= OpKeywordUse (WS_Many) Ident (WS_Many) VersionExpr (WS_Many) Expression
+               | OpKeywordUse (WS_Many) Ident (WS_Many) VersionExpr
+               | OpKeywordUse (WS_Many) Ident (WS_Many) Expression
+               | OpKeywordUse (WS_Many) VersionExpr
+               | OpKeywordUse (WS_Many) Ident
 
-NoStatement ::= OpKeywordNo Ident VersionExpr Expression
-              | OpKeywordNo Ident VersionExpr
-              | OpKeywordNo Ident Expression
-              | OpKeywordNo VersionExpr
-              | OpKeywordNo Ident
+NoStatement ::= OpKeywordNo (WS_Many) Ident (WS_Many) VersionExpr (WS_Many) Expression
+              | OpKeywordNo (WS_Many) Ident (WS_Many) VersionExpr
+              | OpKeywordNo (WS_Many) Ident (WS_Many) Expression
+              | OpKeywordNo (WS_Many) VersionExpr
+              | OpKeywordNo (WS_Many) Ident
 
-RequireStatement ::= OpKeywordRequire VersionExpr
-                   | OpKeywordRequire Ident
-                   | OpKeywordRequire Expression
+RequireStatement ::= OpKeywordRequire (WS_Many) VersionExpr
+                   | OpKeywordRequire (WS_Many) Ident
+                   | OpKeywordRequire (WS_Many) Expression
 
-PackageStatement ::= OpKeywordPackage Ident VersionExpr Block
-                   | OpKeywordPackage Ident Block
-PackageDeclaration ::= OpKeywordPackage Ident VersionExpr
-                     | OpKeywordPackage Ident
+PackageStatement ::= OpKeywordPackage (WS_Many) Ident (WS_Many) VersionExpr (WS_Any) Block
+                   | OpKeywordPackage (WS_Many) Ident (WS_Any) Block
 
-SubStatement ::= PhaseStatement Block
-               | OpKeywordSub PhaseStatement Block
-               | OpKeywordSub SubNameExpr SubDefinition
+PackageDeclaration ::= OpKeywordPackage (WS_Many) Ident (WS_Many) VersionExpr
+                     | OpKeywordPackage (WS_Many) Ident
 
-SubDeclaration ::= OpKeywordSub SubNameExpr
+SubStatement ::= PhaseStatement (WS_Any) Block
+               | OpKeywordSub (WS_Many) PhaseStatement (WS_Any) Block
+               | OpKeywordSub (WS_Many) SubNameExpr (WS_Any) SubDefinition
 
-SubDefinition ::= SubAttrsDefinitionSeq SubSigsDefinition Block
-                | SubAttrsDefinitionSeq Block
-                | SubSigsDefinition Block
+SubDeclaration ::= OpKeywordSub (WS_Many) SubNameExpr
+
+SubDefinition ::= SubAttrsDefinitionSeq (WS_Many) SubSigsDefinition (WS_Any) Block
+                | SubAttrsDefinitionSeq (WS_Any) Block
+                | SubSigsDefinition (WS_Any) Block
                 | Block
 
-SubAttrsDefinitionSeq ::= SubAttrsDefinition SubAttrsDefinitionSeq
+SubAttrsDefinitionSeq ::= SubAttrsDefinition (WS_Many) SubAttrsDefinitionSeq
                         | SubAttrsDefinition
 
-SubAttrsDefinition ::= Colon IdentComp SubAttrArgs
-                     | Colon IdentComp
+SubAttrsDefinition ::= Colon (WS_Any) IdentComp (WS_Any) SubAttrArgs
+                     | Colon (WS_Any) IdentComp
 
 SubSigsDefinition ::= ParenExpr
 
 PhaseStatement ::= PhaseName
 
-Condition ::= ConditionIfExpr ConditionElsifExpr ConditionElseExpr
-            | ConditionIfExpr ConditionElseExpr
-            | ConditionIfExpr ConditionElsifExpr
+Condition ::= ConditionIfExpr (WS_Any) ConditionElsifExpr (WS_Any) ConditionElseExpr
+            | ConditionIfExpr (WS_Any) ConditionElseExpr
+            | ConditionIfExpr (WS_Any) ConditionElsifExpr
             | ConditionIfExpr
             | ConditionUnlessExpr
 
-ConditionUnlessExpr         ::= ConditionUnless  LParen Expression RParen Block
-ConditionIfExpr             ::= ConditionIf      LParen Expression RParen Block
-ConditionElsifExpr          ::= ConditionElsif   LParen Expression RParen Block ConditionElsifExpr
-                              | ConditionElsif   LParen Expression RParen Block
-ConditionElseExpr           ::= ConditionElse    Block
-ConditionIfPostfixExpr      ::= ConditionIf      Expression
-ConditionUnlessPostfixExpr  ::= ConditionUnless  Expression
-ConditionWhilePostfixExpr   ::= ConditionWhile   Expression
-ConditionUntilPostfixExpr   ::= ConditionUntil   Expression
-ConditionForPostfixExpr     ::= ConditionFor     Expression
-ConditionForeachPostfixExpr ::= ConditionForeach Expression
+ConditionUnlessExpr         ::= ConditionUnless  (WS_Any) LParen (WS_Any) Expression (WS_Any) RParen (WS_Any) Block
+ConditionIfExpr             ::= ConditionIf      (WS_Any) LParen (WS_Any) Expression (WS_Any) RParen (WS_Any) Block
+ConditionElsifExpr          ::= ConditionElsif   (WS_Any) LParen (WS_Any) Expression (WS_Any) RParen (WS_Any) Block (WS_Any) ConditionElsifExpr
+                              | ConditionElsif   (WS_Any) LParen (WS_Any) Expression (WS_Any) RParen (WS_Any) Block
+ConditionElseExpr           ::= ConditionElse    (WS_Any) Block
+ConditionIfPostfixExpr      ::= ConditionIf      (WS_Any) Expression
+ConditionUnlessPostfixExpr  ::= ConditionUnless  (WS_Any) Expression
+ConditionWhilePostfixExpr   ::= ConditionWhile   (WS_Any) Expression
+ConditionUntilPostfixExpr   ::= ConditionUntil   (WS_Any) Expression
+ConditionForPostfixExpr     ::= ConditionFor     (WS_Any) Expression
+ConditionForeachPostfixExpr ::= ConditionForeach (WS_Any) Expression
 
 Label ::= IdentComp Colon
 
@@ -146,68 +147,68 @@ ExprArrowU    ::= ExprArrowU  OpArrow   ArrowRHS        | ExprValueU   action =>
 ExprArrow0    ::= ExprArrowU  OpArrow   ArrowRHS        | ExprValue0   action => ::first
 ExprArrowL    ::= ExprArrowU  OpArrow   ArrowRHS        | ExprValueL   action => ::first
 ExprArrowR    ::= ExprArrowU  OpArrow   ArrowRHS        | ExprValueR   action => ::first
-ExprIncU      ::= OpInc ExprArrowU | ExprArrowR OpInc   | ExprArrowU   action => ::first
-ExprInc0      ::= OpInc ExprArrow0 | ExprArrowR OpInc   | ExprArrow0   action => ::first
-ExprIncL      ::= OpInc ExprArrowL | ExprArrowR OpInc   | ExprArrowL   action => ::first
-ExprIncR      ::= OpInc ExprArrowR | ExprArrowL OpInc   | ExprArrowR   action => ::first
-ExprPowerU    ::= ExprIncU    OpPower   ExprUnaryU      | ExprIncU     action => ::first
-ExprPower0    ::= ExprIncU    OpPower   ExprUnary0      | ExprInc0     action => ::first
-ExprPowerL    ::= ExprIncU    OpPower   ExprUnaryL      | ExprIncL     action => ::first
-ExprPowerR    ::= ExprIncU    OpPower   ExprUnaryR      | ExprIncR     action => ::first
-ExprUnaryU    ::= OpUnary     ExprUnaryU                | ExprPowerU   action => ::first
-ExprUnary0    ::= OpUnary     ExprUnary0                | ExprPower0   action => ::first
-ExprUnaryL    ::= OpUnary     ExprUnaryL                | ExprPowerL   action => ::first
-ExprUnaryR    ::= OpUnary     ExprUnaryR                | ExprPowerR   action => ::first
-ExprRegexU    ::= ExprRegexU  OpRegex   ExprUnaryU      | ExprUnaryU   action => ::first
-ExprRegex0    ::= ExprRegexU  OpRegex   ExprUnary0      | ExprUnary0   action => ::first
-ExprRegexL    ::= ExprRegexU  OpRegex   ExprUnaryL      | ExprUnaryL   action => ::first
-ExprRegexR    ::= ExprRegexU  OpRegex   ExprUnaryR      | ExprUnaryR   action => ::first
-ExprMulU      ::= ExprMulU    OpMulti   ExprRegexU      | ExprRegexU   action => ::first
-ExprMul0      ::= ExprMulU    OpMulti   ExprRegex0      | ExprRegex0   action => ::first
-ExprMulL      ::= ExprMulU    OpMulti   ExprRegexL      | ExprRegexL   action => ::first
-ExprMulR      ::= ExprMulU    OpMulti   ExprRegexR      | ExprRegexR   action => ::first
-ExprAddU      ::= ExprAddU    OpAdd     ExprMulU        | ExprMulU     action => ::first
-ExprAdd0      ::= ExprAddU    OpAdd     ExprMul0        | ExprMul0     action => ::first
-ExprAddL      ::= ExprAddU    OpAdd     ExprMulL        | ExprMulL     action => ::first
-ExprAddR      ::= ExprAddU    OpAdd     ExprMulR        | ExprMulR     action => ::first
-ExprShiftU    ::= ExprShiftU  OpShift   ExprAddU        | ExprAddU     action => ::first
-ExprShift0    ::= ExprShiftU  OpShift   ExprAdd0        | ExprAdd0     action => ::first
-ExprShiftL    ::= ExprShiftU  OpShift   ExprAddL        | ExprAddL     action => ::first
-ExprShiftR    ::= ExprShiftU  OpShift   ExprAddR        | ExprAddR     action => ::first
-ExprFile0     ::= OpFile      ExprFile0                 | ExprShift0 action => ::first
-ExprFileL     ::= OpFile      ExprFileL                 | ExprShiftL action => ::first
-ExprFileR     ::= OpFile      ExprFileR                 | ExprShiftR action => ::first
-ExprNeq0      ::= ExprFile0   OpInequal ExprFile0       | ExprFile0    action => ::first
-ExprNeqL      ::= ExprFile0   OpInequal ExprFileL       | ExprFileL    action => ::first
-ExprNeqR      ::= ExprFile0   OpInequal ExprFileR       | ExprFileR    action => ::first
-ExprEq0       ::= ExprNeq0    OpEqual   ExprNeq0        | ExprNeq0     action => ::first
-ExprEqL       ::= ExprNeq0    OpEqual   ExprNeqL        | ExprNeqL     action => ::first
-ExprEqR       ::= ExprNeq0    OpEqual   ExprNeqR        | ExprNeqR     action => ::first
-ExprBinAnd0   ::= ExprBinAnd0 OpBinAnd  ExprEq0         | ExprEq0      action => ::first
-ExprBinAndL   ::= ExprBinAnd0 OpBinAnd  ExprEqL         | ExprEqL      action => ::first
-ExprBinAndR   ::= ExprBinAnd0 OpBinAnd  ExprEqR         | ExprEqR      action => ::first
-ExprBinOr0    ::= ExprBinOr0  OpBinOr   ExprBinAnd0     | ExprBinAnd0  action => ::first
-ExprBinOrL    ::= ExprBinOr0  OpBinOr   ExprBinAndL     | ExprBinAndL  action => ::first
-ExprBinOrR    ::= ExprBinOr0  OpBinOr   ExprBinAndR     | ExprBinAndR  action => ::first
-ExprLogAnd0   ::= ExprLogAnd0 OpLogAnd  ExprBinOr0      | ExprBinOr0   action => ::first
-ExprLogAndL   ::= ExprLogAnd0 OpLogAnd  ExprBinOrL      | ExprBinOrL   action => ::first
-ExprLogAndR   ::= ExprLogAnd0 OpLogAnd  ExprBinOrR      | ExprBinOrR   action => ::first
-ExprLogOr0    ::= ExprLogOr0  OpLogOr   ExprLogAnd0     | ExprLogAnd0  action => ::first
-ExprLogOrL    ::= ExprLogOr0  OpLogOr   ExprLogAndL     | ExprLogAndL  action => ::first
-ExprLogOrR    ::= ExprLogOr0  OpLogOr   ExprLogAndR     | ExprLogAndR  action => ::first
-ExprRange0    ::= ExprLogOr0  OpRange   ExprLogOr0      | ExprLogOr0   action => ::first
-ExprRangeL    ::= ExprLogOr0  OpRange   ExprLogOrL      | ExprLogOrL   action => ::first
-ExprRangeR    ::= ExprLogOr0  OpRange   ExprLogOrR      | ExprLogOrR   action => ::first
-ExprCond0     ::= ExprRange0  OpTriThen ExprRange0 OpTriElse ExprCond0 | ExprRange0 action => ::first
-ExprCondL     ::= ExprRange0  OpTriThen ExprRangeL OpTriElse ExprCondL | ExprRangeL action => ::first
-ExprCondR     ::= ExprRange0  OpTriThen ExprRangeR OpTriElse ExprCondR | ExprRangeR action => ::first
-ExprAssignL   ::= ExprCond0   OpAssign  ExprAssignL     | OpAssignKeywordExpr
+ExprIncU      ::= OpInc (WS_Any) ExprArrowU | ExprArrowR (WS_Any) OpInc   | ExprArrowU   action => ::first
+ExprInc0      ::= OpInc (WS_Any) ExprArrow0 | ExprArrowR (WS_Any) OpInc   | ExprArrow0   action => ::first
+ExprIncL      ::= OpInc (WS_Any) ExprArrowL | ExprArrowR (WS_Any) OpInc   | ExprArrowL   action => ::first
+ExprIncR      ::= OpInc (WS_Any) ExprArrowR | ExprArrowL (WS_Any) OpInc   | ExprArrowR   action => ::first
+ExprPowerU    ::= ExprIncU    (WS_Any) OpPower   (WS_Any) ExprUnaryU      | ExprIncU     action => ::first
+ExprPower0    ::= ExprIncU    (WS_Any) OpPower   (WS_Any) ExprUnary0      | ExprInc0     action => ::first
+ExprPowerL    ::= ExprIncU    (WS_Any) OpPower   (WS_Any) ExprUnaryL      | ExprIncL     action => ::first
+ExprPowerR    ::= ExprIncU    (WS_Any) OpPower   (WS_Any) ExprUnaryR      | ExprIncR     action => ::first
+ExprUnaryU    ::= OpUnary     (WS_Any) ExprUnaryU                | ExprPowerU   action => ::first
+ExprUnary0    ::= OpUnary     (WS_Any) ExprUnary0                | ExprPower0   action => ::first
+ExprUnaryL    ::= OpUnary     (WS_Any) ExprUnaryL                | ExprPowerL   action => ::first
+ExprUnaryR    ::= OpUnary     (WS_Any) ExprUnaryR                | ExprPowerR   action => ::first
+ExprRegexU    ::= ExprRegexU  (WS_Any) OpRegex   (WS_Any) ExprUnaryU      | ExprUnaryU   action => ::first
+ExprRegex0    ::= ExprRegexU  (WS_Any) OpRegex   (WS_Any) ExprUnary0      | ExprUnary0   action => ::first
+ExprRegexL    ::= ExprRegexU  (WS_Any) OpRegex   (WS_Any) ExprUnaryL      | ExprUnaryL   action => ::first
+ExprRegexR    ::= ExprRegexU  (WS_Any) OpRegex   (WS_Any) ExprUnaryR      | ExprUnaryR   action => ::first
+ExprMulU      ::= ExprMulU    (WS_Any) OpMulti   (WS_Any) ExprRegexU      | ExprRegexU   action => ::first
+ExprMul0      ::= ExprMulU    (WS_Any) OpMulti   (WS_Any) ExprRegex0      | ExprRegex0   action => ::first
+ExprMulL      ::= ExprMulU    (WS_Any) OpMulti   (WS_Any) ExprRegexL      | ExprRegexL   action => ::first
+ExprMulR      ::= ExprMulU    (WS_Any) OpMulti   (WS_Any) ExprRegexR      | ExprRegexR   action => ::first
+ExprAddU      ::= ExprAddU    (WS_Any) OpAdd     (WS_Any) ExprMulU        | ExprMulU     action => ::first
+ExprAdd0      ::= ExprAddU    (WS_Any) OpAdd     (WS_Any) ExprMul0        | ExprMul0     action => ::first
+ExprAddL      ::= ExprAddU    (WS_Any) OpAdd     (WS_Any) ExprMulL        | ExprMulL     action => ::first
+ExprAddR      ::= ExprAddU    (WS_Any) OpAdd     (WS_Any) ExprMulR        | ExprMulR     action => ::first
+ExprShiftU    ::= ExprShiftU  (WS_Any) OpShift   (WS_Any) ExprAddU        | ExprAddU     action => ::first
+ExprShift0    ::= ExprShiftU  (WS_Any) OpShift   (WS_Any) ExprAdd0        | ExprAdd0     action => ::first
+ExprShiftL    ::= ExprShiftU  (WS_Any) OpShift   (WS_Any) ExprAddL        | ExprAddL     action => ::first
+ExprShiftR    ::= ExprShiftU  (WS_Any) OpShift   (WS_Any) ExprAddR        | ExprAddR     action => ::first
+ExprFile0     ::= OpFile      (WS_Many) ExprFile0                 | ExprShift0 action => ::first
+ExprFileL     ::= OpFile      (WS_Many) ExprFileL                 | ExprShiftL action => ::first
+ExprFileR     ::= OpFile      (WS_Many) ExprFileR                 | ExprShiftR action => ::first
+ExprNeq0      ::= ExprFile0   (WS_Any) OpInequal (WS_Any) ExprFile0       | ExprFile0    action => ::first
+ExprNeqL      ::= ExprFile0   (WS_Any) OpInequal (WS_Any) ExprFileL       | ExprFileL    action => ::first
+ExprNeqR      ::= ExprFile0   (WS_Any) OpInequal (WS_Any) ExprFileR       | ExprFileR    action => ::first
+ExprEq0       ::= ExprNeq0    (WS_Any) OpEqual   (WS_Any) ExprNeq0        | ExprNeq0     action => ::first
+ExprEqL       ::= ExprNeq0    (WS_Any) OpEqual   (WS_Any) ExprNeqL        | ExprNeqL     action => ::first
+ExprEqR       ::= ExprNeq0    (WS_Any) OpEqual   (WS_Any) ExprNeqR        | ExprNeqR     action => ::first
+ExprBinAnd0   ::= ExprBinAnd0 (WS_Any) OpBinAnd  (WS_Any) ExprEq0         | ExprEq0      action => ::first
+ExprBinAndL   ::= ExprBinAnd0 (WS_Any) OpBinAnd  (WS_Any) ExprEqL         | ExprEqL      action => ::first
+ExprBinAndR   ::= ExprBinAnd0 (WS_Any) OpBinAnd  (WS_Any) ExprEqR         | ExprEqR      action => ::first
+ExprBinOr0    ::= ExprBinOr0  (WS_Any) OpBinOr   (WS_Any) ExprBinAnd0     | ExprBinAnd0  action => ::first
+ExprBinOrL    ::= ExprBinOr0  (WS_Any) OpBinOr   (WS_Any) ExprBinAndL     | ExprBinAndL  action => ::first
+ExprBinOrR    ::= ExprBinOr0  (WS_Any) OpBinOr   (WS_Any) ExprBinAndR     | ExprBinAndR  action => ::first
+ExprLogAnd0   ::= ExprLogAnd0 (WS_Any) OpLogAnd  (WS_Any) ExprBinOr0      | ExprBinOr0   action => ::first
+ExprLogAndL   ::= ExprLogAnd0 (WS_Any) OpLogAnd  (WS_Any) ExprBinOrL      | ExprBinOrL   action => ::first
+ExprLogAndR   ::= ExprLogAnd0 (WS_Any) OpLogAnd  (WS_Any) ExprBinOrR      | ExprBinOrR   action => ::first
+ExprLogOr0    ::= ExprLogOr0  (WS_Any) OpLogOr   (WS_Any) ExprLogAnd0     | ExprLogAnd0  action => ::first
+ExprLogOrL    ::= ExprLogOr0  (WS_Any) OpLogOr   (WS_Any) ExprLogAndL     | ExprLogAndL  action => ::first
+ExprLogOrR    ::= ExprLogOr0  (WS_Any) OpLogOr   (WS_Any) ExprLogAndR     | ExprLogAndR  action => ::first
+ExprRange0    ::= ExprLogOr0  (WS_Any) OpRange   (WS_Any) ExprLogOr0      | ExprLogOr0   action => ::first
+ExprRangeL    ::= ExprLogOr0  (WS_Any) OpRange   (WS_Any) ExprLogOrL      | ExprLogOrL   action => ::first
+ExprRangeR    ::= ExprLogOr0  (WS_Any) OpRange   (WS_Any) ExprLogOrR      | ExprLogOrR   action => ::first
+ExprCond0     ::= ExprRange0  (WS_Any) OpTriThen (WS_Any) ExprRange0 (WS_Any) OpTriElse (WS_Any) ExprCond0 | ExprRange0 action => ::first
+ExprCondL     ::= ExprRange0  (WS_Any) OpTriThen (WS_Any) ExprRangeL (WS_Any) OpTriElse (WS_Any) ExprCondL | ExprRangeL action => ::first
+ExprCondR     ::= ExprRange0  (WS_Any) OpTriThen (WS_Any) ExprRangeR (WS_Any) OpTriElse (WS_Any) ExprCondR | ExprRangeR action => ::first
+ExprAssignL   ::= ExprCond0   (WS_Any) OpAssign  (WS_Any) ExprAssignL     | OpAssignKeywordExpr
                                                         | ExprCondL     action => ::first
-ExprAssignR   ::= ExprCond0   OpAssign  ExprAssignR     | ExprCondR     action => ::first
-ExprComma     ::= ExprAssignL OpComma ExprComma | ExprAssignL OpComma | ExprAssignR action => ::first
-ExprNameNot   ::= OpNameNot   ExprNameNot               | ExprComma     action => ::first
-ExprNameAnd   ::= ExprNameAnd OpNameAnd ExprNameNot     | ExprNameNot   action => ::first
-ExprNameOr    ::= ExprNameOr  OpNameOr  ExprNameAnd     | ExprNameAnd   action => ::first
+ExprAssignR   ::= ExprCond0   (WS_Any) OpAssign  (WS_Any) ExprAssignR     | ExprCondR     action => ::first
+ExprComma     ::= ExprAssignL (WS_Any) OpComma (WS_Any) ExprComma | ExprAssignL (WS_Any) OpComma | ExprAssignR action => ::first
+ExprNameNot   ::= OpNameNot   (WS_Many) ExprNameNot               | ExprComma     action => ::first
+ExprNameAnd   ::= ExprNameAnd (WS_Many) OpNameAnd (WS_Many) ExprNameNot     | ExprNameNot   action => ::first
+ExprNameOr    ::= ExprNameOr  (WS_Many) OpNameOr  (WS_Many) ExprNameAnd     | ExprNameAnd   action => ::first
 Expression    ::=                                         ExprNameOr    action => ::first
 
 # These will never be evaluated as a hashref (LiteralHash)
@@ -222,72 +223,72 @@ NonBraceExprArrowU    ::= NonBraceExprArrowU  OpArrow   ArrowRHS        | NonBra
 NonBraceExprArrow0    ::= NonBraceExprArrowU  OpArrow   ArrowRHS        | NonBraceExprValue0   action => ::first
 NonBraceExprArrowL    ::= NonBraceExprArrowU  OpArrow   ArrowRHS        | NonBraceExprValueL   action => ::first
 NonBraceExprArrowR    ::= NonBraceExprArrowU  OpArrow   ArrowRHS        | NonBraceExprValueR   action => ::first
-NonBraceExprIncU      ::= OpInc ExprArrowU | NonBraceExprArrowR OpInc   | NonBraceExprArrowU   action => ::first
-NonBraceExprInc0      ::= OpInc ExprArrow0 | NonBraceExprArrowR OpInc   | NonBraceExprArrow0   action => ::first
-NonBraceExprIncL      ::= OpInc ExprArrowL | NonBraceExprArrowR OpInc   | NonBraceExprArrowL   action => ::first
-NonBraceExprIncR      ::= OpInc ExprArrowR | NonBraceExprArrowL OpInc   | NonBraceExprArrowR   action => ::first
-NonBraceExprPowerU    ::= NonBraceExprIncU    OpPower   ExprUnaryU      | NonBraceExprIncU     action => ::first
-NonBraceExprPower0    ::= NonBraceExprIncU    OpPower   ExprUnary0      | NonBraceExprInc0     action => ::first
-NonBraceExprPowerL    ::= NonBraceExprIncU    OpPower   ExprUnaryL      | NonBraceExprIncL     action => ::first
-NonBraceExprPowerR    ::= NonBraceExprIncU    OpPower   ExprUnaryR      | NonBraceExprIncR     action => ::first
-NonBraceExprUnaryU    ::= OpUnary     ExprUnaryU                | NonBraceExprPowerU   action => ::first
-NonBraceExprUnary0    ::= OpUnary     ExprUnary0                | NonBraceExprPower0   action => ::first
-NonBraceExprUnaryL    ::= OpUnary     ExprUnaryL                | NonBraceExprPowerL   action => ::first
-NonBraceExprUnaryR    ::= OpUnary     ExprUnaryR                | NonBraceExprPowerR   action => ::first
-NonBraceExprRegexU    ::= NonBraceExprRegexU  OpRegex   ExprUnaryU      | NonBraceExprUnaryU   action => ::first
-NonBraceExprRegex0    ::= NonBraceExprRegexU  OpRegex   ExprUnary0      | NonBraceExprUnary0   action => ::first
-NonBraceExprRegexL    ::= NonBraceExprRegexU  OpRegex   ExprUnaryL      | NonBraceExprUnaryL   action => ::first
-NonBraceExprRegexR    ::= NonBraceExprRegexU  OpRegex   ExprUnaryR      | NonBraceExprUnaryR   action => ::first
-NonBraceExprMulU      ::= NonBraceExprMulU    OpMulti   ExprRegexU      | NonBraceExprRegexU   action => ::first
-NonBraceExprMul0      ::= NonBraceExprMulU    OpMulti   ExprRegex0      | NonBraceExprRegex0   action => ::first
-NonBraceExprMulL      ::= NonBraceExprMulU    OpMulti   ExprRegexL      | NonBraceExprRegexL   action => ::first
-NonBraceExprMulR      ::= NonBraceExprMulU    OpMulti   ExprRegexR      | NonBraceExprRegexR   action => ::first
-NonBraceExprAddU      ::= NonBraceExprAddU    OpAdd     ExprMulU        | NonBraceExprMulU     action => ::first
-NonBraceExprAdd0      ::= NonBraceExprAddU    OpAdd     ExprMul0        | NonBraceExprMul0     action => ::first
-NonBraceExprAddL      ::= NonBraceExprAddU    OpAdd     ExprMulL        | NonBraceExprMulL     action => ::first
-NonBraceExprAddR      ::= NonBraceExprAddU    OpAdd     ExprMulR        | NonBraceExprMulR     action => ::first
-NonBraceExprShiftU    ::= NonBraceExprShiftU  OpShift   ExprAddU        | NonBraceExprAddU     action => ::first
-NonBraceExprShift0    ::= NonBraceExprShiftU  OpShift   ExprAdd0        | NonBraceExprAdd0     action => ::first
-NonBraceExprShiftL    ::= NonBraceExprShiftU  OpShift   ExprAddL        | NonBraceExprAddL     action => ::first
-NonBraceExprShiftR    ::= NonBraceExprShiftU  OpShift   ExprAddR        | NonBraceExprAddR     action => ::first
-NonBraceExprFile0     ::= OpFile      ExprFile0                 | NonBraceExprShift0 action => ::first
-NonBraceExprFileL     ::= OpFile      ExprFileL                 | NonBraceExprShiftL action => ::first
-NonBraceExprFileR     ::= OpFile      ExprFileR                 | NonBraceExprShiftR action => ::first
-NonBraceExprNeq0      ::= NonBraceExprFile0   OpInequal ExprFile0       | NonBraceExprFile0    action => ::first
-NonBraceExprNeqL      ::= NonBraceExprFile0   OpInequal ExprFileL       | NonBraceExprFileL    action => ::first
-NonBraceExprNeqR      ::= NonBraceExprFile0   OpInequal ExprFileR       | NonBraceExprFileR    action => ::first
-NonBraceExprEq0       ::= NonBraceExprNeq0    OpEqual   ExprNeq0        | NonBraceExprNeq0     action => ::first
-NonBraceExprEqL       ::= NonBraceExprNeq0    OpEqual   ExprNeqL        | NonBraceExprNeqL     action => ::first
-NonBraceExprEqR       ::= NonBraceExprNeq0    OpEqual   ExprNeqR        | NonBraceExprNeqR     action => ::first
-NonBraceExprBinAnd0   ::= NonBraceExprBinAnd0 OpBinAnd  ExprEq0         | NonBraceExprEq0      action => ::first
-NonBraceExprBinAndL   ::= NonBraceExprBinAnd0 OpBinAnd  ExprEqL         | NonBraceExprEqL      action => ::first
-NonBraceExprBinAndR   ::= NonBraceExprBinAnd0 OpBinAnd  ExprEqR         | NonBraceExprEqR      action => ::first
-NonBraceExprBinOr0    ::= NonBraceExprBinOr0  OpBinOr   ExprBinAnd0     | NonBraceExprBinAnd0  action => ::first
-NonBraceExprBinOrL    ::= NonBraceExprBinOr0  OpBinOr   ExprBinAndL     | NonBraceExprBinAndL  action => ::first
-NonBraceExprBinOrR    ::= NonBraceExprBinOr0  OpBinOr   ExprBinAndR     | NonBraceExprBinAndR  action => ::first
-NonBraceExprLogAnd0   ::= NonBraceExprLogAnd0 OpLogAnd  ExprBinOr0      | NonBraceExprBinOr0   action => ::first
-NonBraceExprLogAndL   ::= NonBraceExprLogAnd0 OpLogAnd  ExprBinOrL      | NonBraceExprBinOrL   action => ::first
-NonBraceExprLogAndR   ::= NonBraceExprLogAnd0 OpLogAnd  ExprBinOrR      | NonBraceExprBinOrR   action => ::first
-NonBraceExprLogOr0    ::= NonBraceExprLogOr0  OpLogOr   ExprLogAnd0     | NonBraceExprLogAnd0  action => ::first
-NonBraceExprLogOrL    ::= NonBraceExprLogOr0  OpLogOr   ExprLogAndL     | NonBraceExprLogAndL  action => ::first
-NonBraceExprLogOrR    ::= NonBraceExprLogOr0  OpLogOr   ExprLogAndR     | NonBraceExprLogAndR  action => ::first
-NonBraceExprRange0    ::= NonBraceExprLogOr0  OpRange   ExprLogOr0      | NonBraceExprLogOr0   action => ::first
-NonBraceExprRangeL    ::= NonBraceExprLogOr0  OpRange   ExprLogOrL      | NonBraceExprLogOrL   action => ::first
-NonBraceExprRangeR    ::= NonBraceExprLogOr0  OpRange   ExprLogOrR      | NonBraceExprLogOrR   action => ::first
-NonBraceExprCond0     ::= NonBraceExprRange0  OpTriThen ExprRange0 OpTriElse ExprCond0 | NonBraceExprRange0 action => ::first
-NonBraceExprCondL     ::= NonBraceExprRange0  OpTriThen ExprRangeL OpTriElse ExprCondL | NonBraceExprRangeL action => ::first
-NonBraceExprCondR     ::= NonBraceExprRange0  OpTriThen ExprRangeR OpTriElse ExprCondR | NonBraceExprRangeR action => ::first
-NonBraceExprAssignL   ::= NonBraceExprCond0   OpAssign  ExprAssignL     | OpAssignKeywordExpr
+NonBraceExprIncU      ::= OpInc (WS_Any) ExprArrowU | NonBraceExprArrowR (WS_Any) OpInc   | NonBraceExprArrowU   action => ::first
+NonBraceExprInc0      ::= OpInc (WS_Any) ExprArrow0 | NonBraceExprArrowR (WS_Any) OpInc   | NonBraceExprArrow0   action => ::first
+NonBraceExprIncL      ::= OpInc (WS_Any) ExprArrowL | NonBraceExprArrowR (WS_Any) OpInc   | NonBraceExprArrowL   action => ::first
+NonBraceExprIncR      ::= OpInc (WS_Any) ExprArrowR | NonBraceExprArrowL (WS_Any) OpInc   | NonBraceExprArrowR   action => ::first
+NonBraceExprPowerU    ::= NonBraceExprIncU    (WS_Any) OpPower   (WS_Any) ExprUnaryU      | NonBraceExprIncU     action => ::first
+NonBraceExprPower0    ::= NonBraceExprIncU    (WS_Any) OpPower   (WS_Any) ExprUnary0      | NonBraceExprInc0     action => ::first
+NonBraceExprPowerL    ::= NonBraceExprIncU    (WS_Any) OpPower   (WS_Any) ExprUnaryL      | NonBraceExprIncL     action => ::first
+NonBraceExprPowerR    ::= NonBraceExprIncU    (WS_Any) OpPower   (WS_Any) ExprUnaryR      | NonBraceExprIncR     action => ::first
+NonBraceExprUnaryU    ::= OpUnary     (WS_Any) ExprUnaryU                | NonBraceExprPowerU   action => ::first
+NonBraceExprUnary0    ::= OpUnary     (WS_Any) ExprUnary0                | NonBraceExprPower0   action => ::first
+NonBraceExprUnaryL    ::= OpUnary     (WS_Any) ExprUnaryL                | NonBraceExprPowerL   action => ::first
+NonBraceExprUnaryR    ::= OpUnary     (WS_Any) ExprUnaryR                | NonBraceExprPowerR   action => ::first
+NonBraceExprRegexU    ::= NonBraceExprRegexU  (WS_Any) OpRegex   (WS_Any) ExprUnaryU      | NonBraceExprUnaryU   action => ::first
+NonBraceExprRegex0    ::= NonBraceExprRegexU  (WS_Any) OpRegex   (WS_Any) ExprUnary0      | NonBraceExprUnary0   action => ::first
+NonBraceExprRegexL    ::= NonBraceExprRegexU  (WS_Any) OpRegex   (WS_Any) ExprUnaryL      | NonBraceExprUnaryL   action => ::first
+NonBraceExprRegexR    ::= NonBraceExprRegexU  (WS_Any) OpRegex   (WS_Any) ExprUnaryR      | NonBraceExprUnaryR   action => ::first
+NonBraceExprMulU      ::= NonBraceExprMulU    (WS_Any) OpMulti   (WS_Any) ExprRegexU      | NonBraceExprRegexU   action => ::first
+NonBraceExprMul0      ::= NonBraceExprMulU    (WS_Any) OpMulti   (WS_Any) ExprRegex0      | NonBraceExprRegex0   action => ::first
+NonBraceExprMulL      ::= NonBraceExprMulU    (WS_Any) OpMulti   (WS_Any) ExprRegexL      | NonBraceExprRegexL   action => ::first
+NonBraceExprMulR      ::= NonBraceExprMulU    (WS_Any) OpMulti   (WS_Any) ExprRegexR      | NonBraceExprRegexR   action => ::first
+NonBraceExprAddU      ::= NonBraceExprAddU    (WS_Any) OpAdd     (WS_Any) ExprMulU        | NonBraceExprMulU     action => ::first
+NonBraceExprAdd0      ::= NonBraceExprAddU    (WS_Any) OpAdd     (WS_Any) ExprMul0        | NonBraceExprMul0     action => ::first
+NonBraceExprAddL      ::= NonBraceExprAddU    (WS_Any) OpAdd     (WS_Any) ExprMulL        | NonBraceExprMulL     action => ::first
+NonBraceExprAddR      ::= NonBraceExprAddU    (WS_Any) OpAdd     (WS_Any) ExprMulR        | NonBraceExprMulR     action => ::first
+NonBraceExprShiftU    ::= NonBraceExprShiftU  (WS_Any) OpShift   (WS_Any) ExprAddU        | NonBraceExprAddU     action => ::first
+NonBraceExprShift0    ::= NonBraceExprShiftU  (WS_Any) OpShift   (WS_Any) ExprAdd0        | NonBraceExprAdd0     action => ::first
+NonBraceExprShiftL    ::= NonBraceExprShiftU  (WS_Any) OpShift   (WS_Any) ExprAddL        | NonBraceExprAddL     action => ::first
+NonBraceExprShiftR    ::= NonBraceExprShiftU  (WS_Any) OpShift   (WS_Any) ExprAddR        | NonBraceExprAddR     action => ::first
+NonBraceExprFile0     ::= OpFile      (WS_Many) ExprFile0                 | NonBraceExprShift0 action => ::first
+NonBraceExprFileL     ::= OpFile      (WS_Many) ExprFileL                 | NonBraceExprShiftL action => ::first
+NonBraceExprFileR     ::= OpFile      (WS_Many) ExprFileR                 | NonBraceExprShiftR action => ::first
+NonBraceExprNeq0      ::= NonBraceExprFile0   (WS_Any) OpInequal (WS_Any) ExprFile0       | NonBraceExprFile0    action => ::first
+NonBraceExprNeqL      ::= NonBraceExprFile0   (WS_Any) OpInequal (WS_Any) ExprFileL       | NonBraceExprFileL    action => ::first
+NonBraceExprNeqR      ::= NonBraceExprFile0   (WS_Any) OpInequal (WS_Any) ExprFileR       | NonBraceExprFileR    action => ::first
+NonBraceExprEq0       ::= NonBraceExprNeq0    (WS_Any) OpEqual   (WS_Any) ExprNeq0        | NonBraceExprNeq0     action => ::first
+NonBraceExprEqL       ::= NonBraceExprNeq0    (WS_Any) OpEqual   (WS_Any) ExprNeqL        | NonBraceExprNeqL     action => ::first
+NonBraceExprEqR       ::= NonBraceExprNeq0    (WS_Any) OpEqual   (WS_Any) ExprNeqR        | NonBraceExprNeqR     action => ::first
+NonBraceExprBinAnd0   ::= NonBraceExprBinAnd0 (WS_Any) OpBinAnd  (WS_Any) ExprEq0         | NonBraceExprEq0      action => ::first
+NonBraceExprBinAndL   ::= NonBraceExprBinAnd0 (WS_Any) OpBinAnd  (WS_Any) ExprEqL         | NonBraceExprEqL      action => ::first
+NonBraceExprBinAndR   ::= NonBraceExprBinAnd0 (WS_Any) OpBinAnd  (WS_Any) ExprEqR         | NonBraceExprEqR      action => ::first
+NonBraceExprBinOr0    ::= NonBraceExprBinOr0  (WS_Any) OpBinOr   (WS_Any) ExprBinAnd0     | NonBraceExprBinAnd0  action => ::first
+NonBraceExprBinOrL    ::= NonBraceExprBinOr0  (WS_Any) OpBinOr   (WS_Any) ExprBinAndL     | NonBraceExprBinAndL  action => ::first
+NonBraceExprBinOrR    ::= NonBraceExprBinOr0  (WS_Any) OpBinOr   (WS_Any) ExprBinAndR     | NonBraceExprBinAndR  action => ::first
+NonBraceExprLogAnd0   ::= NonBraceExprLogAnd0 (WS_Any) OpLogAnd  (WS_Any) ExprBinOr0      | NonBraceExprBinOr0   action => ::first
+NonBraceExprLogAndL   ::= NonBraceExprLogAnd0 (WS_Any) OpLogAnd  (WS_Any) ExprBinOrL      | NonBraceExprBinOrL   action => ::first
+NonBraceExprLogAndR   ::= NonBraceExprLogAnd0 (WS_Any) OpLogAnd  (WS_Any) ExprBinOrR      | NonBraceExprBinOrR   action => ::first
+NonBraceExprLogOr0    ::= NonBraceExprLogOr0  (WS_Any) OpLogOr   (WS_Any) ExprLogAnd0     | NonBraceExprLogAnd0  action => ::first
+NonBraceExprLogOrL    ::= NonBraceExprLogOr0  (WS_Any) OpLogOr   (WS_Any) ExprLogAndL     | NonBraceExprLogAndL  action => ::first
+NonBraceExprLogOrR    ::= NonBraceExprLogOr0  (WS_Any) OpLogOr   (WS_Any) ExprLogAndR     | NonBraceExprLogAndR  action => ::first
+NonBraceExprRange0    ::= NonBraceExprLogOr0  (WS_Any) OpRange   (WS_Any) ExprLogOr0      | NonBraceExprLogOr0   action => ::first
+NonBraceExprRangeL    ::= NonBraceExprLogOr0  (WS_Any) OpRange   (WS_Any) ExprLogOrL      | NonBraceExprLogOrL   action => ::first
+NonBraceExprRangeR    ::= NonBraceExprLogOr0  (WS_Any) OpRange   (WS_Any) ExprLogOrR      | NonBraceExprLogOrR   action => ::first
+NonBraceExprCond0     ::= NonBraceExprRange0  (WS_Any) OpTriThen (WS_Any) ExprRange0 (WS_Any) OpTriElse (WS_Any) ExprCond0 | NonBraceExprRange0 action => ::first
+NonBraceExprCondL     ::= NonBraceExprRange0  (WS_Any) OpTriThen (WS_Any) ExprRangeL (WS_Any) OpTriElse (WS_Any) ExprCondL | NonBraceExprRangeL action => ::first
+NonBraceExprCondR     ::= NonBraceExprRange0  (WS_Any) OpTriThen (WS_Any) ExprRangeR (WS_Any) OpTriElse (WS_Any) ExprCondR | NonBraceExprRangeR action => ::first
+NonBraceExprAssignL   ::= NonBraceExprCond0   (WS_Any) OpAssign  (WS_Any) ExprAssignL     | OpAssignKeywordExpr
                                                         | NonBraceExprCondL     action => ::first
-NonBraceExprAssignR   ::= NonBraceExprCond0   OpAssign  ExprAssignR     | NonBraceExprCondR     action => ::first
+NonBraceExprAssignR   ::= NonBraceExprCond0   (WS_Any) OpAssign  (WS_Any) ExprAssignR     | NonBraceExprCondR     action => ::first
 
 
-NonBraceExprComma     ::= NonBraceExprAssignL OpComma ExprComma    | NonBraceExprAssignR action => ::first
+NonBraceExprComma     ::= NonBraceExprAssignL (WS_Any) OpComma (WS_Any) ExprComma    | NonBraceExprAssignR action => ::first
 
 # Comma is only allowed if it follows a keyword operator, to avoid block/hash disambiguation in perl.
-BlockLevelExprNameNot ::= OpNameNot ExprNameNot | NonBraceExprAssignR action => ::first
-BlockLevelExprNameAnd ::= BlockLevelExprNameAnd OpNameAnd ExprNameNot | BlockLevelExprNameNot action => ::first
-BlockLevelExprNameOr  ::= BlockLevelExprNameOr OpNameOr ExprNameAnd | BlockLevelExprNameAnd action => ::first
+BlockLevelExprNameNot ::= OpNameNot (WS_Many) ExprNameNot | NonBraceExprAssignR action => ::first
+BlockLevelExprNameAnd ::= BlockLevelExprNameAnd (WS_Many) OpNameAnd (WS_Many) ExprNameNot | BlockLevelExprNameNot action => ::first
+BlockLevelExprNameOr  ::= BlockLevelExprNameOr (WS_Many) OpNameOr (WS_Many) ExprNameAnd | BlockLevelExprNameAnd action => ::first
 BlockLevelExpression  ::= BlockLevelExprNameOr action => ::first
 
 Value         ::= Literal | NonLiteral | QLikeValue
@@ -305,8 +306,8 @@ NonBraceValue ::= NonBraceLiteral | NonLiteral | QLikeValue
 NonLiteral ::= GlobalVariable
              | Variable
              | DerefVariable
-             | Modifier Variable
-             | Modifier ParenExpr
+             | Modifier (WS_Many) Variable
+             | Modifier (WS_Many) ParenExpr
              | UnderscoreValues
              | SubCall
              | PackageArrow
@@ -406,8 +407,8 @@ DoubleDiamond ::= '<<' VarScalar '>>'
                 | '<<' BuiltinFilehandle '>>'
                 | '<<>>'
 
-ParenExpr ::= LParen Expression RParen
-            | LParen RParen # support ()
+ParenExpr ::= LParen (WS_Any) Expression (WS_Any) RParen
+            | LParen (WS_Any) RParen # support ()
 
 Modifier  ::= OpKeywordMy | OpKeywordOur | OpKeywordLocal | OpKeywordState
 
@@ -449,8 +450,8 @@ VarName ::= DigitsExpr
 
 DigitsExpr ::= [0-9]+
 
-SubCall ::= SubNameCallExpr CallArgs
-          | VarCode CallArgs
+SubCall ::= SubNameCallExpr (WS_Any) CallArgs
+          | VarCode (WS_Any) CallArgs
 
 PackageArrow  ::= SubNameExpr OpArrow PackageArrowRHS
 
@@ -502,12 +503,12 @@ Ident ::= SubNameExpr
 
 CallArgs ::= ParenExpr
 
-Block ::= LBrace RBrace
-        | LBrace StatementSeq RBrace
+Block ::= LBrace (WS_Any) RBrace
+        | LBrace (WS_Any) StatementSeq (WS_Any) RBrace
 
-ArrayElem ::= LBracket Expression RBracket
+ArrayElem ::= LBracket (WS_Any) Expression (WS_Any) RBracket
 
-HashElem ::= LBrace Expression RBrace
+HashElem ::= LBrace (WS_Any) Expression (WS_Any) RBrace
 
 NonBraceLiteral ::= LitNumber
                   | LitArray
@@ -517,11 +518,11 @@ NonBraceLiteral ::= LitNumber
 Literal         ::= NonBraceLiteral
                   | LitHash
 
-LitArray       ::= LBracket Expression RBracket
-                 | LBracket RBracket
+LitArray       ::= LBracket (WS_Any) Expression (WS_Any) RBracket
+                 | LBracket (WS_Any) RBracket
 
-LitHash        ::= LBrace Expression RBrace
-                 | LBrace RBrace
+LitHash        ::= LBrace (WS_Any) Expression (WS_Any) RBrace
+                 | LBrace (WS_Any) RBrace
 
 LitString      ::= SingleQuote NonSingleOrEscapedQuote_Many SingleQuote
                  | SingleQuote SingleQuote
@@ -543,10 +544,10 @@ ArrowIndirectCall  ::= SigilScalar Ident CallArgs
 
 DerefVariableArgsAll ::= '$*' | '@*' | '%*' | '&*' | '**' | '$#*'
 
-DerefVariableSlice ::= '@[' Expression ']'
-                     | '@{' Expression '}'
-                     | '%[' Expression ']'
-                     | '%{' Expression '}'
+DerefVariableSlice ::= '@[' (WS_Any) Expression (WS_Any) ']'
+                     | '@{' (WS_Any) Expression (WS_Any) '}'
+                     | '%[' (WS_Any) Expression (WS_Any) ']'
+                     | '%{' (WS_Any) Expression (WS_Any) '}'
 
 DerefVariable ::= SigilScalar   Block
                 | SigilArray    Block
@@ -770,141 +771,141 @@ OpAssignKeywordExpr ::=
     | OpKeywordNextExpr
     | OpKeywordRedoExpr
 
-OpKeywordAbsExpr              ::= OpKeywordAbs OpUnaryKeywordArg
+OpKeywordAbsExpr              ::= OpKeywordAbs (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordAbs
 
-OpKeywordAcceptExpr           ::= OpKeywordAccept OpListKeywordArg
+OpKeywordAcceptExpr           ::= OpKeywordAccept (WS_Any) OpListKeywordArg
 
-OpKeywordAlarmExpr            ::= OpKeywordAlarm OpUnaryKeywordArg
+OpKeywordAlarmExpr            ::= OpKeywordAlarm (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordAlarm
 
-OpKeywordAtan2Expr            ::= OpKeywordAtan2 OpListKeywordArg
+OpKeywordAtan2Expr            ::= OpKeywordAtan2 (WS_Any) OpListKeywordArg
 
-OpKeywordBindExpr             ::= OpKeywordBind OpListKeywordArg
+OpKeywordBindExpr             ::= OpKeywordBind (WS_Any) OpListKeywordArg
 
-OpKeywordBinmodeExpr          ::= OpKeywordBinmode OpListKeywordArg
+OpKeywordBinmodeExpr          ::= OpKeywordBinmode (WS_Any) OpListKeywordArg
 
-OpKeywordBlessExpr            ::= OpKeywordBless OpListKeywordArg
+OpKeywordBlessExpr            ::= OpKeywordBless (WS_Any) OpListKeywordArg
 
-OpKeywordBreakExpr            ::= OpKeywordBreak Label
+OpKeywordBreakExpr            ::= OpKeywordBreak (WS_Many) Label
                                 | OpKeywordBreak
 
-OpKeywordCallerExpr           ::= OpKeywordCaller OpUnaryKeywordArg
+OpKeywordCallerExpr           ::= OpKeywordCaller (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordCaller
 
-OpKeywordChdirExpr            ::= OpKeywordChdir OpUnaryKeywordArg
+OpKeywordChdirExpr            ::= OpKeywordChdir (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordChdir
 
-OpKeywordChmodExpr            ::= OpKeywordChmod OpListKeywordArg
+OpKeywordChmodExpr            ::= OpKeywordChmod (WS_Any) OpListKeywordArg
 
-OpKeywordChompExpr            ::= OpKeywordChomp OpUnaryKeywordArg
+OpKeywordChompExpr            ::= OpKeywordChomp (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordChomp
 
-OpKeywordChopExpr             ::= OpKeywordChop OpUnaryKeywordArg
+OpKeywordChopExpr             ::= OpKeywordChop (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordChop
 
-OpKeywordChownExpr            ::= OpKeywordChown OpListKeywordArg
+OpKeywordChownExpr            ::= OpKeywordChown (WS_Any) OpListKeywordArg
 
-OpKeywordChrExpr              ::= OpKeywordChr OpUnaryKeywordArg
+OpKeywordChrExpr              ::= OpKeywordChr (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordChr
 
-OpKeywordChrootExpr           ::= OpKeywordChroot OpUnaryKeywordArg
+OpKeywordChrootExpr           ::= OpKeywordChroot (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordChroot
 
-OpKeywordCloseExpr            ::= OpKeywordClose OpUnaryKeywordArg
+OpKeywordCloseExpr            ::= OpKeywordClose (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordClose
 
-OpKeywordClosedirExpr         ::= OpKeywordClosedir OpUnaryKeywordArg
+OpKeywordClosedirExpr         ::= OpKeywordClosedir (WS_Any) OpUnaryKeywordArg
 
-OpKeywordConnectExpr          ::= OpKeywordConnect OpListKeywordArg
+OpKeywordConnectExpr          ::= OpKeywordConnect (WS_Any) OpListKeywordArg
 
-OpKeywordCosExpr              ::= OpKeywordCos OpUnaryKeywordArg
+OpKeywordCosExpr              ::= OpKeywordCos (WS_Any) OpUnaryKeywordArg
 
-OpKeywordCryptExpr            ::= OpKeywordCrypt OpListKeywordArg
+OpKeywordCryptExpr            ::= OpKeywordCrypt (WS_Any) OpListKeywordArg
 
-OpKeywordDbmcloseExpr         ::= OpKeywordDbmclose OpUnaryKeywordArg
+OpKeywordDbmcloseExpr         ::= OpKeywordDbmclose (WS_Any) OpUnaryKeywordArg
 
-OpKeywordDbmopenExpr          ::= OpKeywordDbmopen OpListKeywordArg
+OpKeywordDbmopenExpr          ::= OpKeywordDbmopen (WS_Any) OpListKeywordArg
 
-OpKeywordDefinedExpr          ::= OpKeywordDefined OpUnaryKeywordArg
+OpKeywordDefinedExpr          ::= OpKeywordDefined (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordDefined
 
-OpKeywordDeleteExpr           ::= OpKeywordDelete OpUnaryKeywordArg
+OpKeywordDeleteExpr           ::= OpKeywordDelete (WS_Any) OpUnaryKeywordArg
 
-OpKeywordDieExpr              ::= OpKeywordDie OpListKeywordArg
+OpKeywordDieExpr              ::= OpKeywordDie (WS_Any) OpListKeywordArg
 
-OpKeywordDoExpr               ::= OpKeywordDo Block
-                                | OpKeywordDo OpUnaryKeywordArgNonBrace
+OpKeywordDoExpr               ::= OpKeywordDo (WS_Any) Block
+                                | OpKeywordDo (WS_Any) OpUnaryKeywordArgNonBrace
 
-OpKeywordDumpExpr             ::= OpKeywordDump OpAssignKeywordArg
-                                | OpKeywordDump Label
+OpKeywordDumpExpr             ::= OpKeywordDump (WS_Any) OpAssignKeywordArg
+                                | OpKeywordDump (WS_Many) Label
                                 | OpKeywordDump
 
-OpKeywordEachExpr             ::= OpKeywordEach OpUnaryKeywordArg
+OpKeywordEachExpr             ::= OpKeywordEach (WS_Any) OpUnaryKeywordArg
 
-OpKeywordEofExpr              ::= OpKeywordEof OpUnaryKeywordArg
+OpKeywordEofExpr              ::= OpKeywordEof (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordEof
 
-OpKeywordEvalExpr             ::= OpKeywordEval Block
+OpKeywordEvalExpr             ::= OpKeywordEval (WS_Any) Block
 
-OpKeywordEvalbytesExpr        ::= OpKeywordEvalbytes OpUnaryKeywordArg
+OpKeywordEvalbytesExpr        ::= OpKeywordEvalbytes (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordEvalbytes
 
-OpKeywordExistsExpr           ::= OpKeywordExists OpUnaryKeywordArg
+OpKeywordExistsExpr           ::= OpKeywordExists (WS_Any) OpUnaryKeywordArg
 
-OpKeywordExitExpr             ::= OpKeywordExit OpUnaryKeywordArg
+OpKeywordExitExpr             ::= OpKeywordExit (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordExit
 
-OpKeywordExpExpr              ::= OpKeywordExp OpUnaryKeywordArg
+OpKeywordExpExpr              ::= OpKeywordExp (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordExp
 
-OpKeywordFcExpr               ::= OpKeywordFc OpUnaryKeywordArg
+OpKeywordFcExpr               ::= OpKeywordFc (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordFc
 
-OpKeywordFcntlExpr            ::= OpKeywordFcntl OpListKeywordArg
+OpKeywordFcntlExpr            ::= OpKeywordFcntl (WS_Any) OpListKeywordArg
 
-OpKeywordFilenoExpr           ::= OpKeywordFileno OpUnaryKeywordArg
+OpKeywordFilenoExpr           ::= OpKeywordFileno (WS_Any) OpUnaryKeywordArg
 
-OpKeywordFlockExpr            ::= OpKeywordFlock OpListKeywordArg
+OpKeywordFlockExpr            ::= OpKeywordFlock (WS_Any) OpListKeywordArg
 
 OpKeywordForkExpr             ::= OpKeywordFork
 
-OpKeywordGetcExpr             ::= OpKeywordGetc OpUnaryKeywordArg
+OpKeywordGetcExpr             ::= OpKeywordGetc (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordGetc
 
 OpKeywordGetloginExpr         ::= OpKeywordGetlogin
 
-OpKeywordGetpeernameExpr      ::= OpKeywordGetpeername OpUnaryKeywordArg
+OpKeywordGetpeernameExpr      ::= OpKeywordGetpeername (WS_Any) OpUnaryKeywordArg
 
-OpKeywordGetpgrpExpr          ::= OpKeywordGetpgrp OpUnaryKeywordArg
+OpKeywordGetpgrpExpr          ::= OpKeywordGetpgrp (WS_Any) OpUnaryKeywordArg
 
 OpKeywordGetppidExpr          ::= OpKeywordGetppid
 
-OpKeywordGetpriorityExpr      ::= OpKeywordGetpriority OpListKeywordArg
+OpKeywordGetpriorityExpr      ::= OpKeywordGetpriority (WS_Any) OpListKeywordArg
 
-OpKeywordGetpwnamExpr         ::= OpKeywordGetpwnam OpUnaryKeywordArg
+OpKeywordGetpwnamExpr         ::= OpKeywordGetpwnam (WS_Any) OpUnaryKeywordArg
 
-OpKeywordGetgrnamExpr         ::= OpKeywordGetgrnam OpUnaryKeywordArg
+OpKeywordGetgrnamExpr         ::= OpKeywordGetgrnam (WS_Any) OpUnaryKeywordArg
 
-OpKeywordGethostbynameExpr    ::= OpKeywordGethostbyname OpUnaryKeywordArg
+OpKeywordGethostbynameExpr    ::= OpKeywordGethostbyname (WS_Any) OpUnaryKeywordArg
 
-OpKeywordGetnetbynameExpr     ::= OpKeywordGetnetbyname OpUnaryKeywordArg
+OpKeywordGetnetbynameExpr     ::= OpKeywordGetnetbyname (WS_Any) OpUnaryKeywordArg
 
-OpKeywordGetprotobynameExpr   ::= OpKeywordGetprotobyname OpUnaryKeywordArg
+OpKeywordGetprotobynameExpr   ::= OpKeywordGetprotobyname (WS_Any) OpUnaryKeywordArg
 
-OpKeywordGetpwuidExpr         ::= OpKeywordGetpwuid OpUnaryKeywordArg
+OpKeywordGetpwuidExpr         ::= OpKeywordGetpwuid (WS_Any) OpUnaryKeywordArg
 
-OpKeywordGetgrgidExpr         ::= OpKeywordGetgrgid OpUnaryKeywordArg
+OpKeywordGetgrgidExpr         ::= OpKeywordGetgrgid (WS_Any) OpUnaryKeywordArg
 
-OpKeywordGetservbynameExpr    ::= OpKeywordGetservbyname OpListKeywordArg
+OpKeywordGetservbynameExpr    ::= OpKeywordGetservbyname (WS_Any) OpListKeywordArg
 
-OpKeywordGethostbyaddrExpr    ::= OpKeywordGethostbyaddr OpListKeywordArg
+OpKeywordGethostbyaddrExpr    ::= OpKeywordGethostbyaddr (WS_Any) OpListKeywordArg
 
-OpKeywordGetnetbyaddrExpr     ::= OpKeywordGetnetbyaddr OpListKeywordArg
+OpKeywordGetnetbyaddrExpr     ::= OpKeywordGetnetbyaddr (WS_Any) OpListKeywordArg
 
-OpKeywordGetprotobynumberExpr ::= OpKeywordGetprotobynumber OpUnaryKeywordArg
+OpKeywordGetprotobynumberExpr ::= OpKeywordGetprotobynumber (WS_Any) OpUnaryKeywordArg
 
-OpKeywordGetservbyportExpr    ::= OpKeywordGetservbyport OpListKeywordArg
+OpKeywordGetservbyportExpr    ::= OpKeywordGetservbyport (WS_Any) OpListKeywordArg
 
 OpKeywordGetpwentExpr         ::= OpKeywordGetpwent
 
@@ -922,13 +923,13 @@ OpKeywordSetpwentExpr         ::= OpKeywordSetpwent
 
 OpKeywordSetgrentExpr         ::= OpKeywordSetgrent
 
-OpKeywordSethostentExpr       ::= OpKeywordSethostent OpUnaryKeywordArg
+OpKeywordSethostentExpr       ::= OpKeywordSethostent (WS_Any) OpUnaryKeywordArg
 
-OpKeywordSetnetentExpr        ::= OpKeywordSetnetent OpUnaryKeywordArg
+OpKeywordSetnetentExpr        ::= OpKeywordSetnetent (WS_Any) OpUnaryKeywordArg
 
-OpKeywordSetprotoentExpr      ::= OpKeywordSetprotoent OpUnaryKeywordArg
+OpKeywordSetprotoentExpr      ::= OpKeywordSetprotoent (WS_Any) OpUnaryKeywordArg
 
-OpKeywordSetserventExpr       ::= OpKeywordSetservent OpUnaryKeywordArg
+OpKeywordSetserventExpr       ::= OpKeywordSetservent (WS_Any) OpUnaryKeywordArg
 
 OpKeywordEndpwentExpr         ::= OpKeywordEndpwent
 
@@ -942,319 +943,319 @@ OpKeywordEndprotoentExpr      ::= OpKeywordEndprotoent
 
 OpKeywordEndserventExpr       ::= OpKeywordEndservent
 
-OpKeywordExecExpr             ::= OpKeywordExec Block OpListKeywordArg
-                                | OpKeywordExec OpListKeywordArgNonBrace
+OpKeywordExecExpr             ::= OpKeywordExec (WS_Any) Block (WS_Any) OpListKeywordArg
+                                | OpKeywordExec (WS_Any) OpListKeywordArgNonBrace
 
-OpKeywordGetsocknameExpr      ::= OpKeywordGetsockname OpUnaryKeywordArg
+OpKeywordGetsocknameExpr      ::= OpKeywordGetsockname (WS_Any) OpUnaryKeywordArg
 
-OpKeywordGetsockoptExpr       ::= OpKeywordGetsockopt OpListKeywordArg
+OpKeywordGetsockoptExpr       ::= OpKeywordGetsockopt (WS_Any) OpListKeywordArg
 
-OpKeywordGlobExpr             ::= OpKeywordGlob OpListKeywordArg
+OpKeywordGlobExpr             ::= OpKeywordGlob (WS_Any) OpListKeywordArg
                                 | OpKeywordGlob
 
-OpKeywordGmtimeExpr           ::= OpKeywordGmtime OpUnaryKeywordArg
+OpKeywordGmtimeExpr           ::= OpKeywordGmtime (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordGmtime
 
 # &NAME is an expression too
-OpKeywordGotoExpr             ::= OpKeywordGoto OpAssignKeywordArg
-                                | OpKeywordGoto Label
+OpKeywordGotoExpr             ::= OpKeywordGoto (WS_Any) OpAssignKeywordArg
+                                | OpKeywordGoto (WS_Many) Label
 
-OpKeywordGrepExpr             ::= OpKeywordGrep Block OpListKeywordArg
-                                | OpKeywordGrep OpListKeywordArgNonBrace
+OpKeywordGrepExpr             ::= OpKeywordGrep (WS_Any) Block (WS_Any) OpListKeywordArg
+                                | OpKeywordGrep (WS_Any) OpListKeywordArgNonBrace
 
-OpKeywordHexExpr              ::= OpKeywordHex OpUnaryKeywordArg
+OpKeywordHexExpr              ::= OpKeywordHex (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordHex
 
-OpKeywordIndexExpr            ::= OpKeywordIndex OpListKeywordArg
+OpKeywordIndexExpr            ::= OpKeywordIndex (WS_Any) OpListKeywordArg
 
-OpKeywordIntExpr              ::= OpKeywordInt OpUnaryKeywordArg
+OpKeywordIntExpr              ::= OpKeywordInt (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordInt
 
-OpKeywordIoctlExpr            ::= OpKeywordIoctl OpListKeywordArg
+OpKeywordIoctlExpr            ::= OpKeywordIoctl (WS_Any) OpListKeywordArg
 
-OpKeywordJoinExpr             ::= OpKeywordJoin OpListKeywordArg
+OpKeywordJoinExpr             ::= OpKeywordJoin (WS_Any) OpListKeywordArg
 
-OpKeywordKeysExpr             ::= OpKeywordKeys OpUnaryKeywordArg
+OpKeywordKeysExpr             ::= OpKeywordKeys (WS_Any) OpUnaryKeywordArg
 
-OpKeywordKillExpr             ::= OpKeywordKill OpListKeywordArg
-                                | OpKeywordKill Expression
+OpKeywordKillExpr             ::= OpKeywordKill (WS_Any) OpListKeywordArg
+                                | OpKeywordKill (WS_Many) Expression
 
-OpKeywordLastExpr             ::= OpKeywordLast OpAssignKeywordArg
-                                | OpKeywordLast Label
+OpKeywordLastExpr             ::= OpKeywordLast (WS_Any) OpAssignKeywordArg
+                                | OpKeywordLast (WS_Many) Label
                                 | OpKeywordLast
 
-OpKeywordLcExpr               ::= OpKeywordLc OpUnaryKeywordArg
+OpKeywordLcExpr               ::= OpKeywordLc (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordLc
 
-OpKeywordLcfirstExpr          ::= OpKeywordLcfirst OpUnaryKeywordArg
+OpKeywordLcfirstExpr          ::= OpKeywordLcfirst (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordLcfirst
 
-OpKeywordLengthExpr           ::= OpKeywordLength OpUnaryKeywordArg
+OpKeywordLengthExpr           ::= OpKeywordLength (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordLength
 
-OpKeywordLinkExpr             ::= OpKeywordLink OpListKeywordArg
+OpKeywordLinkExpr             ::= OpKeywordLink (WS_Any) OpListKeywordArg
 
-OpKeywordListenExpr           ::= OpKeywordListen OpListKeywordArg
+OpKeywordListenExpr           ::= OpKeywordListen (WS_Any) OpListKeywordArg
 
-OpKeywordLocaltimeExpr        ::= OpKeywordLocaltime OpUnaryKeywordArg
+OpKeywordLocaltimeExpr        ::= OpKeywordLocaltime (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordLocaltime
 
-OpKeywordLockExpr             ::= OpKeywordLock OpUnaryKeywordArg
+OpKeywordLockExpr             ::= OpKeywordLock (WS_Any) OpUnaryKeywordArg
 
-OpKeywordLogExpr              ::= OpKeywordLog OpUnaryKeywordArg
+OpKeywordLogExpr              ::= OpKeywordLog (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordLog
 
-OpKeywordLstatExpr            ::= OpKeywordLstat OpUnaryKeywordArg
+OpKeywordLstatExpr            ::= OpKeywordLstat (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordLstat
 
-OpKeywordMapExpr              ::= OpKeywordMap Block OpListKeywordArg
-                                | OpKeywordMap OpListKeywordArgNonBrace
+OpKeywordMapExpr              ::= OpKeywordMap (WS_Any) Block (WS_Any) OpListKeywordArg
+                                | OpKeywordMap (WS_Any) OpListKeywordArgNonBrace
 
-OpKeywordMkdirExpr            ::= OpKeywordMkdir OpListKeywordArg
+OpKeywordMkdirExpr            ::= OpKeywordMkdir (WS_Any) OpListKeywordArg
                                 | OpKeywordMkdir
 
-OpKeywordMsgctlExpr           ::= OpKeywordMsgctl OpListKeywordArg
+OpKeywordMsgctlExpr           ::= OpKeywordMsgctl (WS_Any) OpListKeywordArg
 
-OpKeywordMsggetExpr           ::= OpKeywordMsgget OpListKeywordArg
+OpKeywordMsggetExpr           ::= OpKeywordMsgget (WS_Any) OpListKeywordArg
 
-OpKeywordMsgrcvExpr           ::= OpKeywordMsgrcv OpListKeywordArg
+OpKeywordMsgrcvExpr           ::= OpKeywordMsgrcv (WS_Any) OpListKeywordArg
 
-OpKeywordMsgsndExpr           ::= OpKeywordMsgsnd OpListKeywordArg
+OpKeywordMsgsndExpr           ::= OpKeywordMsgsnd (WS_Any) OpListKeywordArg
 
-OpKeywordNextExpr             ::= OpKeywordNext OpAssignKeywordArg
-                                | OpKeywordNext Label
+OpKeywordNextExpr             ::= OpKeywordNext (WS_Any) OpAssignKeywordArg
+                                | OpKeywordNext (WS_Many) Label
                                 | OpKeywordNext
 
-OpKeywordOctExpr              ::= OpKeywordOct OpUnaryKeywordArg
+OpKeywordOctExpr              ::= OpKeywordOct (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordOct
 
-OpKeywordOpenExpr             ::= OpKeywordOpen OpListKeywordArg
+OpKeywordOpenExpr             ::= OpKeywordOpen (WS_Any) OpListKeywordArg
 
-OpKeywordOpendirExpr          ::= OpKeywordOpendir OpListKeywordArg
+OpKeywordOpendirExpr          ::= OpKeywordOpendir (WS_Any) OpListKeywordArg
 
-OpKeywordOrdExpr              ::= OpKeywordOrd OpUnaryKeywordArg
+OpKeywordOrdExpr              ::= OpKeywordOrd (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordOrd
 
-OpKeywordPackExpr             ::= OpKeywordPack OpListKeywordArg
+OpKeywordPackExpr             ::= OpKeywordPack (WS_Any) OpListKeywordArg
 
-OpKeywordPipeExpr             ::= OpKeywordPipe OpListKeywordArg
+OpKeywordPipeExpr             ::= OpKeywordPipe (WS_Any) OpListKeywordArg
 
-OpKeywordPopExpr              ::= OpKeywordPop OpUnaryKeywordArg
+OpKeywordPopExpr              ::= OpKeywordPop (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordPop
 
-OpKeywordPosExpr              ::= OpKeywordPos OpUnaryKeywordArg
+OpKeywordPosExpr              ::= OpKeywordPos (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordPos
 
-OpKeywordPrintExpr            ::= OpKeywordPrint Block OpListKeywordArg
-                                | OpKeywordPrint BuiltinFilehandle OpListKeywordArgNonBrace
-                                | OpKeywordPrint BuiltinFilehandle
-                                | OpKeywordPrint OpListKeywordArgNonBrace
-                                | OpKeywordPrint Block
+OpKeywordPrintExpr            ::= OpKeywordPrint (WS_Any) Block (WS_Any) OpListKeywordArg
+                                | OpKeywordPrint (WS_Many) BuiltinFilehandle (WS_Many) OpListKeywordArgNonBrace
+                                | OpKeywordPrint (WS_Many) BuiltinFilehandle
+                                | OpKeywordPrint (WS_Any) OpListKeywordArgNonBrace
+                                | OpKeywordPrint (WS_Any) Block
                                 | OpKeywordPrint
 
-OpKeywordPrintfExpr           ::= OpKeywordPrintf Block OpListKeywordArg
-                                | OpKeywordPrintf BuiltinFilehandle OpListKeywordArgNonBrace
-                                | OpKeywordPrintf BuiltinFilehandle
-                                | OpKeywordPrintf OpListKeywordArgNonBrace
-                                | OpKeywordPrintf Block
+OpKeywordPrintfExpr           ::= OpKeywordPrintf (WS_Any) Block (WS_Any) OpListKeywordArg
+                                | OpKeywordPrintf (WS_Many) BuiltinFilehandle (WS_Many) OpListKeywordArgNonBrace
+                                | OpKeywordPrintf (WS_Many) BuiltinFilehandle
+                                | OpKeywordPrintf (WS_Any) OpListKeywordArgNonBrace
+                                | OpKeywordPrintf (WS_Any) Block
 
-OpKeywordPrototypeExpr        ::= OpKeywordPrototype OpUnaryKeywordArg
+OpKeywordPrototypeExpr        ::= OpKeywordPrototype (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordPrototype
 
-OpKeywordPushExpr             ::= OpKeywordPush OpListKeywordArg
+OpKeywordPushExpr             ::= OpKeywordPush (WS_Any) OpListKeywordArg
 
-OpKeywordQuotemetaExpr        ::= OpKeywordQuotemeta OpUnaryKeywordArg
+OpKeywordQuotemetaExpr        ::= OpKeywordQuotemeta (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordQuotemeta
 
-OpKeywordRandExpr             ::= OpKeywordRand OpUnaryKeywordArg
+OpKeywordRandExpr             ::= OpKeywordRand (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordRand
 
-OpKeywordReadExpr             ::= OpKeywordRead OpListKeywordArg
+OpKeywordReadExpr             ::= OpKeywordRead (WS_Any) OpListKeywordArg
 
-OpKeywordReaddirExpr          ::= OpKeywordReaddir OpUnaryKeywordArg
+OpKeywordReaddirExpr          ::= OpKeywordReaddir (WS_Any) OpUnaryKeywordArg
 
-OpKeywordReadlineExpr         ::= OpKeywordReadline OpUnaryKeywordArg
+OpKeywordReadlineExpr         ::= OpKeywordReadline (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordReadline
 
-OpKeywordReadlinkExpr         ::= OpKeywordReadlink OpUnaryKeywordArg
+OpKeywordReadlinkExpr         ::= OpKeywordReadlink (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordReadlink
 
-OpKeywordReadpipeExpr         ::= OpKeywordReadpipe OpUnaryKeywordArg
+OpKeywordReadpipeExpr         ::= OpKeywordReadpipe (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordReadpipe
 
-OpKeywordRecvExpr             ::= OpKeywordRecv OpListKeywordArg
+OpKeywordRecvExpr             ::= OpKeywordRecv (WS_Any) OpListKeywordArg
 
-OpKeywordRedoExpr             ::= OpKeywordRedo OpAssignKeywordArg
-                                | OpKeywordRedo Label
+OpKeywordRedoExpr             ::= OpKeywordRedo (WS_Any) OpAssignKeywordArg
+                                | OpKeywordRedo (WS_Many) Label
                                 | OpKeywordRedo
 
-OpKeywordRefExpr              ::= OpKeywordRef OpUnaryKeywordArg
+OpKeywordRefExpr              ::= OpKeywordRef (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordRef
 
-OpKeywordRenameExpr           ::= OpKeywordRename OpListKeywordArg
+OpKeywordRenameExpr           ::= OpKeywordRename (WS_Many) OpListKeywordArg
 
-OpKeywordResetExpr            ::= OpKeywordReset OpUnaryKeywordArg
+OpKeywordResetExpr            ::= OpKeywordReset (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordReset
 
-OpKeywordReturnExpr           ::= OpKeywordReturn OpListKeywordArg
+OpKeywordReturnExpr           ::= OpKeywordReturn (WS_Any) OpListKeywordArg
                                 | OpKeywordReturn
 
-OpKeywordReverseExpr          ::= OpKeywordReverse OpListKeywordArg
+OpKeywordReverseExpr          ::= OpKeywordReverse (WS_Any) OpListKeywordArg
 
-OpKeywordRewinddirExpr        ::= OpKeywordRewinddir OpUnaryKeywordArg
+OpKeywordRewinddirExpr        ::= OpKeywordRewinddir (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordRewinddir
 
-OpKeywordRindexExpr           ::= OpKeywordRindex OpListKeywordArg
+OpKeywordRindexExpr           ::= OpKeywordRindex (WS_Any) OpListKeywordArg
                                 | OpKeywordRindex
 
-OpKeywordRmdirExpr            ::= OpKeywordRmdir OpUnaryKeywordArg
+OpKeywordRmdirExpr            ::= OpKeywordRmdir (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordRmdir
 
-OpKeywordSayExpr              ::= OpKeywordSay Block OpListKeywordArg
-                                | OpKeywordSay BuiltinFilehandle OpListKeywordArgNonBrace
-                                | OpKeywordSay BuiltinFilehandle
-                                | OpKeywordSay OpListKeywordArgNonBrace
+OpKeywordSayExpr              ::= OpKeywordSay (WS_Any) Block (WS_Any) OpListKeywordArg
+                                | OpKeywordSay (WS_Many) BuiltinFilehandle (WS_Many) OpListKeywordArgNonBrace
+                                | OpKeywordSay (WS_Many) BuiltinFilehandle
+                                | OpKeywordSay (WS_Any) OpListKeywordArgNonBrace
                                 | OpKeywordSay Block
                                 | OpKeywordSay
 
-OpKeywordScalarExpr           ::= OpKeywordScalar OpUnaryKeywordArg
+OpKeywordScalarExpr           ::= OpKeywordScalar (WS_Any) OpUnaryKeywordArg
 
-OpKeywordSeekExpr             ::= OpKeywordSeek OpListKeywordArg
+OpKeywordSeekExpr             ::= OpKeywordSeek (WS_Any) OpListKeywordArg
 
-OpKeywordSeekdirExpr          ::= OpKeywordSeekdir OpListKeywordArg
+OpKeywordSeekdirExpr          ::= OpKeywordSeekdir (WS_Any) OpListKeywordArg
 
-OpKeywordSelectExpr           ::= OpKeywordSelect OpListKeywordArg
+OpKeywordSelectExpr           ::= OpKeywordSelect (WS_Any) OpListKeywordArg
 
-OpKeywordSemctlExpr           ::= OpKeywordSemctl OpListKeywordArg
+OpKeywordSemctlExpr           ::= OpKeywordSemctl (WS_Any) OpListKeywordArg
 
-OpKeywordSemgetExpr           ::= OpKeywordSemget OpListKeywordArg
+OpKeywordSemgetExpr           ::= OpKeywordSemget (WS_Any) OpListKeywordArg
 
-OpKeywordSemopExpr            ::= OpKeywordSemop OpListKeywordArg
+OpKeywordSemopExpr            ::= OpKeywordSemop (WS_Any) OpListKeywordArg
 
-OpKeywordSendExpr             ::= OpKeywordSend OpListKeywordArg
+OpKeywordSendExpr             ::= OpKeywordSend (WS_Any) OpListKeywordArg
 
-OpKeywordSetpgrpExpr          ::= OpKeywordSetpgrp OpListKeywordArg
+OpKeywordSetpgrpExpr          ::= OpKeywordSetpgrp (WS_Any) OpListKeywordArg
 
-OpKeywordSetpriorityExpr      ::= OpKeywordSetpriority OpListKeywordArg
+OpKeywordSetpriorityExpr      ::= OpKeywordSetpriority (WS_Any) OpListKeywordArg
 
-OpKeywordSetsockoptExpr       ::= OpKeywordSetsockopt OpListKeywordArg
+OpKeywordSetsockoptExpr       ::= OpKeywordSetsockopt (WS_Any) OpListKeywordArg
 
-OpKeywordShiftExpr            ::= OpKeywordShift OpUnaryKeywordArg
+OpKeywordShiftExpr            ::= OpKeywordShift (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordShift
 
-OpKeywordShmctlExpr           ::= OpKeywordShmctl OpListKeywordArg
+OpKeywordShmctlExpr           ::= OpKeywordShmctl (WS_Any) OpListKeywordArg
 
-OpKeywordShmgetExpr           ::= OpKeywordShmget OpListKeywordArg
+OpKeywordShmgetExpr           ::= OpKeywordShmget (WS_Any) OpListKeywordArg
 
-OpKeywordShmreadExpr          ::= OpKeywordShmread OpListKeywordArg
+OpKeywordShmreadExpr          ::= OpKeywordShmread (WS_Any) OpListKeywordArg
 
-OpKeywordShmwriteExpr         ::= OpKeywordShmwrite OpListKeywordArg
+OpKeywordShmwriteExpr         ::= OpKeywordShmwrite (WS_Any) OpListKeywordArg
 
-OpKeywordShutdownExpr         ::= OpKeywordShutdown OpListKeywordArg
+OpKeywordShutdownExpr         ::= OpKeywordShutdown (WS_Any) OpListKeywordArg
 
-OpKeywordSinExpr              ::= OpKeywordSin OpUnaryKeywordArg
+OpKeywordSinExpr              ::= OpKeywordSin (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordSin
 
-OpKeywordSleepExpr            ::= OpKeywordSleep OpUnaryKeywordArg
+OpKeywordSleepExpr            ::= OpKeywordSleep (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordSleep
 
-OpKeywordSocketExpr           ::= OpKeywordSocket OpListKeywordArg
+OpKeywordSocketExpr           ::= OpKeywordSocket (WS_Any) OpListKeywordArg
 
-OpKeywordSocketpairExpr       ::= OpKeywordSocketpair OpListKeywordArg
+OpKeywordSocketpairExpr       ::= OpKeywordSocketpair (WS_Any) OpListKeywordArg
 
-OpKeywordSortExpr             ::= OpKeywordSort Block OpListKeywordArg
-                                | OpKeywordSort VarScalar OpListKeywordArg
-                                | OpKeywordSort OpListKeywordArgNonBrace
+OpKeywordSortExpr             ::= OpKeywordSort (WS_Any) Block (WS_Any) OpListKeywordArg
+                                | OpKeywordSort (WS_Many) VarScalar (WS_Many) OpListKeywordArg
+                                | OpKeywordSort (WS_Any) OpListKeywordArgNonBrace
 
-OpKeywordSpliceExpr           ::= OpKeywordSplice OpListKeywordArg
+OpKeywordSpliceExpr           ::= OpKeywordSplice (WS_Any) OpListKeywordArg
 
-OpKeywordSplitExpr            ::= OpKeywordSplit OpListKeywordArg
+OpKeywordSplitExpr            ::= OpKeywordSplit (WS_Any) OpListKeywordArg
 
-OpKeywordSprintfExpr          ::= OpKeywordSprintf OpListKeywordArg
+OpKeywordSprintfExpr          ::= OpKeywordSprintf (WS_Any) OpListKeywordArg
 
-OpKeywordSqrtExpr             ::= OpKeywordSqrt OpUnaryKeywordArg
+OpKeywordSqrtExpr             ::= OpKeywordSqrt (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordSqrt
 
-OpKeywordSrandExpr            ::= OpKeywordSrand OpUnaryKeywordArg
+OpKeywordSrandExpr            ::= OpKeywordSrand (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordSrand
 
-OpKeywordStatExpr             ::= OpKeywordStat OpUnaryKeywordArg
+OpKeywordStatExpr             ::= OpKeywordStat (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordStat
 
-OpKeywordStudyExpr            ::= OpKeywordStudy OpUnaryKeywordArg
+OpKeywordStudyExpr            ::= OpKeywordStudy (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordStudy
 
-OpKeywordSubExpr              ::= OpKeywordSub SubDefinition
+OpKeywordSubExpr              ::= OpKeywordSub (WS_Any) SubDefinition
 
-OpKeywordSubstrExpr           ::= OpKeywordSubstr OpListKeywordArg
+OpKeywordSubstrExpr           ::= OpKeywordSubstr (WS_Any) OpListKeywordArg
 
-OpKeywordSymlinkExpr          ::= OpKeywordSymlink OpListKeywordArg
+OpKeywordSymlinkExpr          ::= OpKeywordSymlink (WS_Any) OpListKeywordArg
 
-OpKeywordSyscallExpr          ::= OpKeywordSyscall OpListKeywordArg
+OpKeywordSyscallExpr          ::= OpKeywordSyscall (WS_Any) OpListKeywordArg
 
-OpKeywordSysopenExpr          ::= OpKeywordSysopen OpListKeywordArg
+OpKeywordSysopenExpr          ::= OpKeywordSysopen (WS_Any) OpListKeywordArg
 
-OpKeywordSysreadExpr          ::= OpKeywordSysread OpListKeywordArg
+OpKeywordSysreadExpr          ::= OpKeywordSysread (WS_Any) OpListKeywordArg
 
-OpKeywordSysseekExpr          ::= OpKeywordSysseek OpListKeywordArg
+OpKeywordSysseekExpr          ::= OpKeywordSysseek (WS_Any) OpListKeywordArg
 
-OpKeywordSyswriteExpr         ::= OpKeywordSyswrite OpListKeywordArg
+OpKeywordSyswriteExpr         ::= OpKeywordSyswrite (WS_Any) OpListKeywordArg
 
-OpKeywordSystemExpr           ::= OpKeywordSystem Block OpListKeywordArg
-                                | OpKeywordSystem OpListKeywordArgNonBrace
+OpKeywordSystemExpr           ::= OpKeywordSystem (WS_Any) Block (WS_Any) OpListKeywordArg
+                                | OpKeywordSystem (WS_Any) OpListKeywordArgNonBrace
 
-OpKeywordTellExpr             ::= OpKeywordTell OpUnaryKeywordArg
+OpKeywordTellExpr             ::= OpKeywordTell (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordTell
 
-OpKeywordTelldirExpr          ::= OpKeywordTelldir OpUnaryKeywordArg
+OpKeywordTelldirExpr          ::= OpKeywordTelldir (WS_Any) OpUnaryKeywordArg
 
-OpKeywordTieExpr              ::= OpKeywordTie OpListKeywordArg
+OpKeywordTieExpr              ::= OpKeywordTie (WS_Any) OpListKeywordArg
 
-OpKeywordTiedExpr             ::= OpKeywordTied OpUnaryKeywordArg
+OpKeywordTiedExpr             ::= OpKeywordTied (WS_Any) OpUnaryKeywordArg
 
 OpKeywordTimeExpr             ::= OpKeywordTime
 
 OpKeywordTimesExpr            ::= OpKeywordTimes
 
-OpKeywordTruncateExpr         ::= OpKeywordTruncate OpListKeywordArg
+OpKeywordTruncateExpr         ::= OpKeywordTruncate (WS_Any) OpListKeywordArg
 
-OpKeywordUcExpr               ::= OpKeywordUc OpUnaryKeywordArg
+OpKeywordUcExpr               ::= OpKeywordUc (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordUc
 
-OpKeywordUcfirstExpr          ::= OpKeywordUcfirst OpUnaryKeywordArg
+OpKeywordUcfirstExpr          ::= OpKeywordUcfirst (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordUcfirst
 
-OpKeywordUmaskExpr            ::= OpKeywordUmask OpUnaryKeywordArg
+OpKeywordUmaskExpr            ::= OpKeywordUmask (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordUmask
 
-OpKeywordUndefExpr            ::= OpKeywordUndef OpUnaryKeywordArg
+OpKeywordUndefExpr            ::= OpKeywordUndef (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordUndef
 
-OpKeywordUnlinkExpr           ::= OpKeywordUnlink OpUnaryKeywordArg
+OpKeywordUnlinkExpr           ::= OpKeywordUnlink (WS_Any) OpUnaryKeywordArg
                                 | OpKeywordUnlink
 
-OpKeywordUnpackExpr           ::= OpKeywordUnpack OpListKeywordArg
+OpKeywordUnpackExpr           ::= OpKeywordUnpack (WS_Any) OpListKeywordArg
 
-OpKeywordUnshiftExpr          ::= OpKeywordUnshift OpListKeywordArg
+OpKeywordUnshiftExpr          ::= OpKeywordUnshift (WS_Any) OpListKeywordArg
 
-OpKeywordUntieExpr            ::= OpKeywordUntie OpUnaryKeywordArg
+OpKeywordUntieExpr            ::= OpKeywordUntie (WS_Any) OpUnaryKeywordArg
 
-OpKeywordUtimeExpr            ::= OpKeywordUtime OpUnaryKeywordArg
+OpKeywordUtimeExpr            ::= OpKeywordUtime (WS_Any) OpUnaryKeywordArg
 
-OpKeywordValuesExpr           ::= OpKeywordValues OpUnaryKeywordArg
+OpKeywordValuesExpr           ::= OpKeywordValues (WS_Any) OpUnaryKeywordArg
 
-OpKeywordVecExpr              ::= OpKeywordVec OpListKeywordArg
+OpKeywordVecExpr              ::= OpKeywordVec (WS_Any) OpListKeywordArg
 
 OpKeywordWaitExpr             ::= OpKeywordWait
 
-OpKeywordWaitpidExpr          ::= OpKeywordWaitpid OpListKeywordArg
+OpKeywordWaitpidExpr          ::= OpKeywordWaitpid (WS_Any) OpListKeywordArg
 
 OpKeywordWantarrayExpr        ::= OpKeywordWantarray
 
-OpKeywordWarnExpr             ::= OpKeywordWarn OpListKeywordArg
+OpKeywordWarnExpr             ::= OpKeywordWarn (WS_Any) OpListKeywordArg
                                 | OpKeywordWarn
 
-OpKeywordWriteExpr            ::= OpKeywordWrite OpListKeywordArg
+OpKeywordWriteExpr            ::= OpKeywordWrite (WS_Any) OpListKeywordArg
                                 | OpKeywordWrite
 
 OpFile ::=
@@ -1746,9 +1747,10 @@ ConditionForeach ~ 'foreach'
 
 BuiltinFilehandle ~ 'STDIN' | 'STDOUT' | 'STDERR' | 'ARGV' | 'ARGVOUT' | 'DATA'
 
-# Ignore whitespace
-:discard ~ whitespace
-whitespace ~ [\s]+
+# Types of whitespaces
+# WS_Any / WS_Many are used as rules within rules
+WS_Any  ::= [\s]*
+WS_Many ::= [\s]+
 
 # Comments
 :discard ~ <hash comment>

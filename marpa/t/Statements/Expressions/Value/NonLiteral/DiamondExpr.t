@@ -8,11 +8,8 @@ parses('<$fh>');
 parses('<<>>');
 parses('<<$fh>>');
 
-TODO: {
-    local $TODO = 'Reserve whitespace policy to avoid unacceptable spacing';
-    parsent('< $fh >');
-    parsent('<< $fh >>');
-}
+parsent('< $fh >');
+parsent('<< $fh >>');
 
 parsent('<@fh>');
 parsent('<<@fh>>');

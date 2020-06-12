@@ -14,10 +14,7 @@ parsent('@ $foo');
 parsent('% $foo');
 parsent('* $foo');
 
-TODO: {
-    local $TODO = 'Parses but returns empty value';
-    parses('$ #$foo');
-}
+parsent('$ #$foo');
 
 parses('${$foo}');
 parses('@{$foo}');
@@ -31,11 +28,11 @@ parses(q!  %{ $foo->{'bar'} } !);
 parses(q!  *{ $foo->{'bar'} } !);
 parses(q! $#{ $foo->{'bar'} } !);
 
-parses(q!  $ { $foo->{'bar'} } !);
-parses(q!  @ { $foo->{'bar'} } !);
-parses(q!  % { $foo->{'bar'} } !);
-parses(q!  * { $foo->{'bar'} } !);
-parses(q! $# { $foo->{'bar'} } !);
+parses(q!  ${ $foo->{'bar'} } !);
+parses(q!  @{ $foo->{'bar'} } !);
+parses(q!  %{ $foo->{'bar'} } !);
+parses(q!  *{ $foo->{'bar'} } !);
+parses(q! $#{ $foo->{'bar'} } !);
 
 parsent('$$$foo');
 parsent('@$$foo');
