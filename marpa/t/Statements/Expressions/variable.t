@@ -34,7 +34,7 @@ parses('(stat $file)[2]');
 parses('$foo{1}');
 parses('$foo{1, 2}');
 parses('$foo{qw/foo bar/}');
-parses("stat[2]"); # stat anonarray
+parses("(stat)[2]");
 
 parsent("5[1]");
 parsent('$x->y[1]');
