@@ -13,7 +13,7 @@ parsent('@$$bar');
 parses('@{ ${$bar} }');
 
 parsent('@@foo');
-parsent('@$#foo');
+parses('@$#foo'); # @$ and # foo
 
 parsent('@%foo');
 parsent('@@$foo');

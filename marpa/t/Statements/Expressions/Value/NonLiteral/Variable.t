@@ -53,7 +53,8 @@ parses('$^A');
 parses('$^C');
 parses('${^CHILD_ERROR_NATIVE}');
 parses('$^D');
-parses('$<*digits*>');
+parses('$0');
+parses('$100');
 parses('$^E');
 parses('${^ENCODING}');
 parses('$^F');
@@ -99,7 +100,6 @@ parses('%{^CAPTURE}');
 parses('%{^CAPTURE_ALL}');
 parses('%^H');
 
-# $' is written differently, verifying space rule works
-parsent('$ \'');
+parses('$ \'');
 
 done_testing();
