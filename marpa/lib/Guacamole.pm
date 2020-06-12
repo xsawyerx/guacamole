@@ -94,9 +94,9 @@ PackageDeclaration ::= OpKeywordPackage Ident VersionExpr
 
 SubStatement ::= PhaseStatement Block
                | OpKeywordSub PhaseStatement Block
-               | OpKeywordSub NonQLikeIdent SubDefinition
+               | OpKeywordSub SubNameExpr SubDefinition
 
-SubDeclaration ::= OpKeywordSub NonQLikeIdent
+SubDeclaration ::= OpKeywordSub SubNameExpr
 
 SubDefinition ::= SubAttrsDefinitionSeq SubSigsDefinition Block
                 | SubAttrsDefinitionSeq Block
@@ -440,43 +440,65 @@ VarCode     ::= SigilCode VarName
 VarGlob     ::= SigilGlob VarName
 VarArrayTop ::= SigilArrayTop VarName
 
-VarName ::= Ident
+# This is tricky because
+# $x is ok, $3 is ok, $x::3 is ok, $3::x is not ok
+# so we define it as Digits are okay
+# otherwise, a proper ident, which eliminated $3::x but also $x::3
+VarName ::= DigitsExpr
+         || Ident
 
-SubCall ::= NonQLikeIdent CallArgs
+DigitsExpr ::= [0-9]+
+
+SubCall ::= SubNameCallExpr CallArgs
           | VarCode CallArgs
 
-PackageArrow  ::= NonQLikeIdent OpArrow PackageArrowRHS
+PackageArrow  ::= SubNameExpr OpArrow PackageArrowRHS
 
 PackageArrowRHS ::= ArrowMethodCall
                   | ArrowIndirectCall
 
-NonQLikeIdent ::= SubName
-                | SubName PackageSep Ident
+# Used for function calls (Non-QLikeValue string)
+SubNameCallExpr ::= SubNameNonQLike
+                  | SubNameCallExpr PackageSep SubNameNonQLike
 
-# This entire silly dance is done because:
-# 1. We define delimited values (q-like/s/m/tr/y) without spaces after delimiters
-# 2. Any of these can have parens as delimiters
-# 3. Thus, with a space and parens, it will be parsed as a function
-# So we must prevent "s ()" to exist as a subroutine name
-# --> If we remove the automatic ignoring of spaces, we won't need this
-SubName ::= LeadingSubLetter
-          | NonQLikeLetters AllSubLetters
-          | QLetter NonQRWXLetters
-          | QLetter NonQRWXLetters AllSubLetters
-          | QLetter QLetter AllSubLetters
-          | QLetter RLetter AllSubLetters
-          | QLetter WLetter AllSubLetters
-          | QLetter XLetter AllSubLetters
-          | SLetter AllSubLetters
-          | MLetter AllSubLetters
-          | TLetter NonRLetter
-          | TLetter NonRLetter AllSubLetters
-          | TLetter RLetter AllSubLetters
-          | YLetter AllSubLetters
+# Used for defining subs (no limits)
+SubNameExpr ::= SubName
+              | SubNameExpr PackageSep SubName
 
-Ident ::= AllSubLetters
-        | AllSubLetters PackageSep
-        | AllSubLetters PackageSep Ident
+# SubName is used for methods and subroutine definitions
+# They are not limited in any regard (other than no-digits in first char)
+SubName          ~ LeadingSubLetter CoreSubLetters
+LeadingSubLetter ~ [a-zA-Z_]
+CoreSubLetters   ~ [a-zA-z0-9_]*
+
+# SubNameNonQLike is for function calls
+# They are not allowed to be:
+# q / qq / qw / qr / qx
+# s / m / y / tr
+SubNameNonQLike ~
+                  NonQLikeLetters                      # [non-qlike]
+                | NonQLikeLetters AllSubLetters        # [non-qlike][*]
+                | QLetter NonQRWXLetters               # q[non-qrwx]
+                | QLetter NonQRWXLetters AllSubLetters # q[non-qrwx][*]
+                | QLetter QLetter AllSubLetters        # qq[*]
+                | QLetter RLetter AllSubLetters        # qr[*]
+                | QLetter WLetter AllSubLetters        # qw[*]
+                | QLetter XLetter AllSubLetters        # qx[*]
+                | TLetter                              # t
+                | TLetter NonRLetter                   # t[non-r]
+                | TLetter NonRLetter AllSubLetters     # t[non-r][*]
+                | TLetter RLetter AllSubLetters        # tr[*]
+                | SLetter AllSubLetters                # s[*]
+                | MLetter AllSubLetters                # m[*]
+                | YLetter AllSubLetters                # y[*]
+
+# These are sort of the same but not
+# Idents are defined differently for different purposes
+# Subroutine names are defined using one ident
+# Calling subroutines with arrow are defined using another ident
+# Variables are defined using a different ident
+# Namespaced variables ($x::y) are defined with another ident
+Ident ::= SubNameExpr
 
 CallArgs ::= ParenExpr
 
@@ -1343,23 +1365,39 @@ RegexModifiers ~ [a-z]*
 
 ###
 
-# NonQLikeFunction name is anything but:
-# q / qq / qw / qx / qr
-# s / m / tr / y
-# Subroutines are not allowed to be name as such
-NonQLikeLetters  ~ [a-ln-pru-xzA-Z_]
-LeadingSubLetter ~ [a-ln-prtu-xzA-Z_]
-AllSubLetters    ~ [a-zA-Z0-9_]+
-NonQRWXLetters   ~ [a-ps-vy-zA-Z0-9_]
-NonRLetter       ~ [a-qs-zA-Z0-9_]
-MLetter          ~ 'm'
-QLetter          ~ 'q'
-RLetter          ~ 'r'
-SLetter          ~ 's'
-TLetter          ~ 't'
-WLetter          ~ 'w'
-XLetter          ~ 'x'
-YLetter          ~ 'y'
+# Everything except: # q* / s / m / y / t*
+#                         |       |   | |         |
+# a b c d e f g h i j k l m n o p q r s t u v w x y z
+# a -                   l   n - p   r     u -   x   z
+# (Cannot begin with digit, so digits are out)
+NonQLikeLetters ~ [a-ln-pru-xzA-Z_]+
+
+# Everything except: q / w / r / x (qq, qw, qr, qx)
+#                                 | |         | |
+# a b c d e f g h i j k l m n o p q r s t u v w x y z
+# a -                           p     s -   v     y-z
+# (digits also allowed at this point)
+NonQRWXLetters ~ [a-ps-vy-zA-Z0-9_]+
+
+# Everything except: r (tr)
+#                                   |
+# a b c d e f g h i j k l m n o p q r s t u v w x y z
+# a -                             q   s -           z
+# (digits also allowed at this point)
+NonRLetter ~ [a-qs-zA-Z0-9_]
+
+# Letters
+QLetter ~ 'q'
+RLetter ~ 'r'
+WLetter ~ 'w'
+XLetter ~ 'x'
+SLetter ~ 's'
+MLetter ~ 'm'
+TLetter ~ 't'
+YLetter ~ 'y'
+
+# Everything else allowed (including digits)
+AllSubLetters ~ [a-zA-Z0-9_]+
 
 IdentComp  ~ [a-zA-Z_0-9]+
 PackageSep ~ '::'
