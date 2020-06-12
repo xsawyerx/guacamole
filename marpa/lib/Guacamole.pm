@@ -469,7 +469,7 @@ SubNameExpr ::= SubName
 # They are not limited in any regard (other than no-digits in first char)
 SubName          ~ LeadingSubLetter CoreSubLetters
 LeadingSubLetter ~ [a-zA-Z_]
-CoreSubLetters   ~ [a-zA-z0-9_]*
+CoreSubLetters   ~ [a-zA-Z0-9_]*
 
 # SubNameNonQLike is for function calls
 # They are not allowed to be:
