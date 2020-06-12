@@ -1289,18 +1289,12 @@ OpFile ::=
 QLikeValue ::= QLikeValueExpr | QLikeValueExprWithMods
 
 QLikeValueExpr
-    ~ QLikeFunction '(' NonRParenOrEscapedParens_Many               ')'
-    | QLikeFunction '{' NonRBraceOrEscapedBraces_Many               '}'
-    | QLikeFunction '<' NonRAngleOrEscapedAngles_Many               '>'
-    | QLikeFunction '[' NonRBracketOrEscapedBrackets_Many           ']'
-    | QLikeFunction '/' NonForwardSlashOrEscapedForwardSlashes_Many '/'
-    | QLikeFunction '!' NonExclamPointOrEscapedExclamPoints_Many    '!'
-    | QLikeFunction '()'
-    | QLikeFunction '{}'
-    | QLikeFunction '<>'
-    | QLikeFunction '[]'
-    | QLikeFunction '//'
-    | QLikeFunction '!!'
+    ~ QLikeFunction '(' NonRParenOrEscapedParens_Any               ')'
+    | QLikeFunction '{' NonRBraceOrEscapedBraces_Any               '}'
+    | QLikeFunction '<' NonRAngleOrEscapedAngles_Any               '>'
+    | QLikeFunction '[' NonRBracketOrEscapedBrackets_Any           ']'
+    | QLikeFunction '/' NonForwardSlashOrEscapedForwardSlashes_Any '/'
+    | QLikeFunction '!' NonExclamPointOrEscapedExclamPoints_Any    '!'
 
 QLikeFunction ~ OpKeywordQ
               | OpKeywordQq
@@ -1310,49 +1304,21 @@ QLikeFunction ~ OpKeywordQ
 # Here we begin with "qr//" and "m//" which can have parameters
 # Then we continue with "s///", "tr///", and "y///" which have two args, not one
 # "//" follow at the end
-# This is really ugly :/ because I couldn't use NonRParenOrEscapedParens_Many*
-# (so they become optional)
 QLikeValueExprWithMods
-    ~ QLikeFunctionWithMods '(' NonRParenOrEscapedParens_Many               ')' RegexModifiers
-    | QLikeFunctionWithMods '{' NonRBraceOrEscapedBraces_Many               '}' RegexModifiers
-    | QLikeFunctionWithMods '<' NonRAngleOrEscapedAngles_Many               '>' RegexModifiers
-    | QLikeFunctionWithMods '[' NonRBracketOrEscapedBrackets_Many           ']' RegexModifiers
-    | QLikeFunctionWithMods '/' NonForwardSlashOrEscapedForwardSlashes_Many '/' RegexModifiers
-    | QLikeFunctionWithMods '!' NonExclamPointOrEscapedExclamPoints_Many    '!' RegexModifiers
-    | QLikeFunctionWithMods '()' RegexModifiers
-    | QLikeFunctionWithMods '{}' RegexModifiers
-    | QLikeFunctionWithMods '<>' RegexModifiers
-    | QLikeFunctionWithMods '[]' RegexModifiers
-    | QLikeFunctionWithMods '//' RegexModifiers
-    | QLikeFunctionWithMods '!!' RegexModifiers
-    | QLikeSubstWithMods    '(' NonRParenOrEscapedParens_Many               ')(' NonRParenOrEscapedParens_Many               ')' RegexModifiers
-    | QLikeSubstWithMods    '{' NonRBraceOrEscapedBraces_Many               '}{' NonRBraceOrEscapedBraces_Many               '}' RegexModifiers
-    | QLikeSubstWithMods    '<' NonRAngleOrEscapedAngles_Many               '><' NonRAngleOrEscapedAngles_Many               '>' RegexModifiers
-    | QLikeSubstWithMods    '[' NonRBracketOrEscapedBrackets_Many           '][' NonRBracketOrEscapedBrackets_Many             ']' RegexModifiers
-    | QLikeSubstWithMods    '/' NonForwardSlashOrEscapedForwardSlashes_Many '/'  NonForwardSlashOrEscapedForwardSlashes_Many '/' RegexModifiers
-    | QLikeSubstWithMods    '!' NonExclamPointOrEscapedExclamPoints_Many    '!'  NonExclamPointOrEscapedExclamPoints_Many    '!' RegexModifiers
-    | QLikeSubstWithMods    '()' '(' NonRParenOrEscapedParens_Many               ')' RegexModifiers
-    | QLikeSubstWithMods    '{}' '{' NonRBraceOrEscapedBraces_Many               '}' RegexModifiers
-    | QLikeSubstWithMods    '<>' '<' NonRAngleOrEscapedAngles_Many               '>' RegexModifiers
-    | QLikeSubstWithMods    '[]' '[' NonRBracketOrEscapedBrackets_Many           ']' RegexModifiers
-    | QLikeSubstWithMods    '//'     NonForwardSlashOrEscapedForwardSlashes_Many '/' RegexModifiers
-    | QLikeSubstWithMods    '!!'     NonExclamPointOrEscapedExclamPoints_Many    '!' RegexModifiers
-    | QLikeSubstWithMods    '(' NonRParenOrEscapedParens_Many               ')()' RegexModifiers
-    | QLikeSubstWithMods    '{' NonRBraceOrEscapedBraces_Many               '}{}' RegexModifiers
-    | QLikeSubstWithMods    '<' NonRAngleOrEscapedAngles_Many               '><>' RegexModifiers
-    | QLikeSubstWithMods    '[' NonRBracketOrEscapedBrackets_Many           '][]' RegexModifiers
-    | QLikeSubstWithMods    '/' NonForwardSlashOrEscapedForwardSlashes_Many '//' RegexModifiers
-    | QLikeSubstWithMods    '!' NonExclamPointOrEscapedExclamPoints_Many    '!!' RegexModifiers
-    | QLikeSubstWithMods    '()()' RegexModifiers
-    | QLikeSubstWithMods    '{}{}' RegexModifiers
-    | QLikeSubstWithMods    '<><>' RegexModifiers
-    | QLikeSubstWithMods    '[][]' RegexModifiers
-    | QLikeSubstWithMods    '///'  RegexModifiers
-    | QLikeSubstWithMods    '!!!'  RegexModifiers
-    | '/' NonForwardSlashOrEscapedForwardSlashes_Many '/' RegexModifiers
-    | '//' RegexModifiers
-    | '`' NonBacktickOrEscapedBackticks_Many '`'
-    | '``'
+    ~ QLikeFunctionWithMods '(' NonRParenOrEscapedParens_Any               ')' RegexModifiers
+    | QLikeFunctionWithMods '{' NonRBraceOrEscapedBraces_Any               '}' RegexModifiers
+    | QLikeFunctionWithMods '<' NonRAngleOrEscapedAngles_Any               '>' RegexModifiers
+    | QLikeFunctionWithMods '[' NonRBracketOrEscapedBrackets_Any           ']' RegexModifiers
+    | QLikeFunctionWithMods '/' NonForwardSlashOrEscapedForwardSlashes_Any '/' RegexModifiers
+    | QLikeFunctionWithMods '!' NonExclamPointOrEscapedExclamPoints_Any    '!' RegexModifiers
+    | QLikeSubstWithMods    '(' NonRParenOrEscapedParens_Any               ')(' NonRParenOrEscapedParens_Any               ')' RegexModifiers
+    | QLikeSubstWithMods    '{' NonRBraceOrEscapedBraces_Any               '}{' NonRBraceOrEscapedBraces_Any               '}' RegexModifiers
+    | QLikeSubstWithMods    '<' NonRAngleOrEscapedAngles_Any               '><' NonRAngleOrEscapedAngles_Any               '>' RegexModifiers
+    | QLikeSubstWithMods    '[' NonRBracketOrEscapedBrackets_Any           '][' NonRBracketOrEscapedBrackets_Any             ']' RegexModifiers
+    | QLikeSubstWithMods    '/' NonForwardSlashOrEscapedForwardSlashes_Any '/'  NonForwardSlashOrEscapedForwardSlashes_Any '/' RegexModifiers
+    | QLikeSubstWithMods    '!' NonExclamPointOrEscapedExclamPoints_Any    '!'  NonExclamPointOrEscapedExclamPoints_Any    '!' RegexModifiers
+    | '/' NonForwardSlashOrEscapedForwardSlashes_Any '/' RegexModifiers
+    | '`' NonBacktickOrEscapedBackticks_Any '`'
 
 QLikeFunctionWithMods ~ OpKeywordQr
                       | OpKeywordM
@@ -1453,48 +1419,48 @@ RBracket ~ ']'
 LBrace   ~ '{'
 RBrace   ~ '}'
 
-NonRParenOrEscapedParens_Many ~ NonRParenOrEscapedParens+
-NonRParenOrEscapedParens      ~ EscapedParens | NonRParen
-EscapedParens                 ~ EscapedLParen | EscapedRParen
-EscapedLParen                 ~ Escape [(]
-EscapedRParen                 ~ Escape [)]
-NonRParen                     ~ [^)]
+NonRParenOrEscapedParens_Any ~ NonRParenOrEscapedParens*
+NonRParenOrEscapedParens     ~ EscapedParens | NonRParen
+EscapedParens                ~ EscapedLParen | EscapedRParen
+EscapedLParen                ~ Escape [(]
+EscapedRParen                ~ Escape [)]
+NonRParen                    ~ [^)]
 
-NonRBracketOrEscapedBrackets_Many ~ NonRBracketOrEscapedBrackets+
-NonRBracketOrEscapedBrackets      ~ EscapedBrackets | NonRBracket
-EscapedBrackets                   ~ EscapedLBracket | EscapedRBracket
-EscapedLBracket                   ~ Escape [\[]
-EscapedRBracket                   ~ Escape [\]]
-NonRBracket                       ~ [^\]]
+NonRBracketOrEscapedBrackets_Any ~ NonRBracketOrEscapedBrackets*
+NonRBracketOrEscapedBrackets     ~ EscapedBrackets | NonRBracket
+EscapedBrackets                  ~ EscapedLBracket | EscapedRBracket
+EscapedLBracket                  ~ Escape [\[]
+EscapedRBracket                  ~ Escape [\]]
+NonRBracket                      ~ [^\]]
 
-NonRBraceOrEscapedBraces_Many ~ NonRBraceOrEscapedBraces+
-NonRBraceOrEscapedBraces      ~ EscapedBraces | NonRBrace
-EscapedBraces                 ~ EscapedLBrace | EscapedRBrace
-EscapedLBrace                 ~ Escape [\{]
-EscapedRBrace                 ~ Escape [\}]
-NonRBrace                     ~ [^\}]
+NonRBraceOrEscapedBraces_Any ~ NonRBraceOrEscapedBraces*
+NonRBraceOrEscapedBraces     ~ EscapedBraces | NonRBrace
+EscapedBraces                ~ EscapedLBrace | EscapedRBrace
+EscapedLBrace                ~ Escape [\{]
+EscapedRBrace                ~ Escape [\}]
+NonRBrace                    ~ [^\}]
 
-NonRAngleOrEscapedAngles_Many ~ NonRAngleOrEscapedAngles+
-NonRAngleOrEscapedAngles      ~ EscapedAngles | NonRAngle
-EscapedAngles                 ~ EscapedLAngle | EscapedRAngle
-EscapedLAngle                 ~ Escape [<]
-EscapedRAngle                 ~ Escape [>]
-NonRAngle                     ~ [^>]
+NonRAngleOrEscapedAngles_Any ~ NonRAngleOrEscapedAngles*
+NonRAngleOrEscapedAngles     ~ EscapedAngles | NonRAngle
+EscapedAngles                ~ EscapedLAngle | EscapedRAngle
+EscapedLAngle                ~ Escape [<]
+EscapedRAngle                ~ Escape [>]
+NonRAngle                    ~ [^>]
 
-NonForwardSlashOrEscapedForwardSlashes_Many ~ NonForwardSlashOrEscapedForwardSlashes+
-NonForwardSlashOrEscapedForwardSlashes      ~ EscapedForwardSlash | NonForwardSlash
-EscapedForwardSlash                         ~ Escape [/]
-NonForwardSlash                             ~ [^\/]
+NonForwardSlashOrEscapedForwardSlashes_Any ~ NonForwardSlashOrEscapedForwardSlashes*
+NonForwardSlashOrEscapedForwardSlashes     ~ EscapedForwardSlash | NonForwardSlash
+EscapedForwardSlash                        ~ Escape [/]
+NonForwardSlash                            ~ [^\/]
 
-NonExclamPointOrEscapedExclamPoints_Many ~ NonExclamPointOrEscapedExclamPoints+
-NonExclamPointOrEscapedExclamPoints      ~ EscapedExclamPoint | NonExclamPoint
-EscapedExclamPoint                       ~ Escape [!]
-NonExclamPoint                           ~ [^\!]
+NonExclamPointOrEscapedExclamPoints_Any ~ NonExclamPointOrEscapedExclamPoints*
+NonExclamPointOrEscapedExclamPoints     ~ EscapedExclamPoint | NonExclamPoint
+EscapedExclamPoint                      ~ Escape [!]
+NonExclamPoint                          ~ [^\!]
 
-NonBacktickOrEscapedBackticks_Many ~ NonBacktickOrEscapedBackticks+
-NonBacktickOrEscapedBackticks      ~ EscapedBacktick | NonBacktick
-EscapedBacktick                    ~ Escape [`]
-NonBacktick                        ~ [^\`]
+NonBacktickOrEscapedBackticks_Any ~ NonBacktickOrEscapedBackticks*
+NonBacktickOrEscapedBackticks     ~ EscapedBacktick | NonBacktick
+EscapedBacktick                   ~ Escape [`]
+NonBacktick                       ~ [^\`]
 
 Ellipsis ~ '...'
 
@@ -1507,8 +1473,7 @@ UnderscoreSub     ~ '__SUB__'
 
 PhaseName ~ 'BEGIN' | 'CHECK' | 'INIT' | 'UNITCHECK' | 'END'
 
-SubAttrArgs ~ '(' NonRParenOrEscapedParens_Many ')'
-            | '(' ')'
+SubAttrArgs ~ '(' NonRParenOrEscapedParens_Any ')'
 
 OpArrow   ~ '->'
 OpInc     ~ '++' | '--'
