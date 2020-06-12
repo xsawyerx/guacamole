@@ -476,21 +476,21 @@ CoreSubLetters   ~ [a-zA-z0-9_]*
 # q / qq / qw / qr / qx
 # s / m / y / tr
 SubNameNonQLike ~
-                  NonQLikeLetters                      # [non-qlike]
-                | NonQLikeLetters AllSubLetters        # [non-qlike][*]
-                | QLetter NonQRWXLetters               # q[non-qrwx]
-                | QLetter NonQRWXLetters AllSubLetters # q[non-qrwx][*]
-                | QLetter QLetter AllSubLetters        # qq[*]
-                | QLetter RLetter AllSubLetters        # qr[*]
-                | QLetter WLetter AllSubLetters        # qw[*]
-                | QLetter XLetter AllSubLetters        # qx[*]
-                | TLetter                              # t
-                | TLetter NonRLetter                   # t[non-r]
-                | TLetter NonRLetter AllSubLetters     # t[non-r][*]
-                | TLetter RLetter AllSubLetters        # tr[*]
-                | SLetter AllSubLetters                # s[*]
-                | MLetter AllSubLetters                # m[*]
-                | YLetter AllSubLetters                # y[*]
+                  NonQLikeLetters                  # [non-qlike]
+                | NonQLikeLetters AllSubLetters    # [non-qlike][*]
+                | 'q' NonQRWXLetters               # q[non-qrwx]
+                | 'q' NonQRWXLetters AllSubLetters # q[non-qrwx][*]
+                | 'qq' AllSubLetters               # qq[*]
+                | 'qr' AllSubLetters               # qr[*]
+                | 'qw' AllSubLetters               # qw[*]
+                | 'qx' AllSubLetters               # qx[*]
+                | 't'                              # t
+                | 't' NonRLetter                   # t[non-r]
+                | 't' NonRLetter AllSubLetters     # t[non-r][*]
+                | 'tr' AllSubLetters               # tr[*]
+                | 's' AllSubLetters                # s[*]
+                | 'm' AllSubLetters                # m[*]
+                | 'y' AllSubLetters                # y[*]
 
 # These are sort of the same but not
 # Idents are defined differently for different purposes
@@ -1351,16 +1351,6 @@ NonQRWXLetters ~ [a-ps-vy-zA-Z0-9_]+
 # a -                             q   s -           z
 # (digits also allowed at this point)
 NonRLetter ~ [a-qs-zA-Z0-9_]
-
-# Letters
-QLetter ~ 'q'
-RLetter ~ 'r'
-WLetter ~ 'w'
-XLetter ~ 'x'
-SLetter ~ 's'
-MLetter ~ 'm'
-TLetter ~ 't'
-YLetter ~ 'y'
 
 # Everything else allowed (including digits)
 AllSubLetters ~ [a-zA-Z0-9_]+
