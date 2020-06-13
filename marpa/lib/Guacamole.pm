@@ -1975,6 +1975,12 @@ whitespace ~ [\s]+
 :lexeme ~ OpKeywordWarn             priority => 1
 :lexeme ~ OpKeywordWrite            priority => 1
 
+# This is the only Op that conflicts
+# OpInc conflicts with OpUnary
+# So when it's both, OpInc wins
+# (such as: sort $x + $y
+:lexeme ~ OpAdd priority => 1
+
 };
 
 our $grammar = Marpa::R2::Scanless::G->new({ source => \$grammar_source });
