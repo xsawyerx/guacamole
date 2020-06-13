@@ -545,8 +545,8 @@ DerefVariableSlice ::= '@[' Expression ']'
                      | '%{' Expression '}'
 
 DerefVariable ::= SigilScalar   Block
-                | SigilArray    Block
-                | SigilHash     Block
+                | SigilArray    Block ElemSeq0
+                | SigilHash     Block ElemSeq0
                 | SigilGlob     Block
                 | SigilArrayTop Block
 
