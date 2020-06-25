@@ -17,4 +17,6 @@ parses('{pop}');
 parses('{pop;}');
 parses('{a(); b();}');
 
+parsent('sort {} 1');
+
 done_testing;

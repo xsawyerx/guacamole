@@ -16,8 +16,13 @@ parses('[ 1, 2 ]');
 parses('[ 1, 2, ( 10, () ) ]');
 
 # LitHash
+parses('{}');
+parses('sub { {} }');
+parses('sort {}, 1');
 parses('$x = {}');
 parses('$x = { "foo" => "bar" }');
+parses('return { 1, 2, 3, 4 }');
+parsent('{ 1, 2, 3, 4 }');
 
 # LitString (SingleQuote)
 parses(q{''});
