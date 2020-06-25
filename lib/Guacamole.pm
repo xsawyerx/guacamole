@@ -1999,7 +1999,8 @@ sub build_struct {
     while ( my $valueref = shift @values ) {
         if ( ! ref ${$valueref} ) {
             ${$valueref} = {
-                'type'  => ':bare',
+                'name'  => '',
+                'type'  => 'lexeme',
                 'value' => ${$valueref},
             };
 
@@ -2014,7 +2015,7 @@ sub build_struct {
         my ( $line, $column ) = $rec->line_column($start_pos);
         ${$valueref} = {
             'name'      => $name,
-            'type'      => 'lexeme',
+            'type'      => 'rule',
             'start_pos' => $start_pos,
             'length'    => $length,
             'children'  => \@children,

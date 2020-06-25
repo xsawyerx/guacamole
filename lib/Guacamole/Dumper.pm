@@ -23,12 +23,12 @@ sub _dump_tree_inner {
         or die "Bad token object: $tree";
 
     my $head = $tree->{
-        $tree->{'type'} eq ':bare'
+        $tree->{'type'} eq 'lexeme'
         ? 'value'
         : 'name'
     };
 
-    my @tail = $tree->{'type'} eq ':bare'
+    my @tail = $tree->{'type'} eq 'lexeme'
              ? ()
              : @{ $tree->{'children'} };
 
