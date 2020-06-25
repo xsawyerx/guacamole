@@ -23,7 +23,7 @@ BlockStatement ::= LoopStatement
                  | PackageStatement
                  | SubStatement
                  | Condition
-                 | Block
+                 | BlockNonEmpty
 
 Statement ::= BlockLevelExpression StatementModifier
             | BlockLevelExpression
@@ -498,8 +498,11 @@ ClassIdent ::= SubNameExpr
 
 CallArgs ::= ParenExpr
 
-Block ::= LBrace RBrace
-        | LBrace StatementSeq RBrace
+# Depending on context, "{}" may be interpreted as an empty block or a hash literal.
+Block         ::= BlockEmpty                  action => ::first
+                | BlockNonEmpty               action => ::first
+BlockEmpty    ::= LBrace RBrace               name => Block
+BlockNonEmpty ::= LBrace StatementSeq RBrace  name => Block
 
 ArrayElem ::= LBracket Expression RBracket
 
@@ -509,15 +512,17 @@ NonBraceLiteral ::= LitNumber
                   | LitArray
                   | LitString
                   | InterpolString
+                  | LitHashEmpty
 
 Literal         ::= NonBraceLiteral
-                  | LitHash
+                  | LitHashNonEmpty
 
 LitArray       ::= LBracket Expression RBracket
                  | LBracket RBracket
 
-LitHash        ::= LBrace Expression RBrace
-                 | LBrace RBrace
+# Depending on context, "{}" may be interpreted as an empty block or a hash literal.
+LitHashEmpty    ::= LBrace RBrace             name => LitHash
+LitHashNonEmpty ::= LBrace Expression RBrace  name => LitHash
 
 LitString      ::= SingleQuote NonSingleOrEscapedQuote_Many SingleQuote
                  | SingleQuote SingleQuote
@@ -544,11 +549,11 @@ DerefVariableSlice ::= '@[' Expression ']'
                      | '%[' Expression ']'
                      | '%{' Expression '}'
 
-DerefVariable ::= SigilScalar   Block
-                | SigilArray    Block ElemSeq0
-                | SigilHash     Block ElemSeq0
-                | SigilGlob     Block
-                | SigilArrayTop Block
+DerefVariable ::= SigilScalar   BlockNonEmpty
+                | SigilArray    BlockNonEmpty ElemSeq0
+                | SigilHash     BlockNonEmpty ElemSeq0
+                | SigilGlob     BlockNonEmpty
+                | SigilArrayTop BlockNonEmpty
 
 OpNullaryKeywordExpr ::=
       OpKeywordBreakExpr
@@ -829,7 +834,7 @@ OpKeywordDeleteExpr           ::= OpKeywordDelete OpUnaryKeywordArg
 
 OpKeywordDieExpr              ::= OpKeywordDie OpListKeywordArg
 
-OpKeywordDoExpr               ::= OpKeywordDo Block
+OpKeywordDoExpr               ::= OpKeywordDo BlockNonEmpty
                                 | OpKeywordDo OpUnaryKeywordArgNonBrace
 
 OpKeywordDumpExpr             ::= OpKeywordDump OpAssignKeywordArg
@@ -841,7 +846,7 @@ OpKeywordEachExpr             ::= OpKeywordEach OpUnaryKeywordArg
 OpKeywordEofExpr              ::= OpKeywordEof OpUnaryKeywordArg
                                 | OpKeywordEof
 
-OpKeywordEvalExpr             ::= OpKeywordEval Block
+OpKeywordEvalExpr             ::= OpKeywordEval BlockNonEmpty
 
 OpKeywordEvalbytesExpr        ::= OpKeywordEvalbytes OpUnaryKeywordArg
                                 | OpKeywordEvalbytes
@@ -938,7 +943,7 @@ OpKeywordEndprotoentExpr      ::= OpKeywordEndprotoent
 
 OpKeywordEndserventExpr       ::= OpKeywordEndservent
 
-OpKeywordExecExpr             ::= OpKeywordExec Block OpListKeywordArg
+OpKeywordExecExpr             ::= OpKeywordExec BlockNonEmpty OpListKeywordArg
                                 | OpKeywordExec OpListKeywordArgNonBrace
 
 OpKeywordGetsocknameExpr      ::= OpKeywordGetsockname OpUnaryKeywordArg
@@ -955,7 +960,7 @@ OpKeywordGmtimeExpr           ::= OpKeywordGmtime OpUnaryKeywordArg
 OpKeywordGotoExpr             ::= OpKeywordGoto OpAssignKeywordArg
                                 | OpKeywordGoto Label
 
-OpKeywordGrepExpr             ::= OpKeywordGrep Block OpListKeywordArg
+OpKeywordGrepExpr             ::= OpKeywordGrep BlockNonEmpty OpListKeywordArg
                                 | OpKeywordGrep OpListKeywordArgNonBrace
 
 OpKeywordHexExpr              ::= OpKeywordHex OpUnaryKeywordArg
@@ -1003,7 +1008,7 @@ OpKeywordLogExpr              ::= OpKeywordLog OpUnaryKeywordArg
 OpKeywordLstatExpr            ::= OpKeywordLstat OpUnaryKeywordArg
                                 | OpKeywordLstat
 
-OpKeywordMapExpr              ::= OpKeywordMap Block OpListKeywordArg
+OpKeywordMapExpr              ::= OpKeywordMap BlockNonEmpty OpListKeywordArg
                                 | OpKeywordMap OpListKeywordArgNonBrace
 
 OpKeywordMkdirExpr            ::= OpKeywordMkdir OpListKeywordArg
@@ -1041,18 +1046,18 @@ OpKeywordPopExpr              ::= OpKeywordPop OpUnaryKeywordArg
 OpKeywordPosExpr              ::= OpKeywordPos OpUnaryKeywordArg
                                 | OpKeywordPos
 
-OpKeywordPrintExpr            ::= OpKeywordPrint Block OpListKeywordArg
+OpKeywordPrintExpr            ::= OpKeywordPrint BlockNonEmpty OpListKeywordArg
                                 | OpKeywordPrint BuiltinFilehandle OpListKeywordArgNonBrace
                                 | OpKeywordPrint BuiltinFilehandle
                                 | OpKeywordPrint OpListKeywordArgNonBrace
-                                | OpKeywordPrint Block
+                                | OpKeywordPrint BlockNonEmpty
                                 | OpKeywordPrint
 
-OpKeywordPrintfExpr           ::= OpKeywordPrintf Block OpListKeywordArg
+OpKeywordPrintfExpr           ::= OpKeywordPrintf BlockNonEmpty OpListKeywordArg
                                 | OpKeywordPrintf BuiltinFilehandle OpListKeywordArgNonBrace
                                 | OpKeywordPrintf BuiltinFilehandle
                                 | OpKeywordPrintf OpListKeywordArgNonBrace
-                                | OpKeywordPrintf Block
+                                | OpKeywordPrintf BlockNonEmpty
 
 OpKeywordPrototypeExpr        ::= OpKeywordPrototype OpUnaryKeywordArg
                                 | OpKeywordPrototype
@@ -1106,11 +1111,11 @@ OpKeywordRindexExpr           ::= OpKeywordRindex OpListKeywordArg
 OpKeywordRmdirExpr            ::= OpKeywordRmdir OpUnaryKeywordArg
                                 | OpKeywordRmdir
 
-OpKeywordSayExpr              ::= OpKeywordSay Block OpListKeywordArg
+OpKeywordSayExpr              ::= OpKeywordSay BlockNonEmpty OpListKeywordArg
                                 | OpKeywordSay BuiltinFilehandle OpListKeywordArgNonBrace
                                 | OpKeywordSay BuiltinFilehandle
                                 | OpKeywordSay OpListKeywordArgNonBrace
-                                | OpKeywordSay Block
+                                | OpKeywordSay BlockNonEmpty
                                 | OpKeywordSay
 
 OpKeywordScalarExpr           ::= OpKeywordScalar OpUnaryKeywordArg
@@ -1158,7 +1163,7 @@ OpKeywordSocketExpr           ::= OpKeywordSocket OpListKeywordArg
 
 OpKeywordSocketpairExpr       ::= OpKeywordSocketpair OpListKeywordArg
 
-OpKeywordSortExpr             ::= OpKeywordSort Block OpListKeywordArg
+OpKeywordSortExpr             ::= OpKeywordSort BlockNonEmpty OpListKeywordArg
                                 | OpKeywordSort VarScalar OpListKeywordArg
                                 | OpKeywordSort OpListKeywordArgNonBrace
 
@@ -1196,7 +1201,7 @@ OpKeywordSysseekExpr          ::= OpKeywordSysseek OpListKeywordArg
 
 OpKeywordSyswriteExpr         ::= OpKeywordSyswrite OpListKeywordArg
 
-OpKeywordSystemExpr           ::= OpKeywordSystem Block OpListKeywordArg
+OpKeywordSystemExpr           ::= OpKeywordSystem BlockNonEmpty OpListKeywordArg
                                 | OpKeywordSystem OpListKeywordArgNonBrace
 
 OpKeywordTellExpr             ::= OpKeywordTell OpUnaryKeywordArg
