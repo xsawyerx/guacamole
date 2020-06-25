@@ -35,7 +35,7 @@ sub deparse ($string) {
             # Take lexeme as a string element
             if (
                 is_hashref( $valueref->$* )
-             && $valueref->$*->{'type'} eq ':bare'
+             && $valueref->$*->{'type'} eq 'lexeme'
             ) {
                 push @elements, $valueref->$*->{'value'};
             }
@@ -59,7 +59,7 @@ sub fold_string ($valueref) {
 
     $valueref->$*->{'children'} = [
         {
-            'type'  => ':bare',
+            'type'  => 'lexeme',
             'value' => $value,
         }
     ];
