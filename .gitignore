@@ -19,3 +19,6 @@ nytprof.out
 *.bs
 /_eumm/
 *.sw?
+/*.zip
+/*.tar.gz
+Guacamole-*

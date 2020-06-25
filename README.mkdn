@@ -1,0 +1,33 @@
+# NAME
+
+Guacamole - A parser toolkit for Standard Perl
+
+# VERSION
+
+version 0.001
+
+# SYNOPSIS
+
+    use Guacamole;
+    my ($ast) = Guacamole->parse($string);
+
+# WHERE'S THE REST
+
+Gotta write it... Give us time!
+
+# SEE ALSO
+
+[standard](https://metacpan.org/pod/standard)
+
+# AUTHORS
+
+- Sawyer X
+- Vickenty Fesunov
+
+# COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2020 by Sawyer X.
+
+This is free software, licensed under:
+
+    The MIT (X11) License
