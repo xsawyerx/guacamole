@@ -1,4 +1,5 @@
 package Guacamole::Deparse;
+# ABSTRACT: A Gaucamole-based Deparser
 
 use strict;
 use warnings;
@@ -65,3 +66,21 @@ sub fold_string ($valueref) {
 }
 
 1;
+
+__END__
+
+=pod
+
+=head1 SYNOPSIS
+
+    use Guacamole::Deparse;
+    deparse($string); # prints all lexemes with a some folding rules
+
+=head1 WHERE'S THE REST?
+
+Soon.
+
+=head1 SEE ALSO
+
+L<Guacamole>
+

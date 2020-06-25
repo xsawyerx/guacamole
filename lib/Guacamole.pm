@@ -1,4 +1,6 @@
 package Guacamole;
+# ABSTRACT: A parser toolkit for Standard Perl
+
 use strict;
 use warnings;
 use Marpa::R2;
@@ -2068,3 +2070,20 @@ sub parse {
 }
 
 1;
+
+__END__
+
+=pod
+
+=head1 SYNOPSIS
+
+    use Guacamole;
+    my ($ast) = Guacamole->parse($string);
+
+=head1 WHERE'S THE REST
+
+Gotta write it... Give us time!
+
+=head1 SEE ALSO
+
+L<standard>

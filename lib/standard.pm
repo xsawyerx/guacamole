@@ -1,4 +1,5 @@
 package standard;
+# ABSTRACT: Enforce Standard Perl syntax with Guacamole
 
 use strict;
 use warnings;
@@ -55,3 +56,20 @@ sub strip_pods ($contentref) {
 }
 
 1;
+
+__END__
+
+=pod
+
+=head1 SYNOPSIS
+
+    use standard;
+    # Now you will get a warning if you don't break Standard Perl
+
+=head1 WHERE'S THE REST
+
+Soon...
+
+=head1 SEE ALSO
+
+L<Guacamole>

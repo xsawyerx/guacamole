@@ -1,4 +1,6 @@
 package Guacamole::Test;
+# ABSTRACT: What Guacamole uses to test itself
+
 use strict;
 use warnings;
 
@@ -70,3 +72,19 @@ sub parsent {
 }
 
 1;
+
+__END__
+
+=pod
+
+=head1 SYNOPSIS
+
+You don't really need to use this.
+
+=head1 WHERE'S THE REST?
+
+Working on it.
+
+=head1 SEE ALSO
+
+L<Guacamole>

@@ -1,4 +1,6 @@
 package Guacamole::Dumper;
+# ABSTRACT: Dump Guacamole ASTs
+
 use strict;
 use warnings;
 
@@ -49,3 +51,21 @@ sub _dump_tree_inner {
 }
 
 1;
+
+__END__
+
+=pod
+
+=head1 SYNOPSIS
+
+    use Gaucamole;
+    use Guacamole::Dump qw< dump_tree >;
+    dump_tree( Gaucamole->parse($string) );
+
+=head1 WHERE'S THE REST?
+
+Soon.
+
+=head1 SEE ALSO
+
+L<Guacamole>
