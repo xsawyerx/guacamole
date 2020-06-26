@@ -64,7 +64,7 @@ __END__
 =head1 SYNOPSIS
 
     use standard;
-    # Now you will get a warning if you don't break Standard Perl
+    # Now you will get a warning if you don't conform to Standard Perl
 
 =head1 WHERE'S THE REST
 
