@@ -1,11 +1,15 @@
-0.003
+0.004 2020-06-26
+
+    * Fixed a typo (thanks, Olivier Mengué)
+
+0.003 2020-06-25
 
     * Another fix. (And changes for some reason.)
 
-0.002
+0.002 2020-06-25
 
     * Fix naming of rules vs. lexemes.
 
-0.001
+0.001 2020-06-25
 
     * Woohoo!
