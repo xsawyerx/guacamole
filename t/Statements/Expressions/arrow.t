@@ -14,6 +14,6 @@ parses('$foo->thing()');
 parses('"Foo"->thing()');
 parses('Foo->thing()');
 
-parsent('Foo->thing;');
+parses('Foo->thing;');
 
 done_testing;

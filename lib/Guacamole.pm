@@ -542,6 +542,7 @@ ArrowDerefCall     ::= CallArgs
 ArrowDerefVariable ::= DerefVariableArgsAll
                      | DerefVariableSlice
 ArrowMethodCall    ::= SubNameExpr CallArgs
+                     | SubNameExpr
 ArrowIndirectCall  ::= SigilScalar VarIdentExpr CallArgs
 
 DerefVariableArgsAll ::= '$*' | '@*' | '%*' | '&*' | '**' | '$#*'
