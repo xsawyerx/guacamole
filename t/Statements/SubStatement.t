@@ -19,7 +19,9 @@ parses('sub foo :prototype($@\@) ($thing, $id = $auto_id++) {1}');
 
 parses('Foo->method();');
 parsent('Foo::->method();');
-parsent('Foo->method;');
+parses('Foo->method;');
+parses('Foo->method->chain;');
+parses('$object->method->chain->two;');
 
 # make sure we didn't screw up non q-like subroutines
 
