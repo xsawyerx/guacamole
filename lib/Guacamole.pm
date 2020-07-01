@@ -176,12 +176,9 @@ ExprShiftU    ::= ExprShiftU  OpShift   ExprAddU        | ExprAddU     action =>
 ExprShift0    ::= ExprShiftU  OpShift   ExprAdd0        | ExprAdd0     action => ::first
 ExprShiftL    ::= ExprShiftU  OpShift   ExprAddL        | ExprAddL     action => ::first
 ExprShiftR    ::= ExprShiftU  OpShift   ExprAddR        | ExprAddR     action => ::first
-ExprFile0     ::= OpFile      ExprFile0                 | ExprShift0 action => ::first
-ExprFileL     ::= OpFile      ExprFileL                 | ExprShiftL action => ::first
-ExprFileR     ::= OpFile      ExprFileR                 | ExprShiftR action => ::first
-ExprNeq0      ::= ExprFile0   OpInequal ExprFile0       | ExprFile0    action => ::first
-ExprNeqL      ::= ExprFile0   OpInequal ExprFileL       | ExprFileL    action => ::first
-ExprNeqR      ::= ExprFile0   OpInequal ExprFileR       | ExprFileR    action => ::first
+ExprNeq0      ::= ExprShift0  OpInequal ExprShift0      | ExprShift0   action => ::first
+ExprNeqL      ::= ExprShift0  OpInequal ExprShiftL      | ExprShiftL   action => ::first
+ExprNeqR      ::= ExprShift0  OpInequal ExprShiftR      | ExprShiftR   action => ::first
 ExprEq0       ::= ExprNeq0    OpEqual   ExprNeq0        | ExprNeq0     action => ::first
 ExprEqL       ::= ExprNeq0    OpEqual   ExprNeqL        | ExprNeqL     action => ::first
 ExprEqR       ::= ExprNeq0    OpEqual   ExprNeqR        | ExprNeqR     action => ::first
@@ -252,12 +249,9 @@ NonBraceExprShiftU    ::= NonBraceExprShiftU  OpShift   ExprAddU        | NonBra
 NonBraceExprShift0    ::= NonBraceExprShiftU  OpShift   ExprAdd0        | NonBraceExprAdd0     action => ::first
 NonBraceExprShiftL    ::= NonBraceExprShiftU  OpShift   ExprAddL        | NonBraceExprAddL     action => ::first
 NonBraceExprShiftR    ::= NonBraceExprShiftU  OpShift   ExprAddR        | NonBraceExprAddR     action => ::first
-NonBraceExprFile0     ::= OpFile      ExprFile0                 | NonBraceExprShift0 action => ::first
-NonBraceExprFileL     ::= OpFile      ExprFileL                 | NonBraceExprShiftL action => ::first
-NonBraceExprFileR     ::= OpFile      ExprFileR                 | NonBraceExprShiftR action => ::first
-NonBraceExprNeq0      ::= NonBraceExprFile0   OpInequal ExprFile0       | NonBraceExprFile0    action => ::first
-NonBraceExprNeqL      ::= NonBraceExprFile0   OpInequal ExprFileL       | NonBraceExprFileL    action => ::first
-NonBraceExprNeqR      ::= NonBraceExprFile0   OpInequal ExprFileR       | NonBraceExprFileR    action => ::first
+NonBraceExprNeq0      ::= NonBraceExprShift0  OpInequal ExprShift0      | NonBraceExprShift0   action => ::first
+NonBraceExprNeqL      ::= NonBraceExprShift0  OpInequal ExprShiftL      | NonBraceExprShiftL   action => ::first
+NonBraceExprNeqR      ::= NonBraceExprShift0  OpInequal ExprShiftR      | NonBraceExprShiftR   action => ::first
 NonBraceExprEq0       ::= NonBraceExprNeq0    OpEqual   ExprNeq0        | NonBraceExprNeq0     action => ::first
 NonBraceExprEqL       ::= NonBraceExprNeq0    OpEqual   ExprNeqL        | NonBraceExprNeqL     action => ::first
 NonBraceExprEqR       ::= NonBraceExprNeq0    OpEqual   ExprNeqR        | NonBraceExprNeqR     action => ::first
@@ -679,6 +673,7 @@ OpUnaryKeywordExpr ::=
     | OpKeywordUntieExpr
     | OpKeywordUtimeExpr
     | OpKeywordValuesExpr
+    | OpFileExpr
 
 OpListKeywordExpr ::=
       OpKeywordAcceptExpr
@@ -1289,6 +1284,9 @@ OpFile ::=
     | OpFileStartTime
     | OpFileAccessTime
     | OpFileChangeTime
+
+OpFileExpr ::= OpFile OpFileArg
+OpFileArg  ::= OpUnaryKeywordArg
 
 QLikeValue ::= QLikeValueExpr | QLikeValueExprWithMods
 
