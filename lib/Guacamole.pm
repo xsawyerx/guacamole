@@ -1286,6 +1286,7 @@ OpFile ::=
 
 OpFileExpr ::= OpFile OpFileArg
 OpFileArg  ::= OpUnaryKeywordArg
+             | BuiltinFilehandle
 
 QLikeValue ::= QLikeValueExpr | QLikeValueExprWithMods
 
