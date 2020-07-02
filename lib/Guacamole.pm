@@ -2085,6 +2085,11 @@ __END__
 
 Gotta write it... Give us time!
 
+"Standard Perl" aims to use only the syntax that makes Perl easy to
+parse. A Perl static parser such as Guacamole isn't that hard if we
+avoid a small set of constructs that cause parser ambiguities. These
+cases are listed in the L<Guacamole wiki|https://github.com/xsawyerx/guacamole/wiki>.
+
 =head1 SEE ALSO
 
 L<standard>
