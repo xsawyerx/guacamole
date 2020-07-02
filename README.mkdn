@@ -15,6 +15,11 @@ version 0.004
 
 Gotta write it... Give us time!
 
+"Standard Perl" aims to use only the syntax that makes Perl easy to
+parse. A Perl static parser such as Guacamole isn't that hard if we
+avoid a small set of constructs that cause parser ambiguities. These
+cases are listed in the [Guacamole wiki](https://github.com/xsawyerx/guacamole/wiki).
+
 # SEE ALSO
 
 [standard](https://metacpan.org/pod/standard)
