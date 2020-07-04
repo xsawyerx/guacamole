@@ -2089,15 +2089,131 @@ __END__
     use Guacamole;
     my ($ast) = Guacamole->parse($string);
 
-=head1 WHERE'S THE REST
+=head1 DESCRIPITON
 
-Gotta write it... Give us time!
+B<Guacamole> is a Perl parser toolkit.
 
-"Standard Perl" aims to use only the syntax that makes Perl easy to
-parse. A Perl static parser such as Guacamole isn't that hard if we
-avoid a small set of constructs that cause parser ambiguities. These
-cases are listed in the L<Guacamole wiki|https://github.com/xsawyerx/guacamole/wiki>.
+It can:
+
+=over 4
+
+=item * Parse Standard Perl
+
+This is explained in this document.
+
+For B<Standard Perl>, see the next clause.
+
+=item * Check a file is written in Standard Perl
+
+This is done by L<standard>, which is where Standard Perl is described.
+
+=item * Lint your code
+
+See L<Guacamole::Linter>.
+
+=item * Deparse your code
+
+See L<Guacamole::Deparse>.
+
+=item * Rewrite your code
+
+There is a proof-of-concept for this and we hope to provide this as a framework.
+
+=back
+
+=head1 Standard Perl
+
+Guacamole only works on Standard Perl. You can read about it here: L<standard>.
+
+=head1 Parser
+
+    my ($ast) = Guacamole->parse($string);
+
+To parse a string, call L<Gaucamole>'s C<parse> method. (This might turn to an
+object-oriented interface in the future.)
+
+It returns a list of results. If it ever returns more than one, this is a bug that
+means it couldn't ambiguously parse something. This will later be enforced in the
+interface. The current interface is not official.
+
+=head2 AST Nodes
+
+Guacamole returns an AST with two types of nodes.
+
+    my ($ast) = Guacamole->parse('$foo = 1');
+
+The above will generate a larger AST than you imagine (which might be pruned
+in the future). We'll focus on two types of nodes that will appear above.
+
+=head3 Rules
+
+Rules are the top level expressions. They include the definitions for rules.
+They include information on location in the file, length, line, and column.
+
+    $rule = {
+        'children'  => [...],
+        'column'    => 2,
+        'length'    => 3,
+        'line'      => 1,
+        'name'      => 'VarIdentExpr',
+        'start_pos' => 1,
+        'type'      => 'rule',
+    },
+
+This rule is a C<VarIdentExpr> which is an expression for a variable identity.
+
+In the code above, it refers to the C<foo> in C<$foo> - which is the identity
+itself.
+
+It has one child, described below under C<Lexemes>.
+
+=head3 Lexemes
+
+The child for the C<VarIdentExpr> rule should be the value of the identity.
+
+    $lexeme = {
+        'name'  => '',
+        'type'  => 'lexeme',
+        'value' => 'foo',
+    };
+
+The C<name> attribute for all lexemes is empty. This is to make it easy to
+write code that checks for the value of a rule without having to check whether
+it's a rule first.
+
+=head1 THANKS
+
+=over 4
+
+=item * Damian Conway
+
+For helping understand what is feasible, what isn't, and why, and for having
+infinite patience in explaining these.
+
+=item * Jeffrey Kegler
+
+For L<Marpa> and helping understand how to use Marpa better.
+
+=item * Gonzalo Diethelm
+
+For continuous feedback and support.
+
+=item * H. Merijn Brand (@Tux)
+
+For providing the initial production-level test of Guacamole to
+help shake many of the bugs in the BNF.
+
+=back
 
 =head1 SEE ALSO
 
-L<standard>
+=over 4
+
+=item * L<standard>
+
+=item * L<Gaucamole::Linter>
+
+=item * L<Guacamole::Deparse>
+
+=back
+
