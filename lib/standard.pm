@@ -69,7 +69,7 @@ __END__
 =head1 DESCRIPTION
 
 B<Standard Perl> aims to use only the syntax that makes Perl easy to parse.
-A Perl static parser such as Guacamole isn't that hard if we avoid a small
+A Perl static parser such as L<Guacamole> isn't that hard if we avoid a small
 set of constructs that cause parser ambiguities.
 
 These changes are described below. Over time, this documentation will explain
@@ -122,7 +122,7 @@ thus not supported.
 =item * Indirect object notation
 
     my $instance = new Class;    # not ok
-    my $instance = Class->new(); # ok 
+    my $instance = Class->new(); # ok
 
 =item * Bareword filehandles
 
