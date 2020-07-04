@@ -4,25 +4,126 @@ Guacamole - A parser toolkit for Standard Perl
 
 # VERSION
 
-version 0.004
+version 0.005
 
 # SYNOPSIS
 
     use Guacamole;
     my ($ast) = Guacamole->parse($string);
 
-# WHERE'S THE REST
+# DESCRIPITON
 
-Gotta write it... Give us time!
+**Guacamole** is a Perl parser toolkit.
 
-"Standard Perl" aims to use only the syntax that makes Perl easy to
-parse. A Perl static parser such as Guacamole isn't that hard if we
-avoid a small set of constructs that cause parser ambiguities. These
-cases are listed in the [Guacamole wiki](https://github.com/xsawyerx/guacamole/wiki).
+It can:
+
+- Parse Standard Perl
+
+    This is explained in this document.
+
+    For **Standard Perl**, see the next clause.
+
+- Check a file is written in Standard Perl
+
+    This is done by [standard](https://metacpan.org/pod/standard), which is where Standard Perl is described.
+
+- Lint your code
+
+    See [Guacamole::Linter](https://metacpan.org/pod/Guacamole%3A%3ALinter).
+
+- Deparse your code
+
+    See [Guacamole::Deparse](https://metacpan.org/pod/Guacamole%3A%3ADeparse).
+
+- Rewrite your code
+
+    There is a proof-of-concept for this and we hope to provide this as a framework.
+
+# Standard Perl
+
+Guacamole only works on Standard Perl. You can read about it here: [standard](https://metacpan.org/pod/standard).
+
+# Parser
+
+    my ($ast) = Guacamole->parse($string);
+
+To parse a string, call [Gaucamole](https://metacpan.org/pod/Gaucamole)'s `parse` method. (This might turn to an
+object-oriented interface in the future.)
+
+It returns a list of results. If it ever returns more than one, this is a bug that
+means it couldn't ambiguously parse something. This will later be enforced in the
+interface. The current interface is not official.
+
+## AST Nodes
+
+Guacamole returns an AST with two types of nodes.
+
+    my ($ast) = Guacamole->parse('$foo = 1');
+
+The above will generate a larger AST than you imagine (which might be pruned
+in the future). We'll focus on two types of nodes that will appear above.
+
+### Rules
+
+Rules are the top level expressions. They include the definitions for rules.
+They include information on location in the file, length, line, and column.
+
+    $rule = {
+        'children'  => [...],
+        'column'    => 2,
+        'length'    => 3,
+        'line'      => 1,
+        'name'      => 'VarIdentExpr',
+        'start_pos' => 1,
+        'type'      => 'rule',
+    },
+
+This rule is a `VarIdentExpr` which is an expression for a variable identity.
+
+In the code above, it refers to the `foo` in `$foo` - which is the identity
+itself.
+
+It has one child, described below under `Lexemes`.
+
+### Lexemes
+
+The child for the `VarIdentExpr` rule should be the value of the identity.
+
+    $lexeme = {
+        'name'  => '',
+        'type'  => 'lexeme',
+        'value' => 'foo',
+    };
+
+The `name` attribute for all lexemes is empty. This is to make it easy to
+write code that checks for the value of a rule without having to check whether
+it's a rule first.
+
+# THANKS
+
+- Damian Conway
+
+    For helping understand what is feasible, what isn't, and why, and for having
+    infinite patience in explaining these.
+
+- Jeffrey Kegler
+
+    For [Marpa](https://metacpan.org/pod/Marpa) and helping understand how to use Marpa better.
+
+- Gonzalo Diethelm
+
+    For continuous feedback and support.
+
+- H. Merijn Brand (@Tux)
+
+    For providing the initial production-level test of Guacamole to
+    help shake many of the bugs in the BNF.
 
 # SEE ALSO
 
-[standard](https://metacpan.org/pod/standard)
+- [standard](https://metacpan.org/pod/standard)
+- [Gaucamole::Linter](https://metacpan.org/pod/Gaucamole%3A%3ALinter)
+- [Guacamole::Deparse](https://metacpan.org/pod/Guacamole%3A%3ADeparse)
 
 # AUTHORS
 
