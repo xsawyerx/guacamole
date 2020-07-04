@@ -1,3 +1,13 @@
+0.005 2020-07-04
+
+    * Add proper documentation to Guacamole.pm.
+    * GH #88: Fix bareword STDIN with -t and file op precedence.
+    * GH #87: Document Standard Perl in standard.pm.
+    * GH #89: Added '|' as a delimiter for QLike values.
+    * GH #90: Support methods without arglists (Thanks, chromatic!)
+    * GH #93: Explain Standard Perl better. (Thanks, brian d foy)
+    * GH #97: Fix test dependency. (Thanks, Graham @plicease Ollis)
+
 0.004 2020-06-26
 
     * Fixed a typo (thanks, Olivier Mengué)
