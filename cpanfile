@@ -9,3 +9,4 @@ requires 'Path::Tiny';
 
 test_requires 'Test::Builder';
 test_requires 'Test::More';
+test_requires 'Test::Fatal';
