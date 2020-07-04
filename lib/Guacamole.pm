@@ -1298,6 +1298,7 @@ QLikeValueExpr
     | QLikeFunction '[' NonRBracketOrEscapedBrackets_Any           ']'
     | QLikeFunction '/' NonForwardSlashOrEscapedForwardSlashes_Any '/'
     | QLikeFunction '!' NonExclamPointOrEscapedExclamPoints_Any    '!'
+    | QLikeFunction '|' NonPipeOrEscapedPipes_Any                  '|'
 
 QLikeFunction ~ OpKeywordQ
               | OpKeywordQq
@@ -1314,12 +1315,14 @@ QLikeValueExprWithMods
     | QLikeFunctionWithMods '[' NonRBracketOrEscapedBrackets_Any           ']' RegexModifiers
     | QLikeFunctionWithMods '/' NonForwardSlashOrEscapedForwardSlashes_Any '/' RegexModifiers
     | QLikeFunctionWithMods '!' NonExclamPointOrEscapedExclamPoints_Any    '!' RegexModifiers
+    | QLikeFunctionWithMods '|' NonPipeOrEscapedPipes_Any                  '|' RegexModifiers
     | QLikeSubstWithMods    '(' NonRParenOrEscapedParens_Any               ')(' NonRParenOrEscapedParens_Any               ')' RegexModifiers
     | QLikeSubstWithMods    '{' NonRBraceOrEscapedBraces_Any               '}{' NonRBraceOrEscapedBraces_Any               '}' RegexModifiers
     | QLikeSubstWithMods    '<' NonRAngleOrEscapedAngles_Any               '><' NonRAngleOrEscapedAngles_Any               '>' RegexModifiers
-    | QLikeSubstWithMods    '[' NonRBracketOrEscapedBrackets_Any           '][' NonRBracketOrEscapedBrackets_Any             ']' RegexModifiers
+    | QLikeSubstWithMods    '[' NonRBracketOrEscapedBrackets_Any           '][' NonRBracketOrEscapedBrackets_Any           ']' RegexModifiers
     | QLikeSubstWithMods    '/' NonForwardSlashOrEscapedForwardSlashes_Any '/'  NonForwardSlashOrEscapedForwardSlashes_Any '/' RegexModifiers
     | QLikeSubstWithMods    '!' NonExclamPointOrEscapedExclamPoints_Any    '!'  NonExclamPointOrEscapedExclamPoints_Any    '!' RegexModifiers
+    | QLikeSubstWithMods    '|' NonPipeOrEscapedPipes_Any                  '|'  NonPipeOrEscapedPipes_Any                  '|' RegexModifiers
     | '/' NonForwardSlashOrEscapedForwardSlashes_Any '/' RegexModifiers
     | '`' NonBacktickOrEscapedBackticks_Any '`'
 
@@ -1449,6 +1452,11 @@ NonExclamPointOrEscapedExclamPoints_Any ~ NonExclamPointOrEscapedExclamPoints*
 NonExclamPointOrEscapedExclamPoints     ~ EscapedExclamPoint | NonExclamPoint
 EscapedExclamPoint                      ~ Escape [!]
 NonExclamPoint                          ~ [^\!]
+
+NonPipeOrEscapedPipes_Any ~ NonPipeOrEscapedPipes*
+NonPipeOrEscapedPipes     ~ EscapedPipe | NonPipe
+EscapedPipe               ~ Escape [\|]
+NonPipe                   ~ [^\|]
 
 NonBacktickOrEscapedBackticks_Any ~ NonBacktickOrEscapedBackticks*
 NonBacktickOrEscapedBackticks     ~ EscapedBacktick | NonBacktick

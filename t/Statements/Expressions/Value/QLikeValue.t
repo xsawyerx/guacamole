@@ -17,6 +17,7 @@ my @delimiters = (
     [ '<', '>' ], # q<...> | q<>
     [ '/', '/' ], # q/.../ | q//
     [ '!', '!' ], # q!...! | q!!
+    [ '|', '|' ], # q|...| | q||
 );
 
 foreach my $function (@q_functions) {
