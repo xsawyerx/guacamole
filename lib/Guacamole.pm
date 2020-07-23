@@ -1376,11 +1376,16 @@ VersionNumberSegment ~ [0-9] [0-9] [0-9]
                      | [0-9] [0-9]
                      | [0-9]
 
+HexPrefix ~ '0x'
+HexDigits ~ [0-9a-fA-F]+
+HexNumber ~ HexPrefix HexDigits
+
 LitNumber ::= LitNumberDec
 LitNumberDec ~ Digits Period Digits
              | Digits Period
              | Period Digits
              | Digits
+             | HexNumber
 
 Period      ~ '.'
 Digits      ~ [0-9]+
