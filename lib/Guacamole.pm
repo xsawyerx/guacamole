@@ -1398,15 +1398,15 @@ NumberDecInt ~ [1-9] DigitsDec
 
 NumberOct ~ '0' Underbars DigitOct DigitsOct
           | '0' Underbars DigitOct DigitsOct ExpHex
-          | '0' Underbars DigitOct DigitsOct '.' DigitOct DigitsOct ExpHex
+          | '0' DigitsOct '.' DigitOct DigitsOct ExpHex
 
 NumberHex ~ '0' [xX] Underbars DigitHex DigitsHex
           | '0' [xX] Underbars DigitHex DigitsHex ExpHex
-          | '0' [xX] Underbars DigitHex DigitsHex '.' DigitHex DigitsHex ExpHex
+          | '0' [xX] DigitsHex '.' DigitHex DigitsHex ExpHex
 
 NumberBin ~ '0' [bB] Underbars DigitBin DigitsBin
           | '0' [bB] Underbars DigitBin DigitsBin ExpHex
-          | '0' [bB] Underbars DigitBin DigitsBin '.' DigitBin DigitsBin ExpHex
+          | '0' [bB] DigitsBin '.' DigitBin DigitsBin ExpHex
 
 ExpDec ~ [eE] [+-] ExpDecExp
        | [eE] [_] [+-] ExpDecExp
