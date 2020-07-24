@@ -11,4 +11,8 @@ parses('!-t STDIN');
 parses('-f $x << $y');
 parses('-x -x -x STDERR');
 
+parses('-4');
+parses('-44.4');
+
+
 done_testing;
