@@ -18,6 +18,7 @@ parses("0.e1");
 parsent(".e1");
 
 parses("0._4");
+parses("1_.4");
 parses(".4_");
 parsent("._4");
 
@@ -40,6 +41,9 @@ parsent("0_");
 
 parses("01.4p1");
 parses("01.4_p1");
+parses("01_.4p1");
+parses("0_.4p1");
+parsent("0_.4");
 
 # LitNumberHex
 parses("0xf");
@@ -59,6 +63,9 @@ parsent("0xap-_");
 
 parses("0x1.8p1");
 parses("0x1.8_p1");
+parses("0x1_.8p1");
+parses("0x_.8p1");
+parsent("0x_.8");
 
 # LitNumberBin
 parses("0b0");
@@ -74,6 +81,9 @@ parsent("0b_");
 
 parses("0b1.1p1");
 parses("0b1.1_p1");
+parses("0b1_.1p1");
+parses("0b_.1p1");
+parsent("0b_.1");
 
 # LitArray
 parses('[]');
