@@ -1377,12 +1377,58 @@ VersionNumberSegment ~ [0-9] [0-9] [0-9]
                      | [0-9]
 
 LitNumber ::= LitNumberDec
-LitNumberDec ~ Digits Period Digits
-             | Digits Period
-             | Period Digits
-             | Digits
+            | LitNumberOct
+            | LitNumberHex
+            | LitNumberBin
 
-Period      ~ '.'
+LitNumberDec ::= NumberDec
+LitNumberOct ::= NumberOct
+LitNumberHex ::= NumberHex
+LitNumberBin ::= NumberBin
+
+NumberDec ~ NumberDecInt
+          | NumberDecInt ExpDec
+          | NumberDecInt '.' DigitsDec
+          | NumberDecInt '.' DigitsDec ExpDec
+          | '.' DigitDec DigitsDec
+          | '.' DigitDec DigitsDec ExpDec
+
+NumberDecInt ~ [1-9] DigitsDec
+             | '0'
+
+NumberOct ~ '0' Underbars DigitOct DigitsOct
+          | '0' Underbars DigitOct DigitsOct ExpHex
+          | '0' Underbars DigitOct DigitsOct '.' DigitOct DigitsOct ExpHex
+
+NumberHex ~ '0' [xX] Underbars DigitHex DigitsHex
+          | '0' [xX] Underbars DigitHex DigitsHex ExpHex
+          | '0' [xX] Underbars DigitHex DigitsHex '.' DigitHex DigitsHex ExpHex
+
+NumberBin ~ '0' [bB] Underbars DigitBin DigitsBin
+          | '0' [bB] Underbars DigitBin DigitsBin ExpHex
+          | '0' [bB] Underbars DigitBin DigitsBin '.' DigitBin DigitsBin ExpHex
+
+ExpDec ~ [eE] [+-] ExpDecExp
+       | [eE] [_] [+-] ExpDecExp
+       | [eE] ExpDecExp
+
+ExpDecExp ~ Underbars DigitDec DigitsDec
+Underbars ~ [_]*
+
+ExpHex ~ [pP] [+-] DigitDec DigitsDec
+       | [pP] DigitDec DigitsDec
+
+DigitDec    ~ [0-9]
+DigitsDec   ~ [0-9_]*
+
+DigitOct    ~ [0-7]
+DigitsOct   ~ [0-7_]*
+DigitHex    ~ [0-9a-fA-F]
+DigitsHex   ~ [0-9a-fA-F_]*
+
+DigitBin    ~ [01]
+DigitsBin   ~ [01_]*
+
 Digits      ~ [0-9]+
 SingleQuote ~ [']
 DoubleQuote ~ ["]
