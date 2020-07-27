@@ -17,6 +17,10 @@ parses(".0e1");
 parses("0.e1");
 parsent(".e1");
 
+parses("1_000");
+parses("1__00");
+parses("1_000_000");
+parses("1_0_0_");
 parses("0._4");
 parses("1_.4");
 parses(".4_");
