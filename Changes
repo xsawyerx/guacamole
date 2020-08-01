@@ -1,3 +1,8 @@
+0.006 2020-08-01
+
+    * GH #101: Implement number parsing: Decimal, octal, hexadecimal,
+               binary, exponents, and visual separators.
+
 0.005 2020-07-04
 
     * Add proper documentation to Guacamole.pm.
