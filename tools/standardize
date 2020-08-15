@@ -1,0 +1,367 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use experimental qw< postderef signatures >;
+use DDP;
+use PPI::Document;
+use Git::Wrapper;
+use Path::Tiny qw< path >;
+use Getopt::Long qw< :config no_ignore_case >;
+
+# This changes your code to conform to standard.pm, as much as it can
+
+sub help ( $error = '' ) {
+    $error
+        and print "Error: $error\n\n";
+
+    print qq{$0 [OPTIONS] <Directory or Filename>
+
+Options:
+
+-h | --help     Print this help menu and exit
+-v | --verbose  Be more verbose
+};
+
+    exit $error ? 1 : 0;
+}
+
+sub check_if_under_git ($file_path) {
+    if ( !$file_path->is_file() ) {
+        warn "Path '$file_path' is not a file\n";
+        return;
+    };
+
+    my $dir = $file_path->dirname();
+    my $git = Git::Wrapper->new($dir);
+
+    my $file_under_git = $git->RUN( 'ls-files', "$file_path" );
+
+    # TODO: Check whether it's clean or not
+    # just because it's tracked, doesn't mean it's clean
+
+    if ( !$file_under_git ) {
+        print "$0 must be run from a Git repository, skipping...\n";
+        return;
+    }
+
+    return 1;
+}
+
+sub fix_code ($doc) {
+    fix_autoquoting($doc);
+}
+
+sub fix_autoquoting ($doc) {
+    # TODO: Set up all the character rules (See Guacamole GH Issue)
+
+    # Handle left of fat comma (=>)
+
+    my @fatcomma_ops = grep $_->content() eq '=>',
+                       $doc->find('PPI::Token::Operator')->@*;
+    foreach my $op (@fatcomma_ops) {
+        my $word = $op->sprevious_sibling
+            or next;
+
+        should_fix_elem_autoquote($word)
+            and quote_elem($word);
+    }
+
+    # Handle autoquoting in hash access
+    my @subscript_ops = $doc->find('PPI::Structure::Subscript')->@*;
+    foreach my $op (@subscript_ops) {
+        $op->start() eq '{'
+            or next;
+
+        # ignore empty subscripts
+        my $first_child = ( $op->children )[0]
+            or next;
+
+        # Try to find an expression
+        my @exprs = grep !$_->isa('PPI::Token::Whitespace'),
+                    $op->children();
+
+        @exprs == 1
+            or next;
+
+        # Then try to find the next major element
+        my @elems = grep !$_->isa('PPI::Token::Whitespace'),
+                    $exprs[0]->children();
+
+        # Find if there are spaces before and after
+        my $last_child = ( $op->children )[-1];
+        my $pre_or_post_newline
+            = grep $_->content() =~ /\n/xms,
+            get_all_ws( 'next', $first_child ),
+            get_all_ws( 'prev', $last_child );
+
+        $pre_or_post_newline
+            and next;
+
+        my $elem = $elems[0];
+
+        should_fix_elem_autoquote($elem)
+            and quote_elem($elem);
+    }
+}
+
+sub should_fix_elem_autoquote ($elem) {
+    $elem =~ /^['"].*['"]$/
+        and return 0;
+
+    # =>\n breaks auto-quoting
+    my @next_ws = get_all_ws( 'next', $elem );
+    grep $_->content() =~ /\n/xms, @next_ws
+        and return 0;
+
+    $elem->isa('PPI::Token::Word')
+        and return 1;
+}
+
+sub get_all_ws ( $loc, $elem ) {
+    my $iter = $loc eq 'prev'
+             ? sub ($i) { $i->previous_sibling() }
+             : sub ($i) { $i->next_sibling()     };
+
+    my @all;
+    $elem && $elem->isa('PPI::Token::Whitespace')
+        and push @all, $elem;
+
+    my $item = $iter->($elem);
+    while ( $item && $item->isa('PPI::Token::Whitespace') ) {
+        push @all, $item;
+        $item = $iter->($item);
+    }
+
+    return @all;
+}
+
+sub quote_elem ($elem) {
+    $elem->set_content( sprintf "'%s'", $elem->content );
+}
+
+my %opts;
+GetOptions(
+    'help|h'    => \$opts{'help'},
+    'verbose|v' => \$opts{'verbose'},
+);
+
+$opts{'help'}
+    and help();
+
+my $arg = $ARGV[0]
+    or help('Missing which file or directory to operate on');
+
+my $path = path($arg);
+$path->is_dir
+    and help('We don\'t support directories yet...');
+
+my $path_content  = $path->slurp_utf8();
+my $ppi_doc       = PPI::Document->new( \$path_content );
+
+fix_code($ppi_doc);
+
+print "$ppi_doc\n";
+
+# TODO: turn this on
+#$path->spew_utf8($fixed_content);
+
+__END__
+
+$foo{"hi"}
+
+PPI::Document
+  PPI::Statement
+    PPI::Token::Symbol          '$foo'
+    PPI::Structure::Subscript   { ... }
+      PPI::Statement::Expression
+        PPI::Token::Quote::Double       '"hi"'
+
+
+
+$foo{"hello"}[0]{"hi"}
+
+PPI::Document
+  PPI::Statement
+    PPI::Token::Symbol          '$foo'
+    PPI::Structure::Subscript   { ... }
+      PPI::Statement::Expression
+        PPI::Token::Quote::Double       '"hello"'
+    PPI::Structure::Subscript   [ ... ]
+      PPI::Statement::Expression
+        PPI::Token::Number      '0'
+    PPI::Structure::Subscript   { ... }
+      PPI::Statement::Expression
+        PPI::Token::Quote::Double       '"hi"'
+
+
+
+foo( { "hello" => 1 } )
+
+PPI::Document
+  PPI::Statement
+    PPI::Token::Word    'foo'
+    PPI::Structure::List        ( ... )
+      PPI::Statement
+        PPI::Structure::Constructor     { ... }
+          PPI::Statement
+            PPI::Token::Quote::Double   '"hello"'
+            PPI::Token::Operator        '=>'
+            PPI::Token::Number          '1'
+
+
+
+__END__
+PPI::Document
+  PPI::Statement
+    PPI::Token::Symbol          '$foo'
+    PPI::Structure::Subscript   { ... }
+      PPI::Statement::Expression
+        PPI::Token::Word        'hello'
+    PPI::Token::Whitespace      ' '
+    PPI::Token::Operator        '='
+    PPI::Token::Whitespace      ' '
+    PPI::Token::Quote::Double   '"hi"'
+    PPI::Token::Structure       ';'
+  PPI::Token::Whitespace        '\n'
+  PPI::Statement
+    PPI::Token::Symbol          '$foo'
+    PPI::Token::Whitespace      ' '
+    PPI::Token::Operator        '='
+    PPI::Token::Whitespace      ' '
+    PPI::Structure::Constructor         { ... }
+      PPI::Token::Whitespace    ' '
+      PPI::Statement::Expression
+        PPI::Token::Word        'hello'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Operator    '=>'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Quote::Double       '"hi"'
+      PPI::Token::Whitespace    ' '
+    PPI::Token::Structure       ';'
+  PPI::Token::Whitespace        '\n'
+  PPI::Statement
+    PPI::Token::Symbol          '%foo'
+    PPI::Token::Whitespace      ' '
+    PPI::Token::Operator        '='
+    PPI::Token::Whitespace      ' '
+    PPI::Structure::List        ( ... )
+      PPI::Token::Whitespace    ' '
+      PPI::Statement::Expression
+        PPI::Token::Word        'hello'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Operator    '=>'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Quote::Double       '"hi"'
+      PPI::Token::Whitespace    ' '
+    PPI::Token::Structure       ';'
+  PPI::Token::Whitespace        '\n'
+  PPI::Statement
+    PPI::Token::Word    'foo'
+    PPI::Structure::List        ( ... )
+      PPI::Token::Whitespace    ' '
+      PPI::Statement::Expression
+        PPI::Token::Word        'hello'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Operator    '=>'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Quote::Double       '"hi"'
+        PPI::Token::Operator    ','
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Word        'foo'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Operator    '=>'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Word        'bar'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Operator    '=>'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Word        'baz'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Operator    '=>'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Number      '1'
+      PPI::Token::Whitespace    ' '
+    PPI::Token::Structure       ';'
+  PPI::Token::Whitespace        '\n'
+  PPI::Token::Whitespace        '\n'
+  PPI::Token::Comment   '# with newlines\n'
+  PPI::Statement
+    PPI::Token::Symbol          '$foo'
+    PPI::Structure::Subscript   { ... }
+      PPI::Token::Whitespace    '\n'
+      PPI::Statement::Expression
+        PPI::Token::Word        'hello'
+      PPI::Token::Whitespace    '\n'
+    PPI::Token::Whitespace      ' '
+    PPI::Token::Operator        '='
+    PPI::Token::Whitespace      ' '
+    PPI::Token::Quote::Double   '"hi"'
+    PPI::Token::Structure       ';'
+  PPI::Token::Whitespace        '\n'
+  PPI::Statement
+    PPI::Token::Symbol          '$foo'
+    PPI::Token::Whitespace      ' '
+    PPI::Token::Operator        '='
+    PPI::Token::Whitespace      ' '
+    PPI::Structure::Constructor         { ... }
+      PPI::Token::Whitespace    '\n'
+      PPI::Token::Whitespace    '    '
+      PPI::Statement::Expression
+        PPI::Token::Word        'hello'
+        PPI::Token::Whitespace          '\n'
+        PPI::Token::Whitespace          '        '
+        PPI::Token::Operator    '=>'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Quote::Double       '"hi"'
+      PPI::Token::Whitespace    ' '
+    PPI::Token::Structure       ';'
+  PPI::Token::Whitespace        '\n'
+  PPI::Statement
+    PPI::Token::Symbol          '%foo'
+    PPI::Token::Whitespace      ' '
+    PPI::Token::Operator        '='
+    PPI::Token::Whitespace      ' '
+    PPI::Structure::List        ( ... )
+      PPI::Token::Whitespace    '\n'
+      PPI::Statement::Expression
+        PPI::Token::Word        'hello'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Operator    '=>'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Quote::Double       '"hi"'
+      PPI::Token::Whitespace    ' '
+    PPI::Token::Structure       ';'
+  PPI::Token::Whitespace        '\n'
+  PPI::Statement
+    PPI::Token::Word    'foo'
+    PPI::Structure::List        ( ... )
+      PPI::Token::Whitespace    '\n'
+      PPI::Token::Whitespace    '    '
+      PPI::Statement::Expression
+        PPI::Token::Word        'hello'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Operator    '=>'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Quote::Double       '"hi"'
+        PPI::Token::Operator    ','
+        PPI::Token::Whitespace          '\n'
+        PPI::Token::Whitespace          '    '
+        PPI::Token::Word        'foo'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Operator    '=>'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Quote::Double       '"bar"'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Operator    '=>'
+        PPI::Token::Whitespace          '\n'
+        PPI::Token::Whitespace          '    '
+        PPI::Token::Word        'baz'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Operator    '=>'
+        PPI::Token::Whitespace          ' '
+        PPI::Token::Number      '1'
+      PPI::Token::Whitespace    '\n'
+    PPI::Token::Structure       ';'
+  PPI::Token::Whitespace        '\n'
+  PPI::Token::Whitespace        '\n'
+
