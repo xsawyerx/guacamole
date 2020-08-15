@@ -1,3 +1,12 @@
+0.007 2020-08-15
+
+    * GH #106: Document eval EXPR is not supported.
+      (Thanks, Hauke @haukex D)
+    * Add preliminary tool to help turn non-standard code into
+      standard code. For now, it can quote autoquoted strings pretty
+      well. Alpha-level, be warned!
+
+
 0.006 2020-08-01
 
     * GH #101: Implement number parsing: Decimal, octal, hexadecimal,
