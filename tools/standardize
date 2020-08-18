@@ -52,10 +52,7 @@ sub fix_code ($doc) {
 }
 
 sub fix_autoquoting ($doc) {
-    # TODO: Set up all the character rules (See Guacamole GH Issue)
-
     # Handle left of fat comma (=>)
-
     my @fatcomma_ops = grep $_->content() eq '=>',
                        $doc->find('PPI::Token::Operator')->@*;
     foreach my $op (@fatcomma_ops) {
@@ -86,6 +83,10 @@ sub fix_autoquoting ($doc) {
         # Then try to find the next major element
         my @elems = grep !$_->isa('PPI::Token::Whitespace'),
                     $exprs[0]->children();
+
+        # ignore multi-element subscripts
+        @elems == 1
+            or next;
 
         # Find if there are spaces before and after
         my $last_child = ( $op->children )[-1];
