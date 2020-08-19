@@ -49,12 +49,17 @@ sub check_if_under_git ($file_path) {
 
 sub fix_code ($doc) {
     fix_autoquoting($doc);
+    fix_simple_deref($doc);
 }
 
 sub fix_autoquoting ($doc) {
     # Handle left of fat comma (=>)
-    my @fatcomma_ops = grep $_->content() eq '=>',
-                       $doc->find('PPI::Token::Operator')->@*;
+    my $operators = $doc->find('PPI::Token::Operator')
+        or return;
+
+    my @fatcomma_ops = grep $_->content() eq '=>', $operators->@*
+       or return;
+
     foreach my $op (@fatcomma_ops) {
         my $word = $op->sprevious_sibling
             or next;
@@ -102,6 +107,28 @@ sub fix_autoquoting ($doc) {
 
         should_fix_elem_autoquote($elem)
             and quote_elem($elem);
+    }
+}
+
+sub fix_simple_deref ($doc) {
+    # Handle ${$foo}, @{$foo}, %{$foo}
+    my $operators = $doc->find('PPI::Token::Cast')
+        or return;
+
+    foreach my $cast_op ( $operators->@* ) {
+        my $cast_string = $cast_op->content();
+        my $var_op     = $cast_op->snext_sibling();
+
+        $var_op->isa('PPI::Token::Symbol')
+            or next;
+
+        my $var_string = $var_op->content();
+
+        $cast_op->set_content(
+            sprintf '%s{%s}', $cast_string, $var_string
+        );
+
+        $var_op->remove();
     }
 }
 
