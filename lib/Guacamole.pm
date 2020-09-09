@@ -866,18 +866,21 @@ OpKeywordFilenoExpr           ::= OpKeywordFileno OpUnaryKeywordArg
 
 OpKeywordFlockExpr            ::= OpKeywordFlock OpListKeywordArg
 
-OpKeywordForkExpr             ::= OpKeywordFork
+OpKeywordForkExpr             ::= OpKeywordFork LParen RParen
+                                | OpKeywordFork
 
 OpKeywordGetcExpr             ::= OpKeywordGetc OpUnaryKeywordArg
                                 | OpKeywordGetc
 
-OpKeywordGetloginExpr         ::= OpKeywordGetlogin
+OpKeywordGetloginExpr         ::= OpKeywordGetlogin LParen RParen
+                                | OpKeywordGetlogin
 
 OpKeywordGetpeernameExpr      ::= OpKeywordGetpeername OpUnaryKeywordArg
 
 OpKeywordGetpgrpExpr          ::= OpKeywordGetpgrp OpUnaryKeywordArg
 
-OpKeywordGetppidExpr          ::= OpKeywordGetppid
+OpKeywordGetppidExpr          ::= OpKeywordGetppid LParen RParen
+                                | OpKeywordGetppid
 
 OpKeywordGetpriorityExpr      ::= OpKeywordGetpriority OpListKeywordArg
 
@@ -905,21 +908,29 @@ OpKeywordGetprotobynumberExpr ::= OpKeywordGetprotobynumber OpUnaryKeywordArg
 
 OpKeywordGetservbyportExpr    ::= OpKeywordGetservbyport OpListKeywordArg
 
-OpKeywordGetpwentExpr         ::= OpKeywordGetpwent
+OpKeywordGetpwentExpr         ::= OpKeywordGetpwent LParen RParen
+                                | OpKeywordGetpwent
 
-OpKeywordGetgrentExpr         ::= OpKeywordGetgrent
+OpKeywordGetgrentExpr         ::= OpKeywordGetgrent LParen RParen
+                                | OpKeywordGetgrent
 
-OpKeywordGethostentExpr       ::= OpKeywordGethostent
+OpKeywordGethostentExpr       ::= OpKeywordGethostent LParen RParen
+                                | OpKeywordGethostent
 
-OpKeywordGetnetentExpr        ::= OpKeywordGetnetent
+OpKeywordGetnetentExpr        ::= OpKeywordGetnetent LParen RParen
+                                | OpKeywordGetnetent
 
-OpKeywordGetprotoentExpr      ::= OpKeywordGetprotoent
+OpKeywordGetprotoentExpr      ::= OpKeywordGetprotoent LParen RParen
+                                | OpKeywordGetprotoent
 
-OpKeywordGetserventExpr       ::= OpKeywordGetservent
+OpKeywordGetserventExpr       ::= OpKeywordGetservent LParen RParen
+                                | OpKeywordGetservent
 
-OpKeywordSetpwentExpr         ::= OpKeywordSetpwent
+OpKeywordSetpwentExpr         ::= OpKeywordSetpwent LParen RParen
+                                | OpKeywordSetpwent
 
-OpKeywordSetgrentExpr         ::= OpKeywordSetgrent
+OpKeywordSetgrentExpr         ::= OpKeywordSetgrent LParen RParen
+                                | OpKeywordSetgrent
 
 OpKeywordSethostentExpr       ::= OpKeywordSethostent OpUnaryKeywordArg
 
@@ -929,17 +940,23 @@ OpKeywordSetprotoentExpr      ::= OpKeywordSetprotoent OpUnaryKeywordArg
 
 OpKeywordSetserventExpr       ::= OpKeywordSetservent OpUnaryKeywordArg
 
-OpKeywordEndpwentExpr         ::= OpKeywordEndpwent
+OpKeywordEndpwentExpr         ::= OpKeywordEndpwent LParen RParen
+                                | OpKeywordEndpwent
 
-OpKeywordEndgrentExpr         ::= OpKeywordEndgrent
+OpKeywordEndgrentExpr         ::= OpKeywordEndgrent LParen RParen
+                                | OpKeywordEndgrent
 
-OpKeywordEndhostentExpr       ::= OpKeywordEndhostent
+OpKeywordEndhostentExpr       ::= OpKeywordEndhostent LParen RParen
+                                | OpKeywordEndhostent
 
-OpKeywordEndnetentExpr        ::= OpKeywordEndnetent
+OpKeywordEndnetentExpr        ::= OpKeywordEndnetent LParen RParen
+                                | OpKeywordEndnetent
 
-OpKeywordEndprotoentExpr      ::= OpKeywordEndprotoent
+OpKeywordEndprotoentExpr      ::= OpKeywordEndprotoent LParen RParen
+                                | OpKeywordEndprotoent
 
-OpKeywordEndserventExpr       ::= OpKeywordEndservent
+OpKeywordEndserventExpr       ::= OpKeywordEndservent LParen RParen
+                                | OpKeywordEndservent
 
 OpKeywordExecExpr             ::= OpKeywordExec BlockNonEmpty OpListKeywordArg
                                 | OpKeywordExec OpListKeywordArgNonBrace
@@ -1211,9 +1228,11 @@ OpKeywordTieExpr              ::= OpKeywordTie OpListKeywordArg
 
 OpKeywordTiedExpr             ::= OpKeywordTied OpUnaryKeywordArg
 
-OpKeywordTimeExpr             ::= OpKeywordTime
+OpKeywordTimeExpr             ::= OpKeywordTime LParen RParen
+                                | OpKeywordTime
 
-OpKeywordTimesExpr            ::= OpKeywordTimes
+OpKeywordTimesExpr            ::= OpKeywordTimes LParen RParen
+                                | OpKeywordTimes
 
 OpKeywordTruncateExpr         ::= OpKeywordTruncate OpListKeywordArg
 
@@ -1244,11 +1263,13 @@ OpKeywordValuesExpr           ::= OpKeywordValues OpUnaryKeywordArg
 
 OpKeywordVecExpr              ::= OpKeywordVec OpListKeywordArg
 
-OpKeywordWaitExpr             ::= OpKeywordWait
+OpKeywordWaitExpr             ::= OpKeywordWait LParen RParen
+                                | OpKeywordWait
 
 OpKeywordWaitpidExpr          ::= OpKeywordWaitpid OpListKeywordArg
 
-OpKeywordWantarrayExpr        ::= OpKeywordWantarray
+OpKeywordWantarrayExpr        ::= OpKeywordWantarray LParen RParen
+                                | OpKeywordWantarray
 
 OpKeywordWarnExpr             ::= OpKeywordWarn OpListKeywordArg
                                 | OpKeywordWarn
