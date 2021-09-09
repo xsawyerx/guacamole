@@ -782,6 +782,10 @@ OpKeywordAtan2Expr            ::= OpKeywordAtan2 OpListKeywordArg
 OpKeywordBindExpr             ::= OpKeywordBind OpListKeywordArg
 
 OpKeywordBinmodeExpr          ::= OpKeywordBinmode OpListKeywordArg
+                                | OpKeywordBinmode LParen BuiltinFilehandle RParen
+                                | OpKeywordBinmode BuiltinFilehandle
+                                | OpKeywordBinmode LParen BuiltinFilehandle OpComma ExprAssignR RParen
+                                | OpKeywordBinmode BuiltinFilehandle OpComma ExprAssignR
 
 OpKeywordBlessExpr            ::= OpKeywordBless OpListKeywordArg
 
