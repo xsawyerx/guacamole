@@ -42,6 +42,16 @@ LoopStatement ::= ForStatement
 
 ForStatement ::= ForStatementOp LParen Statement Semicolon Statement Semicolon Statement RParen Block ContinueExpr
                | ForStatementOp LParen Statement Semicolon Statement Semicolon Statement RParen Block
+               | ForStatementOp LParen Semicolon Statement Semicolon Statement RParen Block ContinueExpr
+               | ForStatementOp LParen Semicolon Statement Semicolon Statement RParen Block
+               | ForStatementOp LParen Statement Semicolon Semicolon Statement RParen Block ContinueExpr
+               | ForStatementOp LParen Statement Semicolon Semicolon Statement RParen Block
+               | ForStatementOp LParen Statement Semicolon Statement Semicolon RParen Block ContinueExpr
+               | ForStatementOp LParen Statement Semicolon Statement Semicolon RParen Block
+               | ForStatementOp LParen Semicolon Semicolon Statement RParen Block ContinueExpr
+               | ForStatementOp LParen Semicolon Semicolon Statement RParen Block
+               | ForStatementOp LParen Statement Semicolon Semicolon RParen Block ContinueExpr
+               | ForStatementOp LParen Statement Semicolon Semicolon RParen Block
                | ForStatementOp OpKeywordMy VarScalar LParen Expression RParen Block ContinueExpr
                | ForStatementOp OpKeywordMy VarScalar LParen Expression RParen Block
                | ForStatementOp VarScalar LParen Expression RParen Block ContinueExpr
