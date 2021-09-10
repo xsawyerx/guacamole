@@ -355,6 +355,7 @@ GlobalVarExpr ::= '$#'
                 | SigilArray  GlobalVariables ElemSeq0
                 | SigilHash   GlobalVariables ElemSeq0
                 | SigilGlob   GlobalVariables ElemSeq0
+                | SigilArrayTop GlobalVariables
 
 VarScalar   ::= SigilScalar VarIdentExpr ElemSeq0
 VarArray    ::= SigilArray VarIdentExpr ElemSeq0

@@ -91,6 +91,7 @@ parses('$^X');
 parses('@+');
 parses('@-');
 parses('@_');
+parses('$#_');
 parses('@{^CAPTURE}');
 
 parses('%!');
