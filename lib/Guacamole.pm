@@ -846,6 +846,7 @@ OpKeywordDefinedExpr          ::= OpKeywordDefined OpUnaryKeywordArg
 OpKeywordDeleteExpr           ::= OpKeywordDelete OpUnaryKeywordArg
 
 OpKeywordDieExpr              ::= OpKeywordDie OpListKeywordArg
+                                | OpKeywordDie
 
 OpKeywordDoExpr               ::= OpKeywordDo BlockNonEmpty
                                 | OpKeywordDo OpUnaryKeywordArgNonBrace
