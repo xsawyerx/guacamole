@@ -148,10 +148,23 @@ ConditionForeachPostfixExpr ::= ConditionForeach Expression
 Label ::= IdentComp Colon
 
 # this is based on the order of ops in `perldoc perlop`
-# U can be LHS of shift and up
-# 0 can be LHS of assignment and up
-# L can be LHS of comma and up
-# R can be LHS of anything
+# U can be LHS of shift and up      (value)                       << >>
+# 0 can be LHS of assignment and up (value or unary)              = += -= *=
+# L can be LHS of comma and up      (value, assign, unary)        , =>
+# R can be LHS of anything          (value, list, assign, unary) (anything)
+
+# There are four types of keywords:
+# * Nullary (This is "OpNullaryKeywordExpr" -> Value")
+# * Unary   (This is "OpUnaryKeywordExpr")
+# * Assign  (This is "OpAssignKeywordExpr")
+# * List    (This is "OpListKeywordExpr")
+
+# Hence, there are four types of expressions:
+# ExprValueU: Those that are just values
+# ExprValue0: Those that are values, and unary keywords
+# ExprValueL: Those that are values, assignment keywords (+ goto,last,next,redo,dump), or unary keywords
+# ExprValueR: Those that are values, list, assigment, or unary
+
 ExprValueU    ::= Value
 ExprValue0    ::= Value | OpUnaryKeywordExpr
 ExprValueL    ::= Value | OpAssignKeywordExpr | OpUnaryKeywordExpr
