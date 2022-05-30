@@ -1,6 +1,7 @@
 {{$NEXT}}
 
     * GH #114: Support all forms of binmode() (Val @valcomm).
+    * GH #115: Support all forms of for() loop (Val @valcomm).
 
 0.007 2020-08-15
 
