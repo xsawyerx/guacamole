@@ -298,12 +298,15 @@ Standard Perl accepts both attributes and signatures.
     first {...} @foo         # not ok
     first( sub {...}, @foo ) # ok
 
-We are looking into allowing developers to have their grammars hooking
-up to the L<Guacamole> parser so it Standard Perl could be exnteded.
-This will be useful for stuff like L<List::Util>, L<Dancer2>,
-L<Mojolicious::Lite>, L<Moose>, etc.
+There is preliminary support for adding your own keywords by hooking
+into the grammar of the L<Guacamole> parser, but it is B<ALPHA> stage,
+so it's not widely docuemnted.
 
-Having said that, Standard Perl doesn't accept prototypes.
+This will be useful for stuff like L<List::Util>, L<Dancer2>,
+L<Mojolicious::Lite>, L<Try::Tiny>, L<Moose>, etc.
+
+Having said that, Standard Perl will likely never prototypes directly,
+nor should it.
 
 =back
 
