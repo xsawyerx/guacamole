@@ -9,6 +9,7 @@
     * Support "$foo->$bar" and "$foo->$_".
     * Support 'eval "..."' or 'eval $foo'.
     * Improve wording on top-level anonymous hashes.
+    * GH #23: (VERY) Preliminary support for extending the grammar.
 
 0.007 2020-08-15
 
