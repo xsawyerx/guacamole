@@ -2158,6 +2158,13 @@ sub parse {
         }
     };
 
+    if (!@values) {
+        my ( $g1_start, $g1_length ) = $rec->last_completed('Program');
+        die "Program could not be successfully parsed\n" if not defined $g1_start;
+        my $last_expression = $rec->substring( $g1_start, $g1_length );
+        die "Last text successfully parsed was: $last_expression\n";
+    }
+
     return @values;
 }
 
