@@ -175,6 +175,43 @@ odd, so we do not support that.
 
 Not supported.
 
+=item * Anonymous hashes vs. bare block as top-level expressions
+
+    # not ok
+    package Foo {
+        { 'bar' => 'baz' };
+    }
+
+The above shows a useless use of anonymous hash (per the Perl warning
+on it) as a top-level expression (in this case, inside a C<package>
+block).
+
+Standard Perl does not support this since it can be confused with a
+bare code block. Instead, you should add some top-level token to
+disambiguate:
+
+    # ok
+    package Foo {
+        +{ 'bar' => 'baz' }
+    }
+
+It's still useless (and Perl would warn about it), but it's allowed.
+
+    # not ok:
+    sub foo {
+        { 'a' => 'b' };
+    }
+
+    # ok
+    sub foo {
+        +{ 'a' => 'b' }; # "+" is a top-level token
+    }
+
+    # ok
+    sub foo {
+        return { 'a' => 'b' }; # used as argument to "return"
+    }
+
 =back
 
 =head2 Things we changed
