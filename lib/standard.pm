@@ -161,13 +161,15 @@ The following bareword filehandles are supported:
     print {$fh} $foo; # ok
 
 
-=item * C<_> in file operations
+=item * C<_> outside file operations
 
-    if ( -f $foo && -r _ )    {...} # not ok
-    if ( -f $foo && -r $foo ) {...} $ ok
+    if ( -f $foo && -r _ ) {...} # ok
+    print {$fh} _                # not ok
 
-C<_> is an ambiguous bareword identifier. For example, using it in
-C<print> is parsed different than when used with C<-r>.
+C<_> should only be used as a bareword identifier within C<-X> file
+operations. In the C<print> example, Perl understands it as printing
+an underscore character (C<"_">) to the filehandle, which is just
+odd, so we do not support that.
 
 =item * C<given> / C<when> / C<default>
 

@@ -1325,6 +1325,9 @@ OpFile ::=
 OpFileExpr ::= OpFile OpFileArg
 OpFileArg  ::= OpUnaryKeywordArg
              | BuiltinFilehandle
+             | OpFileDefaultArg
+
+OpFileDefaultArg ~ '_'
 
 QLikeValue ::= QLikeValueExpr | QLikeValueExprWithMods
 
