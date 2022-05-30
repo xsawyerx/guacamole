@@ -3,13 +3,14 @@ package Guacamole;
 
 use strict;
 use warnings;
+use feature qw< state >;
 use constant {
     'DEBUG' => 0,
 };
 
 use Marpa::R2;
 
-my $grammar_source = q{
+our $grammar_source = q{
 lexeme default = latm => 1
 :default ::= action => [ name, start, length, values ]
 
@@ -2101,7 +2102,6 @@ whitespace ~ [\s]+
 
 };
 
-our $grammar = Marpa::R2::Scanless::G->new({ source => \$grammar_source });
 
 sub build_struct {
     my ( $rec, $initial_valueref ) = @_;
@@ -2140,6 +2140,8 @@ sub build_struct {
 
 sub parse {
     my ($class, $text) = @_;
+
+    state $grammar = Marpa::R2::Scanless::G->new({ source => \$grammar_source });
 
     my %args = (
         'grammar' => $grammar,
