@@ -6,6 +6,30 @@ use lib "$Bin/../lib";
 use Guacamole;
 use Guacamole::Dumper qw/dump_tree/;
 
+# add_keyword will do the lexeme adding anyway
+#Guacamole->add_lexemes(
+#    [ 'OpKeywordTry'   => 'try' ],
+#    [ 'OpKeywordCatch' => 'catch' ],
+#);
+
+# Example of adding support for Try::Tiny's try/catch
+#Guacamole->add_keyword(
+#    'Catch',
+#    'unary',
+#    'catch',
+#    [ 'OpKeywordCatch BlockNonEmpty' ]
+#);
+#
+#Guacamole->add_keyword(
+#    'Try',
+#    'list',
+#    'try',
+#    [
+#        'OpKeywordTry BlockNonEmpty OpKeywordCatchExpr',
+#        'OpKeywordTry BlockNonEmpty',
+#    ],
+#);
+
 my $src = shift @ARGV;
 foreach my $ast (Guacamole->parse($src)) {
     print dump_tree($ast);

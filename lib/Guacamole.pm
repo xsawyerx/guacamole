@@ -2102,6 +2102,45 @@ whitespace ~ [\s]+
 
 };
 
+sub add_lexemes {
+    my ( $class, @items ) = @_;
+
+    foreach my $item (@items) {
+        ref $item eq 'ARRAY'
+            or die 'add_lexemes( [NAME, VALUE], [NAME, VALUE] )';
+
+        $grammar_source .= "$item->[0] ~ '$item->[1]'\n";
+    }
+}
+
+sub add_keyword {
+    my ( $class, $name, $type, $value, $rules_arrayref ) = @_;
+    $name && $type && $value && $rules_arrayref
+        or die 'add_keyword( NAME_STR, TYPE_STR, VALUE_STR, RULES_ARRAYREF )';
+
+    ref $rules_arrayref eq 'ARRAY'
+        or die 'rules must be an arrayref';
+
+    $type =~ /^( nullary | unary | assign | list )$/xms
+        or die 'Type must be "nullary", "unary", "assign", or "list"';
+
+    grep !length, $name, $type, $value
+        and die 'name, type, value must have length';
+
+    $name = ucfirst $name; # Just in case
+    $type = ucfirst $type;
+
+    my $rules_string = join "\n | ", $rules_arrayref->@*;
+
+    $grammar_source .= qq{
+OpKeyword$name ~ '$value'
+OpKeyword${name}Expr ::= $rules_string
+:lexeme ~ OpKeyword${name} priority => 1
+};
+
+    my $type_rule = "Op${type}KeywordExpr";
+    $grammar_source =~ s{($type_rule\s+::=)}{$1 OpKeyword${name}Expr | }xms;
+}
 
 sub build_struct {
     my ( $rec, $initial_valueref ) = @_;
