@@ -2081,10 +2081,9 @@ whitespace ~ [\s]+
 :lexeme ~ OpKeywordWarn             priority => 1
 :lexeme ~ OpKeywordWrite            priority => 1
 
-# This is the only Op that conflicts
-# OpInc conflicts with OpUnary
-# So when it's both, OpInc wins
-# (such as: sort $x + $y
+# OpAdd ("+") conflicts with OpUnary ("+")
+# So when it's both, OpAdd should win
+# (e.g., "sort $x + $y" should be OpAdd, not OpUnary)
 :lexeme ~ OpAdd priority => 1
 
 };
