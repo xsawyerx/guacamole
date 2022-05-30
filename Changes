@@ -1,3 +1,7 @@
+{{$NEXT}}
+
+    * GH #114: Support all forms of binmode() (Val @valcomm).
+
 0.007 2020-08-15
 
     * GH #106: Document eval EXPR is not supported.
