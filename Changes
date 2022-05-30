@@ -3,6 +3,12 @@
     * GH #111: Support "die".
     * GH #114: Support all forms of binmode() (Val @valcomm).
     * GH #115: Support all forms of for() loop (Val @valcomm).
+    * When failing without an exception, we throw an exception with
+      more information (e.g., "print _").
+    * Support "_" in file operations ("-x _", etc.).
+    * Support "$foo->$bar" and "$foo->$_".
+    * Support 'eval "..."' or 'eval $foo'.
+    * Improve wording on top-level anonymous hashes.
 
 0.007 2020-08-15
 
