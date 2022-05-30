@@ -498,6 +498,8 @@ GlobalVariables ~ '!'
                 | '{^CAPTURE_ALL}'
                 | Digits
 
+VarDefaultArg ::= '$_'
+
 # This uses the same definition as subroutine names
 # In the future, we might want to split those
 # but they are basically the same
@@ -542,6 +544,8 @@ ArrowRHS ::= ArrowDerefCall
            | ArrowMethodCall
            | ArrowIndirectCall
            | ElemSeq1
+           | VarScalar
+           | VarDefaultArg
 
 ArrowDerefCall     ::= CallArgs
 ArrowDerefVariable ::= DerefVariableArgsAll
