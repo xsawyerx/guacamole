@@ -128,14 +128,14 @@ thus not supported.
 
     open FOO, ...    # not ok
     open my $fh, ... # ok
-    open $fh, ...    # also ok
+    open $fh, ...    # ok
 
-    print STDOUT $foo; # also ok
-    print STDERR $foo; # also ok
+    print STDOUT $foo; # ok
+    print STDERR $foo; # ok
 
     while ( <FOO>   ) {...} # not ok
     while ( <$foo>  ) {...} # ok
-    while ( <STDIN> ) {...} # also ok
+    while ( <STDIN> ) {...} # ok
 
 The following bareword filehandles are supported:
 
@@ -180,7 +180,7 @@ Not supported.
 The following are limitations that Standard Perl has which the perl
 interpreter doesn't.
 
-=head3 Q-Like values delimiters
+=head3 Q-Like values
 
 Q-Like values are one of the following: C<q>, C<qq>, C<qw>, C<qx>, C<qr>
 
@@ -214,12 +214,17 @@ C<()>, C<[]>, C<{}>, C<< E<lt> E<gt> >>, C<//>, C<!!>, and C<||>.
     $val = q#...#    # not ok
     $val = q Z ... Z # not ok
 
-=item * No spaces between before delimiters:
+If you want to advocate for another set of delimiters, open a ticket.
 
-    q <foo> # not ok
-    q<foo>  # ok
-    q ()    # not ok
-    q()     # ok
+=item * No spaces between before delimiters in Q-like values:
+
+    q <foo>   # not ok
+    q < foo > # not ok
+    q ()      # not ok
+
+    q<foo>    # ok
+    q< foo >; # ok
+    q()       # ok
 
 =back
 
@@ -235,10 +240,10 @@ C<()>, C<[]>, C<{}>, C<< E<lt> E<gt> >>, C<//>, C<!!>, and C<||>.
 There is an exception for methods:
 
     $foo->bar()         # ok
-    $foo->bar           # also ok
+    $foo->bar           # ok
 
     $foo->bar()->baz()  # ok
-    $foo->bar->baz      # also ok
+    $foo->bar->baz      # ok
 
 =item * Subroutines can have attributes and signatures
 
@@ -255,11 +260,11 @@ Standard Perl accepts both attributes and signatures.
     first( sub {...}, @foo ) # ok
 
 We are looking into allowing developers to have their grammars hooking
-up to the L<Guacamole> parser so it could allow to extend Standard Perl.
+up to the L<Guacamole> parser so it Standard Perl could be exnteded.
 This will be useful for stuff like L<List::Util>, L<Dancer2>,
 L<Mojolicious::Lite>, L<Moose>, etc.
 
-Having said that, Standard Perl doesn't accept this.
+Having said that, Standard Perl doesn't accept prototypes.
 
 =back
 
@@ -272,7 +277,7 @@ Having said that, Standard Perl doesn't accept this.
     Foo->new(); # always a class, never a function "Foo"
 
 This is tricky because the perl interpreter might see a function called
-C<foo> in the same scope and call that instead. This would mean that
+C<Foo> in the same scope and call that instead. This would mean that
 Standard Perl and the perl interpreter would report different results.
 
 We have a shim layer in L<standard> that checks for this and alerts if
@@ -285,7 +290,7 @@ We advise other parsers who use Standard Perl BNF to include this part.
     Foo->bar();   # ok
     Foo::->bar(); # not ok
 
-This might be changed.
+This might be changed in the future.
 
 =back
 

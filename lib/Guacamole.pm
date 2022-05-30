@@ -3,10 +3,11 @@ package Guacamole;
 
 use strict;
 use warnings;
-use Marpa::R2;
 use constant {
     'DEBUG' => 0,
 };
+
+use Marpa::R2;
 
 my $grammar_source = q{
 lexeme default = latm => 1
@@ -101,6 +102,7 @@ RequireStatement ::= OpKeywordRequire VersionExpr
 
 PackageStatement ::= OpKeywordPackage ClassIdent VersionExpr Block
                    | OpKeywordPackage ClassIdent Block
+
 PackageDeclaration ::= OpKeywordPackage ClassIdent VersionExpr
                      | OpKeywordPackage ClassIdent
 
@@ -219,10 +221,9 @@ ExprNameAnd   ::= ExprNameAnd OpNameAnd ExprNameNot     | ExprNameNot   action =
 ExprNameOr    ::= ExprNameOr  OpNameOr  ExprNameAnd     | ExprNameAnd   action => ::first
 Expression    ::=                                         ExprNameOr    action => ::first
 
-# These will never be evaluated as a hashref (LiteralHash)
-# because hashrefs are not allowed to be top-level
-# Being combined combined with '+' or 'return' means they aren't top-level,
-# but follow top-level tokens ('+' or 'return')
+# Hashrefs (LiteralHash) are not allowed to be top-level so they aren't confused with block
+# However, "+{...}" or "return {...}" means they aren't top level because of the preceding op
+# which are themselves top-level tokens ("+", "return")
 NonBraceExprValueU    ::= NonBraceValue
 NonBraceExprValue0    ::= NonBraceValue | OpUnaryKeywordExpr
 NonBraceExprValueL    ::= NonBraceValue | OpAssignKeywordExpr | OpUnaryKeywordExpr
@@ -239,10 +240,10 @@ NonBraceExprPowerU    ::= NonBraceExprIncU    OpPower   ExprUnaryU      | NonBra
 NonBraceExprPower0    ::= NonBraceExprIncU    OpPower   ExprUnary0      | NonBraceExprInc0     action => ::first
 NonBraceExprPowerL    ::= NonBraceExprIncU    OpPower   ExprUnaryL      | NonBraceExprIncL     action => ::first
 NonBraceExprPowerR    ::= NonBraceExprIncU    OpPower   ExprUnaryR      | NonBraceExprIncR     action => ::first
-NonBraceExprUnaryU    ::= OpUnary     ExprUnaryU                | NonBraceExprPowerU   action => ::first
-NonBraceExprUnary0    ::= OpUnary     ExprUnary0                | NonBraceExprPower0   action => ::first
-NonBraceExprUnaryL    ::= OpUnary     ExprUnaryL                | NonBraceExprPowerL   action => ::first
-NonBraceExprUnaryR    ::= OpUnary     ExprUnaryR                | NonBraceExprPowerR   action => ::first
+NonBraceExprUnaryU    ::= OpUnary     ExprUnaryU                        | NonBraceExprPowerU   action => ::first
+NonBraceExprUnary0    ::= OpUnary     ExprUnary0                        | NonBraceExprPower0   action => ::first
+NonBraceExprUnaryL    ::= OpUnary     ExprUnaryL                        | NonBraceExprPowerL   action => ::first
+NonBraceExprUnaryR    ::= OpUnary     ExprUnaryR                        | NonBraceExprPowerR   action => ::first
 NonBraceExprRegexU    ::= NonBraceExprRegexU  OpRegex   ExprUnaryU      | NonBraceExprUnaryU   action => ::first
 NonBraceExprRegex0    ::= NonBraceExprRegexU  OpRegex   ExprUnary0      | NonBraceExprUnary0   action => ::first
 NonBraceExprRegexL    ::= NonBraceExprRegexU  OpRegex   ExprUnaryL      | NonBraceExprUnaryL   action => ::first
@@ -285,7 +286,7 @@ NonBraceExprCondL     ::= NonBraceExprRange0  OpTriThen ExprRangeL OpTriElse Exp
 NonBraceExprCondR     ::= NonBraceExprRange0  OpTriThen ExprRangeR OpTriElse ExprCondR | NonBraceExprRangeR action => ::first
 NonBraceExprAssignL   ::= NonBraceExprCond0   OpAssign  ExprAssignL     | OpAssignKeywordExpr
                                                         | NonBraceExprCondL     action => ::first
-NonBraceExprAssignR   ::= NonBraceExprCond0   OpAssign  ExprAssignR     | NonBraceExprCondR     action => ::first
+NonBraceExprAssignR   ::= NonBraceExprCond0   OpAssign  ExprAssignR     | NonBraceExprCondR    action => ::first
 
 
 NonBraceExprComma     ::= NonBraceExprAssignL OpComma ExprComma    | NonBraceExprAssignR action => ::first
@@ -296,7 +297,7 @@ BlockLevelExprNameAnd ::= BlockLevelExprNameAnd OpNameAnd ExprNameNot | BlockLev
 BlockLevelExprNameOr  ::= BlockLevelExprNameOr OpNameOr ExprNameAnd | BlockLevelExprNameAnd action => ::first
 BlockLevelExpression  ::= BlockLevelExprNameOr action => ::first
 
-Value         ::= Literal | NonLiteral | QLikeValue
+Value ::= Literal | NonLiteral | QLikeValue
 
 # Arguments of operators according to the operator precedence
 OpUnaryKeywordArg         ::= ExprShiftR
