@@ -865,6 +865,7 @@ OpKeywordEofExpr              ::= OpKeywordEof OpUnaryKeywordArg
                                 | OpKeywordEof
 
 OpKeywordEvalExpr             ::= OpKeywordEval BlockNonEmpty
+                                | OpKeywordEval Value
 
 OpKeywordEvalbytesExpr        ::= OpKeywordEvalbytes OpUnaryKeywordArg
                                 | OpKeywordEvalbytes

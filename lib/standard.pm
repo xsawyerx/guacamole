@@ -319,17 +319,6 @@ This might be changed in the future.
 
 =back
 
-=head3 Eval
-
-=over 4
-
-=item * C<eval> only supports a block, not an expression
-
-    eval { ... }   # ok
-    eval " ... "   # not ok
-
-=back
-
 =head1 SEE ALSO
 
 L<Guacamole>
