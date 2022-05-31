@@ -1,6 +1,7 @@
 {{$NEXT}}
 
     * GH #111: Support "die".
+    * GH #113: Support "$#_" (but not "$# _").
     * GH #114: Support all forms of binmode() (Val @valcomm).
     * GH #115: Support all forms of for() loop (Val @valcomm).
     * When failing without an exception, we throw an exception with
