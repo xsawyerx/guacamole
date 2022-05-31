@@ -12,12 +12,8 @@ foreach my $lead_sigil (qw< $ @ % & * >) {
 }
 
 parses('$foo->$#*');
-
-TODO: {
-    local $TODO = 'Expose bad $# patterns';
-    parsent('$foo->$#');
-    parsent('$foo->$# *');
-}
+parsent('$foo->$#');
+parsent('$foo->$# *');
 
 foreach my $slice_sigil (qw< @ % >) {
     parses("\$foo->$slice_sigil\[ 0, 3 \]");

@@ -387,6 +387,7 @@ VarHash     ::= SigilHash VarIdentExpr ElemSeq0
 VarCode     ::= SigilCode VarIdentExpr
 VarGlob     ::= SigilGlob VarIdentExpr
 VarArrayTop ::= SigilArrayTop VarIdentExpr
+              | '$#_'
 
 SubCall ::= SubNameCallExpr CallArgs
           | VarCode CallArgs

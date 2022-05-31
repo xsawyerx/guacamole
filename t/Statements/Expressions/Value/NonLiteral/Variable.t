@@ -22,6 +22,8 @@ parses('$9');
 parses('$!');
 parses('$"');
 parses('$#');
+parses('$#_');
+parsent('$# _');
 parses('$%');
 parses('$&');
 parses('$\'');
