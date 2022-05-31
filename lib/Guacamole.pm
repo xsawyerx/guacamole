@@ -1125,7 +1125,9 @@ OpKeywordReadExpr             ::= OpKeywordRead OpListKeywordArg
 
 OpKeywordReaddirExpr          ::= OpKeywordReaddir OpUnaryKeywordArg
 
-OpKeywordReadlineExpr         ::= OpKeywordReadline OpUnaryKeywordArg
+OpKeywordReadlineExpr         ::= OpKeywordReadline LParen BuiltinFilehandle RParen
+                                | OpKeywordReadline BuiltinFilehandle
+                                | OpKeywordReadline OpUnaryKeywordArg
                                 | OpKeywordReadline
 
 OpKeywordReadlinkExpr         ::= OpKeywordReadlink OpUnaryKeywordArg
