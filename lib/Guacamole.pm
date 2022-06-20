@@ -1554,12 +1554,12 @@ NonRAngle                    ~ [^>]
 NonForwardSlashOrEscapedForwardSlashes_Any ~ NonForwardSlashOrEscapedForwardSlashes*
 NonForwardSlashOrEscapedForwardSlashes     ~ EscapedForwardSlash | NonForwardSlash
 EscapedForwardSlash                        ~ Escape [/]
-NonForwardSlash                            ~ [^\/]
+NonForwardSlash                            ~ [^/]
 
 NonExclamPointOrEscapedExclamPoints_Any ~ NonExclamPointOrEscapedExclamPoints*
 NonExclamPointOrEscapedExclamPoints     ~ EscapedExclamPoint | NonExclamPoint
 EscapedExclamPoint                      ~ Escape [!]
-NonExclamPoint                          ~ [^\!]
+NonExclamPoint                          ~ [^!]
 
 NonPipeOrEscapedPipes_Any ~ NonPipeOrEscapedPipes*
 NonPipeOrEscapedPipes     ~ EscapedPipe | NonPipe
@@ -1569,7 +1569,7 @@ NonPipe                   ~ [^\|]
 NonBacktickOrEscapedBackticks_Any ~ NonBacktickOrEscapedBackticks*
 NonBacktickOrEscapedBackticks     ~ EscapedBacktick | NonBacktick
 EscapedBacktick                   ~ Escape [`]
-NonBacktick                       ~ [^\`]
+NonBacktick                       ~ [^`]
 
 Ellipsis ~ '...'
 
