@@ -29,9 +29,11 @@ sub parses {
     or do { diag($@); };
 
     # debugging
-    # use DDP;
-    # my @dumped_trees = map dump_tree($_), @trees;
-    # p @dumped_trees;
+    if (0) {
+        require DDP;
+        my @dumped_trees = map dump_tree($_), @trees;
+        &DDP::p([@dumped_trees]);
+    }
 
     is( scalar(@trees), 1, "'$text': parsed unambiguously" );
     return \@trees;

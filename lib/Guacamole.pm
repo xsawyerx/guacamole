@@ -1497,13 +1497,13 @@ DoubleQuote ~ ["]
 
 NonDoubleOrEscapedQuote_Many ~ NonDoubleOrEscapedQuote+
 NonDoubleOrEscapedQuote      ~ EscapedDoubleQuote | NonDoubleQuote
-EscapedDoubleQuote           ~ Escape ["]
-NonDoubleQuote               ~ [^"]
+EscapedDoubleQuote           ~ Escape ["] | Escape [^"]
+NonDoubleQuote               ~ [^"\x{005C}]
 
 NonSingleOrEscapedQuote_Many ~ NonSingleOrEscapedQuote+
 NonSingleOrEscapedQuote      ~ EscapedSingleQuote | NonSingleQuote
-EscapedSingleQuote           ~ Escape [']
-NonSingleQuote               ~ [^']
+EscapedSingleQuote           ~ Escape ['] | Escape [^']
+NonSingleQuote               ~ [^'\x{005C}]
 
 Colon     ~ ':'
 Semicolon ~ ';'
@@ -1527,49 +1527,51 @@ NonRParenOrEscapedParens_Any ~ NonRParenOrEscapedParens*
 NonRParenOrEscapedParens     ~ EscapedParens | NonRParen
 EscapedParens                ~ EscapedLParen | EscapedRParen
 EscapedLParen                ~ Escape [(]
-EscapedRParen                ~ Escape [)]
-NonRParen                    ~ [^)]
+EscapedRParen                ~ Escape [)] | Escape [^)]
+NonRParen                    ~ [^)\x{005C}]
 
 NonRBracketOrEscapedBrackets_Any ~ NonRBracketOrEscapedBrackets*
 NonRBracketOrEscapedBrackets     ~ EscapedBrackets | NonRBracket
 EscapedBrackets                  ~ EscapedLBracket | EscapedRBracket
 EscapedLBracket                  ~ Escape [\[]
-EscapedRBracket                  ~ Escape [\]]
-NonRBracket                      ~ [^\]]
+EscapedRBracket                  ~ Escape [\]] | Escape [^\]]
+NonRBracket                      ~ [^\]\x{005C}]
 
 NonRBraceOrEscapedBraces_Any ~ NonRBraceOrEscapedBraces*
 NonRBraceOrEscapedBraces     ~ EscapedBraces | NonRBrace
 EscapedBraces                ~ EscapedLBrace | EscapedRBrace
 EscapedLBrace                ~ Escape [\{]
-EscapedRBrace                ~ Escape [\}]
-NonRBrace                    ~ [^\}]
+EscapedRBrace                ~ Escape [\}] | Escape [^\}]
+NonRBrace                    ~ [^\}\x{005C}]
 
 NonRAngleOrEscapedAngles_Any ~ NonRAngleOrEscapedAngles*
 NonRAngleOrEscapedAngles     ~ EscapedAngles | NonRAngle
 EscapedAngles                ~ EscapedLAngle | EscapedRAngle
 EscapedLAngle                ~ Escape [<]
-EscapedRAngle                ~ Escape [>]
-NonRAngle                    ~ [^>]
+EscapedRAngle                ~ Escape [>] | Escape [^>]
+NonRAngle                    ~ [^>\x{005C}]
 
+# Escape                 == \x{005C}
+# ForwardSlash (solidus) == \x{002F}
 NonForwardSlashOrEscapedForwardSlashes_Any ~ NonForwardSlashOrEscapedForwardSlashes*
 NonForwardSlashOrEscapedForwardSlashes     ~ EscapedForwardSlash | NonForwardSlash
-EscapedForwardSlash                        ~ Escape [/]
-NonForwardSlash                            ~ [^/]
+EscapedForwardSlash                        ~ Escape Escape | Escape [^\x{005C}]
+NonForwardSlash                            ~ [^\x{002F}\x{005C}]
 
 NonExclamPointOrEscapedExclamPoints_Any ~ NonExclamPointOrEscapedExclamPoints*
 NonExclamPointOrEscapedExclamPoints     ~ EscapedExclamPoint | NonExclamPoint
-EscapedExclamPoint                      ~ Escape [!]
-NonExclamPoint                          ~ [^!]
+EscapedExclamPoint                      ~ Escape [!] | Escape [^!]
+NonExclamPoint                          ~ [^!\x{005C}]
 
 NonPipeOrEscapedPipes_Any ~ NonPipeOrEscapedPipes*
 NonPipeOrEscapedPipes     ~ EscapedPipe | NonPipe
-EscapedPipe               ~ Escape [\|]
-NonPipe                   ~ [^\|]
+EscapedPipe               ~ Escape [\|] | Escape [^\|]
+NonPipe                   ~ [^\|\x{005C}]
 
 NonBacktickOrEscapedBackticks_Any ~ NonBacktickOrEscapedBackticks*
 NonBacktickOrEscapedBackticks     ~ EscapedBacktick | NonBacktick
-EscapedBacktick                   ~ Escape [`]
-NonBacktick                       ~ [^`]
+EscapedBacktick                   ~ Escape [\`] | Escape [^\`]
+NonBacktick                       ~ [^`\x{005C}]
 
 Ellipsis ~ '...'
 
