@@ -1875,8 +1875,8 @@ whitespace ~ [\s]+
 <terminated hash comment>         ~ '#' <hash comment body> <vertical space char>
 <unterminated final hash comment> ~ '#' <hash comment body>
 <hash comment body>               ~ <hash comment char>*
-<vertical space char>             ~ [\x{A}\x{B}\x{C}\x{D}\x{2028}\x{2029}]
-<hash comment char>               ~ [^\x{A}\x{B}\x{C}\x{D}\x{2028}\x{2029}]
+<vertical space char>             ~ [\x{A}\x{B}\x{C}\x{D}\x{0085}\x{2028}\x{2029}]
+<hash comment char>               ~ [^\x{A}\x{B}\x{C}\x{D}\x{0085}\x{2028}\x{2029}]
 
 # Recognize phases before subroutines
 :lexeme ~ PhaseName              priority => 1
