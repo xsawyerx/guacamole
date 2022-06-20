@@ -1870,7 +1870,7 @@ BuiltinFilehandle ~ 'STDIN' | 'STDOUT' | 'STDERR' | 'ARGV' | 'ARGVOUT' | 'DATA'
 whitespace ~ [\s]+
 
 # Comments
-:discard ~ <hash comment>
+:discard                          ~ <hash comment>
 <hash comment>                    ~ <terminated hash comment> | <unterminated final hash comment>
 <terminated hash comment>         ~ '#' <hash comment body> <vertical space char>
 <unterminated final hash comment> ~ '#' <hash comment body>
