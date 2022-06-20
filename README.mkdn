@@ -4,7 +4,7 @@ Guacamole - A parser toolkit for Standard Perl
 
 # VERSION
 
-version 0.007
+version 0.008
 
 # SYNOPSIS
 
@@ -132,7 +132,7 @@ it's a rule first.
 
 # COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2020 by Sawyer X.
+This software is Copyright (c) 2022 by Sawyer X.
 
 This is free software, licensed under:
 
