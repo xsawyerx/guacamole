@@ -51,7 +51,7 @@ To parse a string, call [Gaucamole](https://metacpan.org/pod/Gaucamole)'s `parse
 object-oriented interface in the future.)
 
 It returns a list of results. If it ever returns more than one, this is a bug that
-means it couldn't ambiguously parse something. This will later be enforced in the
+means the parsed string was ambiguous. This will later be enforced in the
 interface. The current interface is not official.
 
 ## AST Nodes
